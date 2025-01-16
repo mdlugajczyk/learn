@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alphabet Learning App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background-image: url('https://img.icons8.com/color/96/gift.png');
+      background-size: cover;
+      background-position: center;
+      border: none;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .box.open {
+      background-image: none;
+    }
+
+    .letter {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #000;
+      display: none;
+      animation: pop-in 0.5s ease forwards;
+    }
+
+    .box.open .letter {
+      display: block;
+    }
+
+    @keyframes pop-in {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .restart-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .restart-btn:hover {
+      background-color: #45a049;
+    }
+
+    .settings-btn {
+      margin-top: 10px;
+      padding: 8px 15px;
+      font-size: 14px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .settings-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .font-settings {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box-container" id="boxContainer">
+    <div class="box" onclick="openBox(this)">
+      <div class="letter">A</div>
+    </div>
+    <div class="box" onclick="openBox(this)">
+      <div class="letter">B</div>
+    </div>
+    <div class="box" onclick="openBox(this)">
+      <div class="letter">C</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="resetBoxes()" style="display: none;">Restart</button>
+  <button class="settings-btn" onclick="toggleFontSettings()">Settings</button>
+  <div class="font-settings" id="fontSettings">
+    <label for="fontSelector">Choose a font:</label>
+    <select id="fontSelector" onchange="changeFont(this.value)">
+      <option value="Arial">Arial</option>
+      <option value="Comic Sans MS">Comic Sans MS</option>
+      <option value="Verdana">Verdana</option>
+      <option value="Tahoma">Tahoma</option>
+    </select>
+  </div>
+
+  <script>
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function getRandomLetter() {
+      return alphabet[Math.floor(Math.random() * alphabet.length)];
+    }
+
+    function openBox(box) {
+      if (!box.classList.contains('open')) {
+        const letterDiv = box.querySelector('.letter');
+        letterDiv.textContent = getRandomLetter();
+        box.classList.add('open');
+
+        const allBoxes = document.querySelectorAll('.box');
+        const allOpen = Array.from(allBoxes).every(b => b.classList.contains('open'));
+
+        if (allOpen) {
+          document.querySelector('.restart-btn').style.display = 'block';
+        }
+      }
+    }
+
+    function resetBoxes() {
+      const allBoxes = document.querySelectorAll('.box');
+      allBoxes.forEach(box => {
+        box.classList.remove('open');
+        box.querySelector('.letter').textContent = '';
+      });
+      document.querySelector('.restart-btn').style.display = 'none';
+    }
+
+    function toggleFontSettings() {
+      const fontSettings = document.getElementById('fontSettings');
+      fontSettings.style.display = fontSettings.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function changeFont(font) {
+      const letters = document.querySelectorAll('.letter');
+      letters.forEach(letter => {
+        letter.style.fontFamily = font;
+      });
+    }
+  </script>
+</body>
+</html>
