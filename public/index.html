@@ -68,7 +68,7 @@
     }
 
     .restart-btn {
-      margin-top: 20px;
+      margin-top: 10px;
       padding: 10px 20px;
       font-size: 16px;
       background-color: #4caf50;
@@ -101,6 +101,10 @@
       display: none;
       margin-top: 20px;
     }
+
+    .font-settings label {
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
@@ -115,29 +119,46 @@
       <div class="letter">C</div>
     </div>
   </div>
-  <button class="restart-btn" onclick="resetBoxes()" style="display: none;">Restart</button>
   <button class="settings-btn" onclick="toggleFontSettings()">Settings</button>
+  <button class="restart-btn" onclick="resetBoxes()">Restart</button>
   <div class="font-settings" id="fontSettings">
-    <label for="fontSelector">Choose a font:</label>
-    <select id="fontSelector" onchange="changeFont(this.value)">
-      <option value="Arial">Arial</option>
-      <option value="Comic Sans MS">Comic Sans MS</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Tahoma">Tahoma</option>
-    </select>
+    <div>
+      <label for="fontSelector">Choose a font:</label>
+      <select id="fontSelector" onchange="changeFont(this.value)">
+        <option value="Arial">Arial</option>
+        <option value="Comic Sans MS">Comic Sans MS</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Tahoma">Tahoma</option>
+      </select>
+    </div>
+    <div style="margin-top: 10px;">
+      <label for="caseSelector">Letter Case:</label>
+      <select id="caseSelector" onchange="changeCase(this.value)">
+        <option value="uppercase">Uppercase</option>
+        <option value="lowercase">Lowercase</option>
+        <option value="mixed">Mixed</option>
+      </select>
+    </div>
   </div>
 
   <script>
-    const alphabet = 'ABCDEFGHIJKLMNOPRSTUWZ';
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    function getRandomLetter() {
-      return alphabet[Math.floor(Math.random() * alphabet.length)];
+    function getRandomLetter(caseType) {
+      let letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+      if (caseType === 'lowercase') {
+        return letter.toLowerCase();
+      } else if (caseType === 'mixed') {
+        return Math.random() > 0.5 ? letter.toLowerCase() : letter;
+      }
+      return letter;
     }
 
     function openBox(box) {
       if (!box.classList.contains('open')) {
+        const caseType = document.getElementById('caseSelector').value;
         const letterDiv = box.querySelector('.letter');
-        letterDiv.textContent = getRandomLetter();
+        letterDiv.textContent = getRandomLetter(caseType);
         box.classList.add('open');
 
         const allBoxes = document.querySelectorAll('.box');
@@ -168,6 +189,10 @@
       letters.forEach(letter => {
         letter.style.fontFamily = font;
       });
+    }
+
+    function changeCase(caseType) {
+      resetBoxes();
     }
   </script>
 </body>
