@@ -163,29 +163,28 @@
     const alphabet = 'ABCDEFGHIJKLMNOPRSTUWZ';
     let usedLetters = [];
 
-
     const letterToWordAndImage = {
-	A: 'arbuz',
-	B: 'banan',
-	C: 'cytryna',
-	D: 'dynia',
-	E: 'everest',
-	G: 'gruszka',
-	H: 'helikopter',
-	I: 'indyk',
-	J: 'jablko',
-	K: 'kot',
-	L: 'lody',
-	M: 'mama',
-	N: 'noz',
-	O: 'okno',
-	P: 'pies',
-	R: 'rower',
-	S: 'slonce',
-	T: 'tata',
-	U: 'ul',
-	W: 'warsztat',
-	Z: 'zebra'
+      A: 'arbuz',
+      B: 'banan',
+      C: 'cytryna',
+      D: 'dynia',
+      E: 'everest',
+      G: 'gruszka',
+      H: 'helikopter',
+      I: 'indyk',
+      J: 'jablko',
+      K: 'kot',
+      L: 'lody',
+      M: 'mama',
+      N: 'noz',
+      O: 'okno',
+      P: 'pies',
+      R: 'rower',
+      S: 'slonce',
+      T: 'tata',
+      U: 'ul',
+      W: 'warsztat',
+      Z: 'zebra'
     };
 
     function getRandomLetter(caseType) {
@@ -207,12 +206,13 @@
       usedLetters.push(letter.toUpperCase());
       return letter;
     }
-    
+
     function openBox(box) {
       if (!box.classList.contains('open')) {
         const caseType = document.getElementById('caseSelector').value;
         const letterDiv = box.querySelector('.letter');
         const letter = getRandomLetter(caseType);
+
         letterDiv.textContent = letter.toUpperCase();
         box.classList.add('open');
 
@@ -240,7 +240,6 @@
     }
 
     function resetBoxes() {
-      usedLetters = []
       const allBoxes = document.querySelectorAll('.box');
       allBoxes.forEach(box => {
         box.classList.remove('open');
@@ -248,6 +247,7 @@
       });
       document.querySelector('.restart-btn').style.display = 'none';
       document.getElementById('imageContainer').innerHTML = '';
+      usedLetters = [];
     }
 
     function toggleFontSettings() {
@@ -265,6 +265,35 @@
     function changeCase(caseType) {
       resetBoxes();
     }
+
+    function preloadImages() {
+      Object.values(letterToWordAndImage).forEach(word => {
+        const img = new Image();
+        img.src = `img/${word}.png`;
+      });
+    }
+
+        // Register service worker
+
+    if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+	    navigator.serviceWorker.register('sw.js')
+		.then(registration => {
+		    console.log('ServiceWorker registered: ', registration);
+		    // Send init_data to service worker
+		    if (registration.active) {
+			registration.active.postMessage({
+			    type: 'init_data',
+			    words: Object.values(letterToWordAndImage),
+			});
+		    }
+		})
+		.catch(error => {
+		    console.log('ServiceWorker registration failed: ', error);
+		});
+	});
+    }
+    preloadImages();
   </script>
 </body>
 </html>
