@@ -105,6 +105,22 @@
     .font-settings label {
       margin-right: 10px;
     }
+
+    .image-container {
+      margin-top: 20px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .image-container img {
+      max-width: 150px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 5px;
+      background-color: white;
+    }
   </style>
 </head>
 <body>
@@ -141,25 +157,71 @@
     </div>
   </div>
 
+  <div class="image-container" id="imageContainer"></div>
+
   <script>
     const alphabet = 'ABCDEFGHIJKLMNOPRSTUWZ';
+    let usedLetters = [];
+
+
+    const letterToWordAndImage = {
+	A: 'arbuz',
+	B: 'banan',
+	C: 'cytryna',
+	D: 'dynia',
+	E: 'everest',
+	G: 'gruszka',
+	H: 'helikopter',
+	I: 'indyk',
+	J: 'jablko',
+	K: 'kot',
+	L: 'lody',
+	M: 'mama',
+	N: 'noz',
+	O: 'okno',
+	P: 'pies',
+	R: 'rower',
+	S: 'slonce',
+	T: 'tata',
+	U: 'ul',
+	W: 'warsztat',
+	Z: 'zebra'
+    };
 
     function getRandomLetter(caseType) {
-      let letter = alphabet[Math.floor(Math.random() * alphabet.length)];
-      if (caseType === 'lowercase') {
-        return letter.toLowerCase();
-      } else if (caseType === 'mixed') {
-        return Math.random() > 0.5 ? letter.toLowerCase() : letter;
+      let availableLetters = alphabet.split('').filter(letter => !usedLetters.includes(letter));
+
+      if (availableLetters.length === 0) {
+        return null; // No letters left to choose from
       }
+
+      let randomIndex = Math.floor(Math.random() * availableLetters.length);
+      let letter = availableLetters[randomIndex];
+
+      if (caseType === 'lowercase') {
+        letter = letter.toLowerCase();
+      } else if (caseType === 'mixed') {
+        letter = Math.random() > 0.5 ? letter.toLowerCase() : letter;
+      }
+
+      usedLetters.push(letter.toUpperCase());
       return letter;
     }
-
+    
     function openBox(box) {
       if (!box.classList.contains('open')) {
         const caseType = document.getElementById('caseSelector').value;
         const letterDiv = box.querySelector('.letter');
-        letterDiv.textContent = getRandomLetter(caseType);
+        const letter = getRandomLetter(caseType);
+        letterDiv.textContent = letter.toUpperCase();
         box.classList.add('open');
+
+        const letterKey = letter.toUpperCase();
+        if (letterToWordAndImage[letterKey]) {
+          const word = letterToWordAndImage[letterKey];
+          const imagePath = `img/${word}.png`;
+          displayImage(imagePath);
+        }
 
         const allBoxes = document.querySelectorAll('.box');
         const allOpen = Array.from(allBoxes).every(b => b.classList.contains('open'));
@@ -170,13 +232,22 @@
       }
     }
 
+    function displayImage(image) {
+      const imageContainer = document.getElementById('imageContainer');
+      imageContainer.innerHTML = `
+        <img src="${image}" alt="">
+      `;
+    }
+
     function resetBoxes() {
+      usedLetters = []
       const allBoxes = document.querySelectorAll('.box');
       allBoxes.forEach(box => {
         box.classList.remove('open');
         box.querySelector('.letter').textContent = '';
       });
       document.querySelector('.restart-btn').style.display = 'none';
+      document.getElementById('imageContainer').innerHTML = '';
     }
 
     function toggleFontSettings() {
