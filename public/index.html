@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alphabet Learning App</title>
+  <title>Alphabet & Word Learning App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,9 +14,64 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px 0;
     }
 
+    /* --- New Startup Modal Styles --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .modal-content button {
+      display: block;
+      width: 100%;
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      border: 2px solid #007bff;
+      background-color: white;
+      color: #007bff;
+      border-radius: 8px;
+      margin-top: 15px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .modal-content button:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .mode-container {
+      width: 100%;
+      display: none; /* Hidden by default, enabled by JS */
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* --- Original Alphabet Mode Styles (Unchanged) --- */
     .box-container {
       display: flex;
       justify-content: center;
@@ -40,10 +95,7 @@
       overflow: hidden;
     }
 
-    .box.open {
-      background-image: none;
-    }
-
+    .box.open { background-image: none; }
     .letter {
       font-size: 3rem;
       font-weight: bold;
@@ -51,220 +103,315 @@
       display: none;
       animation: pop-in 0.5s ease forwards;
     }
-
-    .box.open .letter {
-      display: block;
-    }
-
+    .box.open .letter { display: block; }
     @keyframes pop-in {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .restart-btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      margin-top: 10px; padding: 10px 20px; font-size: 16px; background-color: #4caf50;
+      color: white; border: none; border-radius: 5px; cursor: pointer;
     }
-
-    .restart-btn:hover {
-      background-color: #45a049;
-    }
+    .restart-btn:hover { background-color: #45a049; }
 
     .settings-btn {
-      margin-top: 10px;
-      padding: 8px 15px;
-      font-size: 14px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      margin-top: 10px; padding: 8px 15px; font-size: 14px; background-color: #007bff;
+      color: white; border: none; border-radius: 5px; cursor: pointer;
     }
+    .settings-btn:hover { background-color: #0056b3; }
 
-    .settings-btn:hover {
-      background-color: #0056b3;
-    }
-
-    .font-settings {
-      display: none;
-      margin-top: 20px;
-    }
-
-    .font-settings label {
-      margin-right: 10px;
-    }
+    .font-settings { display: none; margin-top: 20px; }
+    .font-settings label { margin-right: 10px; }
 
     .image-container {
-      margin-top: 20px;
-      max-width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 20px; min-height: 160px; max-width: 100%; display: flex;
+      flex-direction: column; align-items: center;
+    }
+    .image-container img {
+      max-width: 150px; border: 2px solid #ddd; border-radius: 10px;
+      padding: 5px; background-color: white;
     }
 
-    .image-container img {
-      max-width: 150px;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      padding: 5px;
-      background-color: white;
+    /* --- New Writing Mode Styles --- */
+    #wordImageContainer {
+      min-height: 160px; display: flex; align-items: center; justify-content: center;
+    }
+    #wordImageContainer img {
+      max-width: 150px; border: 2px solid #ddd; border-radius: 10px;
+      padding: 5px; background-color: white;
+    }
+    #wordFormationContainer { display: flex; gap: 10px; height: 60px; margin-top: 10px; }
+
+    .letter-placeholder {
+      width: 50px; height: 50px; border: 2px dashed #ccc; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: bold;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .letter-placeholder.filled {
+      border-color: #28a745;
+      border-style: solid;
+      background-color: #28a745;
+      color: white;
+    }
+
+    #letterChoicesContainer {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 10px; padding: 10px; max-width: 500px;
+    }
+    .letter-choice {
+      width: 50px; height: 50px; background-color: #007bff; color: white;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: bold; cursor: pointer;
+      transition: background-color 0.3s, transform 0.5s ease; user-select: none;
+    }
+    .letter-choice:hover { background-color: #0056b3; }
+    
+    .letter-choice.moving {
+        transition: transform 0.5s ease-in-out;
+        z-index: 100; background-color: #28a745;
+    }
+
+    .next-word-btn {
+        margin-top: 10px; padding: 10px 20px; font-size: 16px; background-color: #4caf50;
+        color: white; border: none; border-radius: 5px; cursor: pointer;
+    }
+    .next-word-btn:hover { background-color: #45a049; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+      20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+    .letter-choice.incorrect {
+        animation: shake 0.5s ease-in-out; background-color: #dc3545;
     }
   </style>
 </head>
 <body>
-  <div class="box-container" id="boxContainer">
-    <div class="box" onclick="openBox(this)">
-      <div class="letter">A</div>
-    </div>
-    <div class="box" onclick="openBox(this)">
-      <div class="letter">B</div>
-    </div>
-    <div class="box" onclick="openBox(this)">
-      <div class="letter">C</div>
-    </div>
-  </div>
-  <button class="settings-btn" onclick="toggleFontSettings()">Settings</button>
-  <button class="restart-btn" onclick="resetBoxes()">Restart</button>
-  <div class="font-settings" id="fontSettings">
-    <div>
-      <label for="fontSelector">Choose a font:</label>
-      <select id="fontSelector" onchange="changeFont(this.value)">
-        <option value="Arial">Arial</option>
-        <option value="Comic Sans MS">Comic Sans MS</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Tahoma">Tahoma</option>
-      </select>
-    </div>
-    <div style="margin-top: 10px;">
-      <label for="caseSelector">Letter Case:</label>
-      <select id="caseSelector" onchange="changeCase(this.value)">
-        <option value="uppercase">Uppercase</option>
-        <option value="lowercase">Lowercase</option>
-        <option value="mixed">Mixed</option>
-      </select>
+
+  <div id="startupModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Choose a Mode</h2>
+      <button onclick="initializeMode('alphabet')">Learn Alphabet</button>
+      <button onclick="initializeMode('writing')">Practice Writing</button>
     </div>
   </div>
 
-  <div class="image-container" id="imageContainer"></div>
+  <div id="alphabetMode" class="mode-container">
+    <div class="box-container" id="boxContainer"></div>
+    <button class="settings-btn" onclick="toggleFontSettings()">Settings</button>
+    <button class="restart-btn" onclick="resetBoxes()">Restart</button>
+    <div class="font-settings" id="fontSettings">
+      <div>
+        <label for="fontSelector">Choose a font:</label>
+        <select id="fontSelector" onchange="changeFont(this.value)">
+          <option value="Arial">Arial</option>
+          <option value="Comic Sans MS">Comic Sans MS</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+      </div>
+      <div style="margin-top: 10px;">
+        <label for="caseSelector">Letter Case:</label>
+        <select id="caseSelector" onchange="changeCase(this.value)">
+          <option value="uppercase">Uppercase</option>
+          <option value="lowercase">Lowercase</option>
+          <option value="mixed">Mixed</option>
+        </select>
+      </div>
+    </div>
+    <div class="image-container" id="imageContainer"></div>
+  </div>
+
+  <div id="writingMode" class="mode-container">
+    <div id="wordImageContainer"></div>
+    <div id="wordFormationContainer"></div>
+    <div id="letterChoicesContainer"></div>
+    <button class="next-word-btn" style="display: none;" onclick="startWritingRound()">Next Word</button>
+  </div>
 
   <script>
+    /* --- ALPHABET MODE SCRIPT --- */
     const alphabet = 'ABCDEFGHIJKLMNOPRSTUWZ';
     let usedLetters = [];
-
-
     const letterToWordAndImage = {
-	A: 'arbuz',
-	B: 'banan',
-	C: 'cytryna',
-	D: 'dynia',
-	E: 'everest',
-	G: 'gruszka',
-	H: 'helikopter',
-	I: 'indyk',
-	J: 'jablko',
-	K: 'kot',
-	L: 'lody',
-	M: 'mama',
-	N: 'noz',
-	O: 'okno',
-	P: 'pies',
-	R: 'rower',
-	S: 'slonce',
-	T: 'tata',
-	U: 'ul',
-	W: 'warsztat',
-	Z: 'zebra'
+      A: 'arbuz', B: 'banan', C: 'cytryna', D: 'dynia', E: 'everest', G: 'gruszka',
+      H: 'helikopter', I: 'indyk', J: 'jablko', K: 'kot', L: 'lody', M: 'mama',
+      N: 'noz', O: 'okno', P: 'pies', R: 'rower', S: 'slonce', T: 'tata', U: 'ul',
+      W: 'warsztat', Z: 'zebra'
     };
-
     function getRandomLetter(caseType) {
       let availableLetters = alphabet.split('').filter(letter => !usedLetters.includes(letter));
-
       if (availableLetters.length === 0) {
-        return null; // No letters left to choose from
+        generateAlphabetBoxes();
+        usedLetters = [];
+        availableLetters = alphabet.split('');
       }
-
       let randomIndex = Math.floor(Math.random() * availableLetters.length);
       let letter = availableLetters[randomIndex];
-
-      if (caseType === 'lowercase') {
-        letter = letter.toLowerCase();
-      } else if (caseType === 'mixed') {
-        letter = Math.random() > 0.5 ? letter.toLowerCase() : letter;
-      }
-
+      if (caseType === 'lowercase') letter = letter.toLowerCase();
+      else if (caseType === 'mixed') letter = Math.random() > 0.5 ? letter.toLowerCase() : letter;
       usedLetters.push(letter.toUpperCase());
       return letter;
     }
-    
     function openBox(box) {
       if (!box.classList.contains('open')) {
-        const caseType = document.getElementById('caseSelector').value;
-        const letterDiv = box.querySelector('.letter');
-        const letter = getRandomLetter(caseType);
-        letterDiv.textContent = letter.toUpperCase();
+        const letter = getRandomLetter(document.getElementById('caseSelector').value);
+        if (!letter) return;
+        box.querySelector('.letter').textContent = letter.toUpperCase();
         box.classList.add('open');
-
         const letterKey = letter.toUpperCase();
         if (letterToWordAndImage[letterKey]) {
-          const word = letterToWordAndImage[letterKey];
-          const imagePath = `img/${word}.png`;
-          displayImage(imagePath);
+          displayImage(`img/${letterToWordAndImage[letterKey]}.png`);
         }
-
-        const allBoxes = document.querySelectorAll('.box');
-        const allOpen = Array.from(allBoxes).every(b => b.classList.contains('open'));
-
-        if (allOpen) {
+        if (Array.from(document.querySelectorAll('.box')).every(b => b.classList.contains('open'))) {
           document.querySelector('.restart-btn').style.display = 'block';
         }
       }
     }
-
-    function displayImage(image) {
-      const imageContainer = document.getElementById('imageContainer');
-      imageContainer.innerHTML = `
-        <img src="${image}" alt="">
-      `;
+    function displayImage(image) { document.getElementById('imageContainer').innerHTML = `<img src="${image}" alt="">`; }
+    function generateAlphabetBoxes() {
+      const boxContainer = document.getElementById('boxContainer');
+      boxContainer.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const boxDiv = document.createElement('div');
+        boxDiv.className = 'box';
+        boxDiv.onclick = function() { openBox(this); };
+        boxDiv.appendChild(document.createElement('div')).className = 'letter';
+        boxContainer.appendChild(boxDiv);
+      }
     }
-
     function resetBoxes() {
-      usedLetters = []
-      const allBoxes = document.querySelectorAll('.box');
-      allBoxes.forEach(box => {
-        box.classList.remove('open');
-        box.querySelector('.letter').textContent = '';
-      });
-      document.querySelector('.restart-btn').style.display = 'none';
+      generateAlphabetBoxes();
+      document.querySelector('#alphabetMode .restart-btn').style.display = 'none';
       document.getElementById('imageContainer').innerHTML = '';
     }
-
     function toggleFontSettings() {
       const fontSettings = document.getElementById('fontSettings');
       fontSettings.style.display = fontSettings.style.display === 'none' ? 'block' : 'none';
     }
-
     function changeFont(font) {
-      const letters = document.querySelectorAll('.letter');
-      letters.forEach(letter => {
-        letter.style.fontFamily = font;
+      document.querySelectorAll('.letter, .letter-placeholder, .letter-choice').forEach(el => el.style.fontFamily = font);
+    }
+    function changeCase(caseType) { resetBoxes(); }
+    function preloadImages() {
+      Object.values(letterToWordAndImage).forEach(word => {
+        const img = new Image();
+        img.src = `img/${word}.png`;
       });
     }
 
-    function changeCase(caseType) {
-      resetBoxes();
+    /* --- WRITING MODE SCRIPT --- */
+    const fullAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const writingWords = Object.values(letterToWordAndImage);
+    let currentWritingWord = '';
+    let discoveredLettersCount = 0;
+    let isAnimating = false;
+
+    function startWritingRound() {
+      isAnimating = false;
+      document.querySelector('#writingMode .next-word-btn').style.display = 'none';
+      const randomIndex = Math.floor(Math.random() * writingWords.length);
+      currentWritingWord = writingWords[randomIndex].toUpperCase();
+      discoveredLettersCount = 0;
+      const imagePath = `img/${currentWritingWord.toLowerCase()}.png`;
+      document.getElementById('wordImageContainer').innerHTML = `<img src="${imagePath}" alt="${currentWritingWord}">`;
+      const formationContainer = document.getElementById('wordFormationContainer');
+      formationContainer.innerHTML = '';
+      currentWritingWord.split('').forEach((_, i) => {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'letter-placeholder';
+        placeholder.id = `placeholder-${i}`;
+        formationContainer.appendChild(placeholder);
+      });
+      generateLetterChoices();
     }
+
+    function generateLetterChoices() {
+      const correctLetters = currentWritingWord.toUpperCase().split('');
+      const incorrectLettersCount = correctLetters.length;
+      let incorrectLetters = [];
+      while (incorrectLetters.length < incorrectLettersCount) {
+        const randomLetter = fullAlphabet[Math.floor(Math.random() * fullAlphabet.length)];
+        if (!correctLetters.includes(randomLetter) && !incorrectLetters.includes(randomLetter)) {
+          incorrectLetters.push(randomLetter);
+        }
+      }
+      let choices = [...correctLetters, ...incorrectLetters].sort(() => Math.random() - 0.5);
+      const choicesContainer = document.getElementById('letterChoicesContainer');
+      choicesContainer.innerHTML = '';
+      choices.forEach(letter => {
+        const choiceEl = document.createElement('div');
+        choiceEl.className = 'letter-choice';
+        choiceEl.textContent = letter;
+        choiceEl.onclick = () => selectLetterChoice(choiceEl);
+        choicesContainer.appendChild(choiceEl);
+      });
+      changeFont(document.getElementById('fontSelector').value);
+    }
+
+    function selectLetterChoice(letterEl) {
+      if (isAnimating) return;
+      const selectedLetter = letterEl.textContent;
+      if (selectedLetter === currentWritingWord[discoveredLettersCount]) {
+        isAnimating = true;
+        const placeholder = document.getElementById(`placeholder-${discoveredLettersCount}`);
+        const placeholderRect = placeholder.getBoundingClientRect();
+        const letterRect = letterEl.getBoundingClientRect();
+        
+        letterEl.classList.add('moving');
+        // --- FIX #1: Changed position to 'fixed' for reliable viewport positioning ---
+        letterEl.style.position = 'fixed';
+        letterEl.style.top = `${letterRect.top}px`;
+        letterEl.style.left = `${letterRect.left}px`;
+        
+        requestAnimationFrame(() => {
+          const newX = placeholderRect.left - letterRect.left;
+          const newY = placeholderRect.top - letterRect.top;
+          letterEl.style.transform = `translate(${newX}px, ${newY}px)`;
+        });
+
+        setTimeout(() => {
+          // --- FIX #2: Corrected syntax error from merge conflict ---
+          placeholder.textContent = selectedLetter;
+          placeholder.classList.add('filled');
+          letterEl.remove();
+          discoveredLettersCount++;
+          isAnimating = false;
+          if (discoveredLettersCount === currentWritingWord.length) {
+            document.querySelector('#writingMode .next-word-btn').style.display = 'inline-block';
+          }
+        }, 500);
+      } else {
+        letterEl.classList.add('incorrect');
+        setTimeout(() => letterEl.classList.remove('incorrect'), 500);
+      }
+    }
+
+    /* --- MODE INITIALIZATION LOGIC --- */
+    function initializeMode(mode) {
+      const modal = document.getElementById('startupModal');
+      modal.style.display = 'none';
+
+      if (mode === 'alphabet') {
+        document.getElementById('alphabetMode').style.display = 'flex';
+        resetBoxes();
+      } else {
+        document.getElementById('writingMode').style.display = 'flex';
+        startWritingRound();
+      }
+    }
+
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+      preloadImages();
+      writingWords.forEach(word => {
+        const img = new Image();
+        img.src = `img/${word.toLowerCase()}.png`;
+      });
+    });
   </script>
 </body>
 </html>
