@@ -25,20 +25,7 @@
       -webkit-touch-callout: none; /* Disable callout on long press (e.g., save image) */
     }
 
-    /* --- New Fullscreen Button Style --- */
-    .fullscreen-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 8px 12px;
-      font-size: 14px;
-      background-color: #6c757d;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 150;
-    }
+
 
     .modal-overlay {
       position: fixed;
@@ -193,9 +180,6 @@
 </head>
 <body>
 
-  <!-- ADDITION: Fullscreen Button -->
-  <button class="fullscreen-btn" onclick="toggleFullScreen()">Fullscreen</button>
-
   <div id="startupModal" class="modal-overlay">
     <div class="modal-content">
       <h2>Choose a Mode</h2>
@@ -241,19 +225,7 @@
   </div>
 
   <script>
-    // --- ADDITION: Fullscreen API Logic ---
-    function toggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-        });
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      }
-    }
-    
+
     /* --- ALPHABET MODE SCRIPT --- */
     const alphabet = 'ABCDEFGHIJKLMNOPRSTUWZ';
     let usedLetters = [];
