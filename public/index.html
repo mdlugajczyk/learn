@@ -102,6 +102,42 @@
       max-width: 150px; border: 2px solid #ddd; border-radius: 10px;
       padding: 5px; background-color: white;
     }
+    
+    /* --- WRITING MODE STYLES --- */
+    #wordSelectionContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+      max-width: 600px;
+    }
+    .word-thumbnail {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      background-color: white;
+      padding: 5px;
+    }
+    .word-thumbnail:hover {
+      transform: scale(1.05);
+      border-color: #007bff;
+    }
+    .word-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    
+    #writingGameContainer {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
     #wordImageContainer {
       min-height: 160px; display: flex; align-items: center; justify-content: center;
     }
@@ -135,6 +171,11 @@
         transition: transform 0.5s ease-in-out;
         z-index: 100; background-color: #28a745;
     }
+    .back-to-selection-btn {
+        margin-top: 10px; padding: 10px 20px; font-size: 16px; background-color: #6c757d;
+        color: white; border: none; border-radius: 5px; cursor: pointer;
+    }
+    .back-to-selection-btn:hover { background-color: #545b62; }
     .next-word-btn {
         margin-top: 10px; padding: 10px 20px; font-size: 16px; background-color: #4caf50;
         color: white; border: none; border-radius: 5px; cursor: pointer;
@@ -189,10 +230,14 @@
   </div>
 
   <div id="writingMode" class="mode-container">
-    <div id="wordImageContainer"></div>
-    <div id="wordFormationContainer"></div>
-    <div id="letterChoicesContainer"></div>
-    <button class="next-word-btn" style="display: none;" onclick="startWritingRound()">Next Word</button>
+    <div id="wordSelectionContainer"></div>
+    <div id="writingGameContainer">
+      <div id="wordImageContainer"></div>
+      <div id="wordFormationContainer"></div>
+      <div id="letterChoicesContainer"></div>
+      <button class="back-to-selection-btn" onclick="showWordSelection()">Back to Word Selection</button>
+      <button class="next-word-btn" style="display: none;" onclick="showWordSelection()">Select Another Word</button>
+    </div>
   </div>
 
   <script>
@@ -281,19 +326,54 @@
 
     /* --- WRITING MODE SCRIPT --- */
     const fullAlphabet = 'ABCDEFGHIJKLMNOPRSTUWYZ';
-    const writingWords = ['mama', 'tata', 'kot', 'pies', 'ul', 'zebra', 'arbuz', 'okno', 'rower'];
+    const writingWords = ['mama', 'tata', 'kot', 'pies', 'ul', 'zebra', 'arbuz', 'okno', 'rower', 'banan', 'cytryna', 'cynamon', 'dynia', 'everest', 'gruszka', 'helikopter', 'indyk', 'jablko', 'lody', 'noz', 'slonce', 'warsztat'];
     let currentWritingWord = '';
     let discoveredLettersCount = 0;
     let isAnimating = false;
 
-    function startWritingRound() {
+    function showWordSelection() {
+      document.getElementById('wordSelectionContainer').style.display = 'flex';
+      document.getElementById('writingGameContainer').style.display = 'none';
+      
+      // Generate thumbnails
+      const container = document.getElementById('wordSelectionContainer');
+      container.innerHTML = '';
+      
+      writingWords.forEach(word => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = 'word-thumbnail';
+        thumbnail.onclick = () => selectWord(word);
+        
+        const img = document.createElement('img');
+        img.src = `img/${word}.png`;
+        img.alt = word;
+        img.onerror = function() {
+          // If image fails to load, show a placeholder
+          this.style.display = 'none';
+          thumbnail.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 12px; color: #666;">${word}</div>`;
+        };
+        
+        thumbnail.appendChild(img);
+        container.appendChild(thumbnail);
+      });
+    }
+
+    function selectWord(word) {
+      currentWritingWord = word.toUpperCase();
+      startWritingGame();
+    }
+
+    function startWritingGame() {
+      document.getElementById('wordSelectionContainer').style.display = 'none';
+      document.getElementById('writingGameContainer').style.display = 'flex';
+      
       isAnimating = false;
       document.querySelector('#writingMode .next-word-btn').style.display = 'none';
-      const randomIndex = Math.floor(Math.random() * writingWords.length);
-      currentWritingWord = writingWords[randomIndex].toUpperCase();
       discoveredLettersCount = 0;
+      
       const imagePath = `img/${currentWritingWord.toLowerCase()}.png`;
       document.getElementById('wordImageContainer').innerHTML = `<img src="${imagePath}" alt="${currentWritingWord}">`;
+      
       const formationContainer = document.getElementById('wordFormationContainer');
       formationContainer.innerHTML = '';
       currentWritingWord.split('').forEach((_, i) => {
@@ -302,6 +382,7 @@
         placeholder.id = `placeholder-${i}`;
         formationContainer.appendChild(placeholder);
       });
+      
       generateLetterChoices();
     }
 
@@ -374,7 +455,7 @@
         resetBoxes();
       } else {
         document.getElementById('writingMode').style.display = 'flex';
-        startWritingRound();
+        showWordSelection();
       }
     }
 
