@@ -257,7 +257,7 @@
         box.classList.add('open');
         const letterKey = letter.toUpperCase();
         if (letterToWordAndImage[letterKey]) {
-          displayImage(`img/${letterToWordAndImage[letterKey]}.png`);
+          displayImage(`img/${letterToWordAndImage[letterKey]}.jpeg`);
         }
         if (Array.from(document.querySelectorAll('.box')).every(b => b.classList.contains('open'))) {
           document.querySelector('.restart-btn').style.display = 'block';
@@ -292,13 +292,14 @@
     function preloadImages() {
       Object.values(letterToWordAndImage).forEach(word => {
         const img = new Image();
-        img.src = `img/${word}.png`;
+        img.src = `img/${word}.jpeg`;
       });
     }
 
     /* --- WRITING MODE SCRIPT --- */
     const fullAlphabet = 'ABCDEFGHIJKLMNOPRSTUWYZ';
-    const writingWords = ['mama', 'tata', 'kot', 'pies', 'ul', 'zebra', 'arbuz', 'okno', 'rower', 'banan', 'cytryna', 'cynamon', 'dynia', 'everest', 'gruszka', 'helikopter', 'indyk', 'jablko', 'lody', 'noz', 'slonce', 'warsztat'];
+
+    const writingWords = ['mama', 'tata', 'kot', 'pies', 'ul', 'zebra', 'arbuz', 'okno', 'rower', 'banan', 'auto', 'fele', 'adelka', 'lew', 'kwiatek'];
     let currentWritingWord = '';
     let discoveredLettersCount = 0;
     let isAnimating = false;
@@ -317,7 +318,7 @@
         thumbnail.onclick = () => selectWord(word);
         
         const img = document.createElement('img');
-        img.src = `img/${word}.png`;
+        img.src = `img/${word}.jpeg`;
         img.alt = word;
         img.onerror = function() {
           // If image fails to load, show a placeholder
@@ -343,7 +344,7 @@
       document.querySelector('#writingMode .next-word-btn').style.display = 'none';
       discoveredLettersCount = 0;
       
-      const imagePath = `img/${currentWritingWord.toLowerCase()}.png`;
+      const imagePath = `img/${currentWritingWord.toLowerCase()}.jpeg`;
       document.getElementById('wordImageContainer').innerHTML = `<img src="${imagePath}" alt="${currentWritingWord}">`;
       
       const formationContainer = document.getElementById('wordFormationContainer');
@@ -436,7 +437,7 @@
       preloadImages();
       writingWords.forEach(word => {
         const img = new Image();
-        img.src = `img/${word.toLowerCase()}.png`;
+        img.src = `img/${word.toLowerCase()}.jpeg`;
       });
     });
   </script>
