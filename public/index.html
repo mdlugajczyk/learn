@@ -25,8 +25,6 @@
       -webkit-touch-callout: none; /* Disable callout on long press (e.g., save image) */
     }
 
-
-
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -168,13 +166,147 @@
         color: white; border: none; border-radius: 5px; cursor: pointer;
     }
     .next-word-btn:hover { background-color: #45a049; }
+
+    /* --- ARITHMETIC MODE STYLES --- */
+    #arithmeticProblem {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+    }
+    
+    .apples-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 30px;
+      margin: 20px 0;
+      min-height: 120px;
+    }
+    
+    .apple-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .apple-group-label {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .apples-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 150px;
+      gap: 5px;
+    }
+    
+    .apple {
+      width: 30px;
+      height: 30px;
+      background-color: #ff4444;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      margin: 2px;
+    }
+    
+    .apple::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 8px;
+      background-color: #8B4513;
+      border-radius: 2px;
+    }
+    
+    .apple::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      right: 8px;
+      width: 8px;
+      height: 6px;
+      background-color: #228B22;
+      border-radius: 50%;
+      transform: rotate(20deg);
+    }
+    
+    #numberChoicesContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+      max-width: 400px;
+    }
+    
+    .number-choice {
+      width: 60px;
+      height: 60px;
+      background-color: #ff6b35;
+      color: white;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      border: none;
+    }
+    
+    .number-choice:hover {
+      background-color: #e55a2b;
+      transform: scale(1.05);
+    }
+    
+    .number-choice.correct {
+      background-color: #28a745;
+      animation: correct-bounce 0.6s ease;
+    }
+    
+    .number-choice.incorrect {
+      background-color: #dc3545;
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes correct-bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
       20%, 40%, 60%, 80% { transform: translateX(8px); }
     }
+    
     .letter-choice.incorrect {
         animation: shake 0.5s ease-in-out; background-color: #dc3545;
+    }
+    
+    .next-problem-btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+    
+    .next-problem-btn:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -185,6 +317,7 @@
       <h2>Choose a Mode</h2>
       <button onclick="initializeMode('alphabet')">Learn Alphabet</button>
       <button onclick="initializeMode('writing')">Practice Writing</button>
+      <button onclick="initializeMode('arithmetic')">Learn Arithmetic</button>
     </div>
   </div>
 
@@ -222,6 +355,14 @@
       <button class="back-to-selection-btn" onclick="showWordSelection()">Back to Word Selection</button>
       <button class="next-word-btn" style="display: none;" onclick="showWordSelection()">Select Another Word</button>
     </div>
+  </div>
+
+  <div id="arithmeticMode" class="mode-container">
+    <div id="arithmeticProblem"></div>
+    <div class="apples-container" id="applesContainer"></div>
+    <div id="numberChoicesContainer"></div>
+    <button class="next-problem-btn" onclick="generateArithmeticProblem()">Next Problem</button>
+    <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
   </div>
 
   <script>
@@ -418,18 +559,151 @@
       }
     }
 
+    /* --- ARITHMETIC MODE SCRIPT --- */
+    let currentNum1, currentNum2, correctAnswer;
+    let isArithmeticAnimating = false;
+
+    function generateArithmeticProblem() {
+      // Reset UI state
+      document.querySelector('.next-problem-btn').style.display = 'none';
+      isArithmeticAnimating = false;
+      
+      // Generate two random numbers that sum to less than 10
+      currentNum1 = Math.floor(Math.random() * 5) + 1; // 1-5
+      const maxNum2 = Math.min(5, 9 - currentNum1); // Ensure sum < 10
+      currentNum2 = Math.floor(Math.random() * maxNum2) + 1; // 1 to maxNum2
+      correctAnswer = currentNum1 + currentNum2;
+      
+      // Display the problem
+      document.getElementById('arithmeticProblem').innerHTML = `${currentNum1} + ${currentNum2} = ?`;
+      
+      // Generate apple visuals
+      generateApples();
+      
+      // Generate number choices (1-9)
+      generateNumberChoices();
+    }
+
+    function generateApples() {
+      const container = document.getElementById('applesContainer');
+      container.innerHTML = '';
+      
+      // Create first group of apples
+      const group1 = document.createElement('div');
+      group1.className = 'apple-group';
+      
+      const label1 = document.createElement('div');
+      label1.className = 'apple-group-label';
+      label1.textContent = currentNum1;
+      group1.appendChild(label1);
+      
+      const applesRow1 = document.createElement('div');
+      applesRow1.className = 'apples-row';
+      for (let i = 0; i < currentNum1; i++) {
+        const apple = document.createElement('div');
+        apple.className = 'apple';
+        applesRow1.appendChild(apple);
+      }
+      group1.appendChild(applesRow1);
+      
+      // Plus sign
+      const plusSign = document.createElement('div');
+      plusSign.style.fontSize = '3rem';
+      plusSign.style.fontWeight = 'bold';
+      plusSign.style.color = '#333';
+      plusSign.style.alignSelf = 'center';
+      plusSign.textContent = '+';
+      
+      // Create second group of apples
+      const group2 = document.createElement('div');
+      group2.className = 'apple-group';
+      
+      const label2 = document.createElement('div');
+      label2.className = 'apple-group-label';
+      label2.textContent = currentNum2;
+      group2.appendChild(label2);
+      
+      const applesRow2 = document.createElement('div');
+      applesRow2.className = 'apples-row';
+      for (let i = 0; i < currentNum2; i++) {
+        const apple = document.createElement('div');
+        apple.className = 'apple';
+        applesRow2.appendChild(apple);
+      }
+      group2.appendChild(applesRow2);
+      
+      container.appendChild(group1);
+      container.appendChild(plusSign);
+      container.appendChild(group2);
+    }
+
+    function generateNumberChoices() {
+      const container = document.getElementById('numberChoicesContainer');
+      container.innerHTML = '';
+      
+      for (let i = 1; i <= 9; i++) {
+        const choice = document.createElement('button');
+        choice.className = 'number-choice';
+        choice.textContent = i;
+        choice.onclick = () => selectNumberChoice(choice, i);
+        container.appendChild(choice);
+      }
+    }
+
+    function selectNumberChoice(choiceEl, selectedNumber) {
+      if (isArithmeticAnimating) return;
+      
+      isArithmeticAnimating = true;
+      
+      if (selectedNumber === correctAnswer) {
+        choiceEl.classList.add('correct');
+        setTimeout(() => {
+          document.querySelector('.next-problem-btn').style.display = 'inline-block';
+          isArithmeticAnimating = false;
+        }, 600);
+      } else {
+        choiceEl.classList.add('incorrect');
+        setTimeout(() => {
+          choiceEl.classList.remove('incorrect');
+          isArithmeticAnimating = false;
+        }, 500);
+      }
+    }
+
+    function initializeArithmeticMode() {
+      generateArithmeticProblem();
+    }
+
     /* --- MODE INITIALIZATION LOGIC --- */
     function initializeMode(mode) {
       const modal = document.getElementById('startupModal');
       modal.style.display = 'none';
 
+      // Hide all modes first
+      document.getElementById('alphabetMode').style.display = 'none';
+      document.getElementById('writingMode').style.display = 'none';
+      document.getElementById('arithmeticMode').style.display = 'none';
+
       if (mode === 'alphabet') {
         document.getElementById('alphabetMode').style.display = 'flex';
         resetBoxes();
-      } else {
+      } else if (mode === 'writing') {
         document.getElementById('writingMode').style.display = 'flex';
         showWordSelection();
+      } else if (mode === 'arithmetic') {
+        document.getElementById('arithmeticMode').style.display = 'flex';
+        initializeArithmeticMode();
       }
+    }
+
+    function backToModeSelection() {
+      // Hide all modes
+      document.getElementById('alphabetMode').style.display = 'none';
+      document.getElementById('writingMode').style.display = 'none';
+      document.getElementById('arithmeticMode').style.display = 'none';
+      
+      // Show modal
+      document.getElementById('startupModal').style.display = 'flex';
     }
 
     // --- Initial Load ---
