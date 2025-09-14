@@ -318,6 +318,7 @@
       <button onclick="initializeMode('alphabet')">Learn Alphabet</button>
       <button onclick="initializeMode('writing')">Practice Writing</button>
       <button onclick="initializeMode('arithmetic')">Learn Arithmetic</button>
+      <button onclick="initializeMode('digits')">Learn Digits</button>
     </div>
   </div>
 
@@ -364,6 +365,14 @@
     <button class="next-problem-btn" onclick="generateArithmeticProblem()">Next Problem</button>
     <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
   </div>
+
+  <div id="digitsMode" class="mode-container">
+    <div class="apples-container" id="digitsApplesContainer"></div>
+    <div id="digitsNumberChoicesContainer"></div>
+    <button class="next-problem-btn" onclick="generateDigitsProblem()">Next</button>
+    <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
+  </div>
+  
 
   <script>
 
@@ -674,26 +683,96 @@
       generateArithmeticProblem();
     }
 
+    /* --- DIGITS MODE SCRIPT --- */
+    let currentDigit, isDigitsAnimating = false;
+
+    function generateDigitsProblem() {
+	// reset
+	document.querySelector('#digitsMode .next-problem-btn').style.display = 'none';
+	isDigitsAnimating = false;
+
+	// pick random number 1–9
+	currentDigit = Math.floor(Math.random() * 9) + 1;
+
+	// draw apples
+	const container = document.getElementById('digitsApplesContainer');
+	container.innerHTML = '';
+	const applesRow = document.createElement('div');
+	applesRow.className = 'apples-row';
+	for (let i = 0; i < currentDigit; i++) {
+	    const apple = document.createElement('div');
+	    apple.className = 'apple';
+	    applesRow.appendChild(apple);
+	}
+	container.appendChild(applesRow);
+
+	// generate 1 correct + 3 random wrong answers
+	let choices = [currentDigit];
+	while (choices.length < 4) {
+	    const n = Math.floor(Math.random() * 9) + 1;
+	    if (!choices.includes(n)) choices.push(n);
+	}
+	choices.sort(() => Math.random() - 0.5);
+
+	const choicesContainer = document.getElementById('digitsNumberChoicesContainer');
+	choicesContainer.innerHTML = '';
+	choices.forEach(n => {
+	    const btn = document.createElement('button');
+	    btn.className = 'number-choice';
+	    btn.textContent = n;
+	    btn.onclick = () => selectDigitsChoice(btn, n);
+	    choicesContainer.appendChild(btn);
+	});
+    }
+
+    function selectDigitsChoice(btn, n) {
+	if (isDigitsAnimating) return;
+	isDigitsAnimating = true;
+	if (n === currentDigit) {
+	    btn.classList.add('correct');
+	    setTimeout(() => {
+		document.querySelector('#digitsMode .next-problem-btn').style.display = 'inline-block';
+		isDigitsAnimating = false;
+	    }, 600);
+	} else {
+	    btn.classList.add('incorrect');
+	    setTimeout(() => {
+		btn.classList.remove('incorrect');
+		isDigitsAnimating = false;
+	    }, 500);
+	}
+    }
+
+    function initializeDigitsMode() {
+	generateDigitsProblem();
+    }
+
+
     /* --- MODE INITIALIZATION LOGIC --- */
     function initializeMode(mode) {
-      const modal = document.getElementById('startupModal');
-      modal.style.display = 'none';
+	const modal = document.getElementById('startupModal');
+	modal.style.display = 'none';
 
-      // Hide all modes first
-      document.getElementById('alphabetMode').style.display = 'none';
-      document.getElementById('writingMode').style.display = 'none';
-      document.getElementById('arithmeticMode').style.display = 'none';
+	// Hide all modes first
+	document.getElementById('alphabetMode').style.display = 'none';
+	document.getElementById('writingMode').style.display = 'none';
+	document.getElementById('arithmeticMode').style.display = 'none';
+	document.getElementById('digitsMode').style.display = 'none'; // NEW
 
-      if (mode === 'alphabet') {
-        document.getElementById('alphabetMode').style.display = 'flex';
-        resetBoxes();
-      } else if (mode === 'writing') {
-        document.getElementById('writingMode').style.display = 'flex';
-        showWordSelection();
-      } else if (mode === 'arithmetic') {
-        document.getElementById('arithmeticMode').style.display = 'flex';
-        initializeArithmeticMode();
-      }
+
+	if (mode === 'alphabet') {
+            document.getElementById('alphabetMode').style.display = 'flex';
+            resetBoxes();
+	} else if (mode === 'writing') {
+            document.getElementById('writingMode').style.display = 'flex';
+            showWordSelection();
+	} else if (mode === 'arithmetic') {
+            document.getElementById('arithmeticMode').style.display = 'flex';
+            initializeArithmeticMode();
+	} else if (mode === 'digits') {                // NEW
+	    document.getElementById('digitsMode').style.display = 'flex';
+	    initializeDigitsMode();
+	}
     }
 
     function backToModeSelection() {
