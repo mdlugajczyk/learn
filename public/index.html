@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- MODIFICATION: Added user-scalable=no to prevent pinch-zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Alphabet & Word Learning App</title>
   <style>
@@ -18,11 +17,10 @@
       min-height: 100vh;
       padding: 20px 0;
       
-      /* --- MODIFICATION: Prevent accidental text selection and callouts --- */
-      -webkit-user-select: none; /* Safari */
-      -ms-user-select: none;     /* IE 10+ */
-      user-select: none;         /* Standard */
-      -webkit-touch-callout: none; /* Disable callout on long press (e.g., save image) */
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .modal-overlay {
@@ -268,13 +266,13 @@
       transform: scale(1.05);
     }
     
-    .number-choice.correct {
-      background-color: #28a745;
+    .number-choice.correct, .lowercase-choice.correct {
+      background-color: #28a745 !important;
       animation: correct-bounce 0.6s ease;
     }
     
-    .number-choice.incorrect {
-      background-color: #dc3545;
+    .number-choice.incorrect, .lowercase-choice.incorrect {
+      background-color: #dc3545 !important;
       animation: shake 0.5s ease-in-out;
     }
     
@@ -308,6 +306,59 @@
     .next-problem-btn:hover {
       background-color: #45a049;
     }
+
+    /* --- NEW LOWERCASE MODE STYLES --- */
+    .lowercase-target-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .lowercase-target-letter {
+        font-size: 5rem;
+        font-weight: bold;
+        color: #007bff;
+        font-family: Arial, sans-serif;
+    }
+    .lowercase-target-img img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    #lowercaseChoicesContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        max-width: 500px;
+        padding: 10px;
+    }
+    .lowercase-choice {
+        width: 60px;
+        height: 60px;
+        background-color: #6f42c1;
+        color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+        border: none;
+    }
+    .lowercase-choice:hover {
+        background-color: #5a32a3;
+        transform: scale(1.05);
+    }
+
   </style>
 </head>
 <body>
@@ -316,7 +367,7 @@
     <div class="modal-content">
       <h2>Choose a Mode</h2>
       <button onclick="initializeMode('alphabet')">Learn Alphabet</button>
-      <button onclick="initializeMode('writing')">Practice Writing</button>
+      <button onclick="initializeMode('lowercase')">Learn Lowercase</button> <button onclick="initializeMode('writing')">Practice Writing</button>
       <button onclick="initializeMode('arithmetic')">Learn Arithmetic</button>
       <button onclick="initializeMode('digits')">Learn Digits</button>
     </div>
@@ -345,6 +396,17 @@
       </div>
     </div>
     <div class="image-container" id="imageContainer"></div>
+  </div>
+
+  <div id="lowercaseMode" class="mode-container">
+      <div class="lowercase-target-container">
+          <div class="lowercase-target-img" id="lowercaseTargetImgContainer"></div>
+          <div class="lowercase-target-letter" id="lowercaseTargetLetterDisplay"></div>
+      </div>
+      <h3 style="margin: 0 0 15px 0; color: #666;">Choose the lowercase letter:</h3>
+      <div id="lowercaseChoicesContainer"></div>
+      <button class="next-problem-btn" onclick="generateLowercaseProblem()">Next</button>
+      <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
   </div>
 
   <div id="writingMode" class="mode-container">
@@ -436,7 +498,7 @@
       fontSettings.style.display = fontSettings.style.display === 'none' ? 'block' : 'none';
     }
     function changeFont(font) {
-      document.querySelectorAll('.letter, .letter-placeholder, .letter-choice').forEach(el => el.style.fontFamily = font);
+      document.querySelectorAll('.letter, .letter-placeholder, .letter-choice, .lowercase-target-letter, .lowercase-choice').forEach(el => el.style.fontFamily = font);
     }
     function changeCase(caseType) { resetBoxes(); }
     function preloadImages() {
@@ -444,6 +506,82 @@
         const img = new Image();
         img.src = `img/${word}.jpeg`;
       });
+    }
+
+    /* --- NEW LOWERCASE MODE SCRIPT --- */
+    let currentLowercaseTargetLetter = '';
+    let isLowercaseAnimating = false;
+
+    function generateLowercaseProblem() {
+        // Reset state
+        document.querySelector('#lowercaseMode .next-problem-btn').style.display = 'none';
+        isLowercaseAnimating = false;
+        
+        // Pick a random letter from the alphabet const
+        const randomIndex = Math.floor(Math.random() * alphabet.length);
+        const letterChar = alphabet[randomIndex]; // Uppercase
+        currentLowercaseTargetLetter = letterChar.toLowerCase();
+
+        // Set Display (Image + Uppercase Letter)
+        const displayLetter = document.getElementById('lowercaseTargetLetterDisplay');
+        const displayImgContainer = document.getElementById('lowercaseTargetImgContainer');
+        
+        displayLetter.textContent = letterChar; // Show Uppercase
+        
+        // Show corresponding image if available
+        if (letterToWordAndImage[letterChar]) {
+            displayImgContainer.innerHTML = `<img src="img/${letterToWordAndImage[letterChar]}.jpeg" alt="${letterToWordAndImage[letterChar]}">`;
+        } else {
+            displayImgContainer.innerHTML = ''; // Fallback if no image
+        }
+
+        // Generate Options (1 Correct + 5 Distractors)
+        let choices = [currentLowercaseTargetLetter];
+        
+        while (choices.length < 6) {
+            const rIndex = Math.floor(Math.random() * alphabet.length);
+            const rChar = alphabet[rIndex].toLowerCase();
+            if (!choices.includes(rChar)) {
+                choices.push(rChar);
+            }
+        }
+        
+        // Shuffle choices
+        choices.sort(() => Math.random() - 0.5);
+
+        // Render Buttons
+        const choicesContainer = document.getElementById('lowercaseChoicesContainer');
+        choicesContainer.innerHTML = '';
+        
+        choices.forEach(l => {
+            const btn = document.createElement('button');
+            btn.className = 'lowercase-choice';
+            btn.textContent = l;
+            btn.onclick = () => selectLowercaseChoice(btn, l);
+            choicesContainer.appendChild(btn);
+        });
+        
+        // Apply current font
+        changeFont(document.getElementById('fontSelector').value || 'Arial');
+    }
+
+    function selectLowercaseChoice(btn, letter) {
+        if (isLowercaseAnimating) return;
+        isLowercaseAnimating = true;
+
+        if (letter === currentLowercaseTargetLetter) {
+            btn.classList.add('correct');
+            setTimeout(() => {
+                document.querySelector('#lowercaseMode .next-problem-btn').style.display = 'inline-block';
+                isLowercaseAnimating = false;
+            }, 600);
+        } else {
+            btn.classList.add('incorrect');
+            setTimeout(() => {
+                btn.classList.remove('incorrect');
+                isLowercaseAnimating = false;
+            }, 500);
+        }
     }
 
     /* --- WRITING MODE SCRIPT --- */
@@ -574,7 +712,7 @@
 
     function generateArithmeticProblem() {
       // Reset UI state
-      document.querySelector('.next-problem-btn').style.display = 'none';
+      document.querySelector('#arithmeticMode .next-problem-btn').style.display = 'none';
       isArithmeticAnimating = false;
       
       // Generate two random numbers that sum to less than 10
@@ -667,7 +805,7 @@
       if (selectedNumber === correctAnswer) {
         choiceEl.classList.add('correct');
         setTimeout(() => {
-          document.querySelector('.next-problem-btn').style.display = 'inline-block';
+          document.querySelector('#arithmeticMode .next-problem-btn').style.display = 'inline-block';
           isArithmeticAnimating = false;
         }, 600);
       } else {
@@ -687,99 +825,105 @@
     let currentDigit, isDigitsAnimating = false;
 
     function generateDigitsProblem() {
-	// reset
-	document.querySelector('#digitsMode .next-problem-btn').style.display = 'none';
-	isDigitsAnimating = false;
+        // reset
+        document.querySelector('#digitsMode .next-problem-btn').style.display = 'none';
+        isDigitsAnimating = false;
 
-	// pick random number 1–9
-	currentDigit = Math.floor(Math.random() * 9) + 1;
+        // pick random number 1–9
+        currentDigit = Math.floor(Math.random() * 9) + 1;
 
-	// draw apples
-	const container = document.getElementById('digitsApplesContainer');
-	container.innerHTML = '';
-	const applesRow = document.createElement('div');
-	applesRow.className = 'apples-row';
-	for (let i = 0; i < currentDigit; i++) {
-	    const apple = document.createElement('div');
-	    apple.className = 'apple';
-	    applesRow.appendChild(apple);
-	}
-	container.appendChild(applesRow);
+        // draw apples
+        const container = document.getElementById('digitsApplesContainer');
+        container.innerHTML = '';
+        const applesRow = document.createElement('div');
+        applesRow.className = 'apples-row';
+        for (let i = 0; i < currentDigit; i++) {
+            const apple = document.createElement('div');
+            apple.className = 'apple';
+            applesRow.appendChild(apple);
+        }
+        container.appendChild(applesRow);
 
-	// generate 1 correct + 3 random wrong answers
-	let choices = [currentDigit];
-	while (choices.length < 4) {
-	    const n = Math.floor(Math.random() * 9) + 1;
-	    if (!choices.includes(n)) choices.push(n);
-	}
-	choices.sort(() => Math.random() - 0.5);
+        // generate 1 correct + 3 random wrong answers
+        let choices = [currentDigit];
+        while (choices.length < 4) {
+            const n = Math.floor(Math.random() * 9) + 1;
+            if (!choices.includes(n)) choices.push(n);
+        }
+        choices.sort(() => Math.random() - 0.5);
 
-	const choicesContainer = document.getElementById('digitsNumberChoicesContainer');
-	choicesContainer.innerHTML = '';
-	choices.forEach(n => {
-	    const btn = document.createElement('button');
-	    btn.className = 'number-choice';
-	    btn.textContent = n;
-	    btn.onclick = () => selectDigitsChoice(btn, n);
-	    choicesContainer.appendChild(btn);
-	});
+        const choicesContainer = document.getElementById('digitsNumberChoicesContainer');
+        choicesContainer.innerHTML = '';
+        choices.forEach(n => {
+            const btn = document.createElement('button');
+            btn.className = 'number-choice';
+            btn.textContent = n;
+            btn.onclick = () => selectDigitsChoice(btn, n);
+            choicesContainer.appendChild(btn);
+        });
     }
 
     function selectDigitsChoice(btn, n) {
-	if (isDigitsAnimating) return;
-	isDigitsAnimating = true;
-	if (n === currentDigit) {
-	    btn.classList.add('correct');
-	    setTimeout(() => {
-		document.querySelector('#digitsMode .next-problem-btn').style.display = 'inline-block';
-		isDigitsAnimating = false;
-	    }, 600);
-	} else {
-	    btn.classList.add('incorrect');
-	    setTimeout(() => {
-		btn.classList.remove('incorrect');
-		isDigitsAnimating = false;
-	    }, 500);
-	}
+        if (isDigitsAnimating) return;
+        isDigitsAnimating = true;
+        if (n === currentDigit) {
+            btn.classList.add('correct');
+            setTimeout(() => {
+                document.querySelector('#digitsMode .next-problem-btn').style.display = 'inline-block';
+                isDigitsAnimating = false;
+            }, 600);
+        } else {
+            btn.classList.add('incorrect');
+            setTimeout(() => {
+                btn.classList.remove('incorrect');
+                isDigitsAnimating = false;
+            }, 500);
+        }
     }
 
     function initializeDigitsMode() {
-	generateDigitsProblem();
+        generateDigitsProblem();
     }
 
 
     /* --- MODE INITIALIZATION LOGIC --- */
     function initializeMode(mode) {
-	const modal = document.getElementById('startupModal');
-	modal.style.display = 'none';
+        const modal = document.getElementById('startupModal');
+        modal.style.display = 'none';
 
-	// Hide all modes first
-	document.getElementById('alphabetMode').style.display = 'none';
-	document.getElementById('writingMode').style.display = 'none';
-	document.getElementById('arithmeticMode').style.display = 'none';
-	document.getElementById('digitsMode').style.display = 'none'; // NEW
+        // Hide all modes first
+        document.getElementById('alphabetMode').style.display = 'none';
+        document.getElementById('lowercaseMode').style.display = 'none'; // NEW
+        document.getElementById('writingMode').style.display = 'none';
+        document.getElementById('arithmeticMode').style.display = 'none';
+        document.getElementById('digitsMode').style.display = 'none';
 
 
-	if (mode === 'alphabet') {
+        if (mode === 'alphabet') {
             document.getElementById('alphabetMode').style.display = 'flex';
             resetBoxes();
-	} else if (mode === 'writing') {
+        } else if (mode === 'lowercase') { // NEW
+            document.getElementById('lowercaseMode').style.display = 'flex';
+            generateLowercaseProblem();
+        } else if (mode === 'writing') {
             document.getElementById('writingMode').style.display = 'flex';
             showWordSelection();
-	} else if (mode === 'arithmetic') {
+        } else if (mode === 'arithmetic') {
             document.getElementById('arithmeticMode').style.display = 'flex';
             initializeArithmeticMode();
-	} else if (mode === 'digits') {                // NEW
-	    document.getElementById('digitsMode').style.display = 'flex';
-	    initializeDigitsMode();
-	}
+        } else if (mode === 'digits') {
+            document.getElementById('digitsMode').style.display = 'flex';
+            initializeDigitsMode();
+        }
     }
 
     function backToModeSelection() {
       // Hide all modes
       document.getElementById('alphabetMode').style.display = 'none';
+      document.getElementById('lowercaseMode').style.display = 'none'; // NEW
       document.getElementById('writingMode').style.display = 'none';
       document.getElementById('arithmeticMode').style.display = 'none';
+      document.getElementById('digitsMode').style.display = 'none';
       
       // Show modal
       document.getElementById('startupModal').style.display = 'flex';
