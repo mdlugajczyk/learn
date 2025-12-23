@@ -367,7 +367,8 @@
     <div class="modal-content">
       <h2>Choose a Mode</h2>
       <button onclick="initializeMode('alphabet')">Learn Alphabet</button>
-      <button onclick="initializeMode('lowercase')">Learn Lowercase</button> <button onclick="initializeMode('writing')">Practice Writing</button>
+      <button onclick="initializeMode('lowercase')">Match Lowercase</button>
+      <button onclick="initializeMode('writing')">Practice Writing</button>
       <button onclick="initializeMode('arithmetic')">Learn Arithmetic</button>
       <button onclick="initializeMode('digits')">Learn Digits</button>
     </div>
@@ -447,6 +448,7 @@
       N: 'noz', O: 'okno', P: 'pies', R: 'rower', S: 'slonce', T: 'tata', U: 'ul',
       W: 'warsztat', Z: 'zebra'
     };
+    
     function getRandomLetter(caseType) {
       let availableLetters = alphabet.split('').filter(letter => !usedLetters.includes(letter));
       if (availableLetters.length === 0) {
@@ -456,26 +458,42 @@
       }
       let randomIndex = Math.floor(Math.random() * availableLetters.length);
       let letter = availableLetters[randomIndex];
-      if (caseType === 'lowercase') letter = letter.toLowerCase();
-      else if (caseType === 'mixed') letter = Math.random() > 0.5 ? letter.toLowerCase() : letter;
+      
+      // Determine Case
+      if (caseType === 'lowercase') {
+          letter = letter.toLowerCase();
+      } else if (caseType === 'mixed') {
+          letter = Math.random() > 0.5 ? letter.toLowerCase() : letter;
+      }
+      // Used letters are always stored as Uppercase to avoid duplicates like 'a' and 'A' in the same session
       usedLetters.push(letter.toUpperCase());
       return letter;
     }
+
     function openBox(box) {
       if (!box.classList.contains('open')) {
-        const letter = getRandomLetter(document.getElementById('caseSelector').value);
+        const caseSetting = document.getElementById('caseSelector').value;
+        const letter = getRandomLetter(caseSetting);
+        
         if (!letter) return;
-        box.querySelector('.letter').textContent = letter.toUpperCase();
+        
+        // BUG FIX: Removed .toUpperCase() here so it respects the getRandomLetter() result
+        box.querySelector('.letter').textContent = letter;
+        
         box.classList.add('open');
+        
+        // Use uppercase key for image lookup
         const letterKey = letter.toUpperCase();
         if (letterToWordAndImage[letterKey]) {
           displayImage(`img/${letterToWordAndImage[letterKey]}.jpeg`);
         }
+        
         if (Array.from(document.querySelectorAll('.box')).every(b => b.classList.contains('open'))) {
           document.querySelector('.restart-btn').style.display = 'block';
         }
       }
     }
+
     function displayImage(image) { document.getElementById('imageContainer').innerHTML = `<img src="${image}" alt="">`; }
     function generateAlphabetBoxes() {
       const boxContainer = document.getElementById('boxContainer');
@@ -508,7 +526,7 @@
       });
     }
 
-    /* --- NEW LOWERCASE MODE SCRIPT --- */
+    /* --- MATCH LOWERCASE MODE SCRIPT --- */
     let currentLowercaseTargetLetter = '';
     let isLowercaseAnimating = false;
 
@@ -893,7 +911,7 @@
 
         // Hide all modes first
         document.getElementById('alphabetMode').style.display = 'none';
-        document.getElementById('lowercaseMode').style.display = 'none'; // NEW
+        document.getElementById('lowercaseMode').style.display = 'none';
         document.getElementById('writingMode').style.display = 'none';
         document.getElementById('arithmeticMode').style.display = 'none';
         document.getElementById('digitsMode').style.display = 'none';
@@ -902,7 +920,7 @@
         if (mode === 'alphabet') {
             document.getElementById('alphabetMode').style.display = 'flex';
             resetBoxes();
-        } else if (mode === 'lowercase') { // NEW
+        } else if (mode === 'lowercase') {
             document.getElementById('lowercaseMode').style.display = 'flex';
             generateLowercaseProblem();
         } else if (mode === 'writing') {
@@ -920,7 +938,7 @@
     function backToModeSelection() {
       // Hide all modes
       document.getElementById('alphabetMode').style.display = 'none';
-      document.getElementById('lowercaseMode').style.display = 'none'; // NEW
+      document.getElementById('lowercaseMode').style.display = 'none';
       document.getElementById('writingMode').style.display = 'none';
       document.getElementById('arithmeticMode').style.display = 'none';
       document.getElementById('digitsMode').style.display = 'none';
