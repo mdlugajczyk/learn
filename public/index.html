@@ -477,12 +477,9 @@
         
         if (!letter) return;
         
-        // BUG FIX: Removed .toUpperCase() here so it respects the getRandomLetter() result
         box.querySelector('.letter').textContent = letter;
-        
         box.classList.add('open');
         
-        // Use uppercase key for image lookup
         const letterKey = letter.toUpperCase();
         if (letterToWordAndImage[letterKey]) {
           displayImage(`img/${letterToWordAndImage[letterKey]}.jpeg`);
@@ -529,43 +526,96 @@
     /* --- MATCH LOWERCASE MODE SCRIPT --- */
     let currentLowercaseTargetLetter = '';
     let isLowercaseAnimating = false;
+    
+    // Algorithm State
+    let lowercasePool = [];         // Unseen letters
+    let lowercaseFailed = [];       // Letters failed on first try (to retry)
+    let lowercaseLastTarget = null; // To avoid immediate repeats of target
+    let lowercaseLastOptions = [];  // To avoid repeats of distractors
+    let lowercaseCurrentAttemptFailed = false; // Tracks if current round was imperfect
+
+    function initializeLowercasePool() {
+        lowercasePool = alphabet.split('').sort(() => Math.random() - 0.5);
+        lowercaseFailed = [];
+        lowercaseLastTarget = null;
+        lowercaseLastOptions = [];
+    }
 
     function generateLowercaseProblem() {
         // Reset state
         document.querySelector('#lowercaseMode .next-problem-btn').style.display = 'none';
         isLowercaseAnimating = false;
-        
-        // Pick a random letter from the alphabet const
-        const randomIndex = Math.floor(Math.random() * alphabet.length);
-        const letterChar = alphabet[randomIndex]; // Uppercase
-        currentLowercaseTargetLetter = letterChar.toLowerCase();
+        lowercaseCurrentAttemptFailed = false;
 
-        // Set Display (Image + Uppercase Letter)
+        // --- SELECTION ALGORITHM ---
+        let selectedChar = null;
+
+        // Check failed queue first, but respect interleave rule (don't show same target twice in a row)
+        // Try to find a letter in failed queue that isn't the one we just showed.
+        const retryCandidateIndex = lowercaseFailed.findIndex(c => c !== lowercaseLastTarget);
+        
+        if (retryCandidateIndex !== -1) {
+            // Found a valid retry candidate
+            selectedChar = lowercaseFailed[retryCandidateIndex];
+            lowercaseFailed.splice(retryCandidateIndex, 1);
+        } else if (lowercasePool.length > 0) {
+            // No suitable retry candidate, pick from new pool
+            selectedChar = lowercasePool.shift();
+        } else if (lowercaseFailed.length > 0) {
+            // Pool empty, only failed letters left (and maybe the one we just showed).
+            // Force pick from failed even if it repeats (end game scenario)
+            selectedChar = lowercaseFailed.shift();
+        } else {
+            // Everything mastered! Restart.
+            alert("Great job! Restarting alphabet.");
+            initializeLowercasePool();
+            selectedChar = lowercasePool.shift();
+        }
+
+        lowercaseLastTarget = selectedChar; // Uppercase char from pool logic
+        currentLowercaseTargetLetter = selectedChar.toLowerCase();
+
+        // --- UI UPDATE ---
         const displayLetter = document.getElementById('lowercaseTargetLetterDisplay');
         const displayImgContainer = document.getElementById('lowercaseTargetImgContainer');
         
-        displayLetter.textContent = letterChar; // Show Uppercase
+        displayLetter.textContent = selectedChar; 
         
-        // Show corresponding image if available
-        if (letterToWordAndImage[letterChar]) {
-            displayImgContainer.innerHTML = `<img src="img/${letterToWordAndImage[letterChar]}.jpeg" alt="${letterToWordAndImage[letterChar]}">`;
+        if (letterToWordAndImage[selectedChar]) {
+            displayImgContainer.innerHTML = `<img src="img/${letterToWordAndImage[selectedChar]}.jpeg" alt="${letterToWordAndImage[selectedChar]}">`;
         } else {
-            displayImgContainer.innerHTML = ''; // Fallback if no image
+            displayImgContainer.innerHTML = ''; 
         }
 
-        // Generate Options (1 Correct + 5 Distractors)
-        let choices = [currentLowercaseTargetLetter];
+        // --- DISTRACTOR GENERATION ---
+        // Constraint: "next round should have at most 1 letter from the previous one"
+        // We interpret this as: The set of available choices should not overlap heavily with previous choices.
+        // We already ensure the TARGET is different (mostly). Now ensure Distractors are different.
         
-        while (choices.length < 6) {
-            const rIndex = Math.floor(Math.random() * alphabet.length);
-            const rChar = alphabet[rIndex].toLowerCase();
-            if (!choices.includes(rChar)) {
-                choices.push(rChar);
-            }
-        }
+        let allChars = alphabet.split('').map(c => c.toLowerCase());
         
-        // Shuffle choices
+        // Exclude current target
+        let potentialDistractors = allChars.filter(c => c !== currentLowercaseTargetLetter);
+        
+        // Filter out letters that were used in the previous round to ensure variety
+        // But only if we have enough letters left (Need 5). 
+        // 22 letters total. 1 target. 21 left. 
+        // If we exclude previous 6, we have 15 left. Plenty.
+        const fullyFreshDistractors = potentialDistractors.filter(c => !lowercaseLastOptions.includes(c));
+        
+        // If somehow we ran out (not possible with 22 letters), fall back to potentialDistractors
+        let sourceDistractors = fullyFreshDistractors.length >= 5 ? fullyFreshDistractors : potentialDistractors;
+        
+        // Shuffle and pick 5
+        sourceDistractors.sort(() => Math.random() - 0.5);
+        let distractors = sourceDistractors.slice(0, 5);
+        
+        // Combine Target + Distractors
+        let choices = [currentLowercaseTargetLetter, ...distractors];
         choices.sort(() => Math.random() - 0.5);
+
+        // Save choices for next round exclusion logic
+        lowercaseLastOptions = [...choices];
 
         // Render Buttons
         const choicesContainer = document.getElementById('lowercaseChoicesContainer');
@@ -579,7 +629,6 @@
             choicesContainer.appendChild(btn);
         });
         
-        // Apply current font
         changeFont(document.getElementById('fontSelector').value || 'Arial');
     }
 
@@ -589,11 +638,24 @@
 
         if (letter === currentLowercaseTargetLetter) {
             btn.classList.add('correct');
+            
+            // LOGIC: If guessed on first try (lowercaseCurrentAttemptFailed is false), 
+            // it is NOT added to failed queue. It is effectively "Done".
+            // If failed previously, we ADD it to the failed queue to show again later.
+            if (lowercaseCurrentAttemptFailed) {
+                 // It wasn't perfect. Put the Uppercase version back into the retry queue.
+                 // We use unshift/push logic to handle order? 
+                 // Simple push adds to end.
+                 lowercaseFailed.push(currentLowercaseTargetLetter.toUpperCase());
+            }
+
             setTimeout(() => {
                 document.querySelector('#lowercaseMode .next-problem-btn').style.display = 'inline-block';
                 isLowercaseAnimating = false;
             }, 600);
         } else {
+            // Wrong guess
+            lowercaseCurrentAttemptFailed = true;
             btn.classList.add('incorrect');
             setTimeout(() => {
                 btn.classList.remove('incorrect');
@@ -614,7 +676,6 @@
       document.getElementById('wordSelectionContainer').style.display = 'flex';
       document.getElementById('writingGameContainer').style.display = 'none';
       
-      // Generate thumbnails
       const container = document.getElementById('wordSelectionContainer');
       container.innerHTML = '';
       
@@ -627,7 +688,6 @@
         img.src = `img/${word}.jpeg`;
         img.alt = word;
         img.onerror = function() {
-          // If image fails to load, show a placeholder
           this.style.display = 'none';
           thumbnail.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 12px; color: #666;">${word}</div>`;
         };
@@ -729,23 +789,16 @@
     let isArithmeticAnimating = false;
 
     function generateArithmeticProblem() {
-      // Reset UI state
       document.querySelector('#arithmeticMode .next-problem-btn').style.display = 'none';
       isArithmeticAnimating = false;
       
-      // Generate two random numbers that sum to less than 10
-      currentNum1 = Math.floor(Math.random() * 5) + 1; // 1-5
-      const maxNum2 = Math.min(5, 9 - currentNum1); // Ensure sum < 10
-      currentNum2 = Math.floor(Math.random() * maxNum2) + 1; // 1 to maxNum2
+      currentNum1 = Math.floor(Math.random() * 5) + 1; 
+      const maxNum2 = Math.min(5, 9 - currentNum1); 
+      currentNum2 = Math.floor(Math.random() * maxNum2) + 1; 
       correctAnswer = currentNum1 + currentNum2;
       
-      // Display the problem
       document.getElementById('arithmeticProblem').innerHTML = `${currentNum1} + ${currentNum2} = ?`;
-      
-      // Generate apple visuals
       generateApples();
-      
-      // Generate number choices (1-9)
       generateNumberChoices();
     }
 
@@ -753,15 +806,12 @@
       const container = document.getElementById('applesContainer');
       container.innerHTML = '';
       
-      // Create first group of apples
       const group1 = document.createElement('div');
       group1.className = 'apple-group';
-      
       const label1 = document.createElement('div');
       label1.className = 'apple-group-label';
       label1.textContent = currentNum1;
       group1.appendChild(label1);
-      
       const applesRow1 = document.createElement('div');
       applesRow1.className = 'apples-row';
       for (let i = 0; i < currentNum1; i++) {
@@ -771,7 +821,6 @@
       }
       group1.appendChild(applesRow1);
       
-      // Plus sign
       const plusSign = document.createElement('div');
       plusSign.style.fontSize = '3rem';
       plusSign.style.fontWeight = 'bold';
@@ -779,15 +828,12 @@
       plusSign.style.alignSelf = 'center';
       plusSign.textContent = '+';
       
-      // Create second group of apples
       const group2 = document.createElement('div');
       group2.className = 'apple-group';
-      
       const label2 = document.createElement('div');
       label2.className = 'apple-group-label';
       label2.textContent = currentNum2;
       group2.appendChild(label2);
-      
       const applesRow2 = document.createElement('div');
       applesRow2.className = 'apples-row';
       for (let i = 0; i < currentNum2; i++) {
@@ -805,7 +851,6 @@
     function generateNumberChoices() {
       const container = document.getElementById('numberChoicesContainer');
       container.innerHTML = '';
-      
       for (let i = 1; i <= 9; i++) {
         const choice = document.createElement('button');
         choice.className = 'number-choice';
@@ -817,9 +862,7 @@
 
     function selectNumberChoice(choiceEl, selectedNumber) {
       if (isArithmeticAnimating) return;
-      
       isArithmeticAnimating = true;
-      
       if (selectedNumber === correctAnswer) {
         choiceEl.classList.add('correct');
         setTimeout(() => {
@@ -843,14 +886,11 @@
     let currentDigit, isDigitsAnimating = false;
 
     function generateDigitsProblem() {
-        // reset
         document.querySelector('#digitsMode .next-problem-btn').style.display = 'none';
         isDigitsAnimating = false;
 
-        // pick random number 1–9
         currentDigit = Math.floor(Math.random() * 9) + 1;
 
-        // draw apples
         const container = document.getElementById('digitsApplesContainer');
         container.innerHTML = '';
         const applesRow = document.createElement('div');
@@ -862,7 +902,6 @@
         }
         container.appendChild(applesRow);
 
-        // generate 1 correct + 3 random wrong answers
         let choices = [currentDigit];
         while (choices.length < 4) {
             const n = Math.floor(Math.random() * 9) + 1;
@@ -909,7 +948,6 @@
         const modal = document.getElementById('startupModal');
         modal.style.display = 'none';
 
-        // Hide all modes first
         document.getElementById('alphabetMode').style.display = 'none';
         document.getElementById('lowercaseMode').style.display = 'none';
         document.getElementById('writingMode').style.display = 'none';
@@ -922,6 +960,10 @@
             resetBoxes();
         } else if (mode === 'lowercase') {
             document.getElementById('lowercaseMode').style.display = 'flex';
+            // Only re-init pool if it's empty (start of session)
+            if (lowercasePool.length === 0 && lowercaseFailed.length === 0) {
+                initializeLowercasePool();
+            }
             generateLowercaseProblem();
         } else if (mode === 'writing') {
             document.getElementById('writingMode').style.display = 'flex';
@@ -936,14 +978,12 @@
     }
 
     function backToModeSelection() {
-      // Hide all modes
       document.getElementById('alphabetMode').style.display = 'none';
       document.getElementById('lowercaseMode').style.display = 'none';
       document.getElementById('writingMode').style.display = 'none';
       document.getElementById('arithmeticMode').style.display = 'none';
       document.getElementById('digitsMode').style.display = 'none';
       
-      // Show modal
       document.getElementById('startupModal').style.display = 'flex';
     }
 
@@ -954,6 +994,8 @@
         const img = new Image();
         img.src = `img/${word.toLowerCase()}.jpeg`;
       });
+      // Start directly in Match Lowercase mode
+      initializeMode('lowercase');
     });
   </script>
 </body>
