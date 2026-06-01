@@ -224,10 +224,19 @@
       filter: drop-shadow(0 0 26px rgba(255, 227, 89, 0.95));
     }
 
-    .hero-card img,
-    .opponent-card img {
+    .hero-card img {
       max-width: 100%;
       max-height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .opponent-art-frame img {
+      width: auto;
+      height: 100%;
+      max-width: 100%;
       object-fit: contain;
       -webkit-user-drag: none;
       user-select: none;
@@ -245,10 +254,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: center;
       position: relative;
       transform-origin: center 62%;
       transition: filter 0.25s ease;
+    }
+
+    .opponent-art-frame {
+      width: min(100%, 269px);
+      height: min(34vh, 188px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .defense-stat {
@@ -455,6 +472,11 @@
         height: 52vh;
       }
 
+      .opponent-art-frame {
+        width: min(100%, 168px);
+        height: min(29vh, 160px);
+      }
+
       .control-deck {
         min-height: 92px;
         padding: 8px 10px 10px;
@@ -485,6 +507,11 @@
       .opponent-card {
         width: 42%;
         height: 34vh;
+      }
+
+      .opponent-art-frame {
+        width: min(100%, 156px);
+        height: min(22vh, 150px);
       }
 
       .control-deck {
@@ -1431,31 +1458,99 @@
     /* --- ARITHMETIC MODE SCRIPT --- */
     let opponent1Defense, opponent2Defense, targetAttack;
     let isArithmeticAnimating = false;
-    const arithmeticHeroImages = [
-      'img/ironman1.jpeg',
+    let arithmeticMaxTarget = 10;
+    let lastArithmeticHero = '';
+    let lastArithmeticOpponents = [];
+    const arithmeticImageAssets = [
+      'img/arithmetic/ironman1.jpeg',
       'img/arithmetic/ironman2.jpeg',
-      'img/arithmetic/ironman3.jpeg'
-    ];
-    const arithmeticOpponentImages = [
+      'img/arithmetic/ironman3.jpeg',
       'img/arithmetic/dragon.jpeg',
       'img/arithmetic/mega.jpeg',
       'img/arithmetic/wolf.jpeg'
     ];
+    const arithmeticHeroPattern = /^ironman\d+\.(jpe?g|png)$/i;
+    const arithmeticImagePattern = /\.(jpe?g|png)$/i;
+    const arithmeticHeroImages = arithmeticImageAssets.filter(src => arithmeticHeroPattern.test(src.split('/').pop()));
+    const arithmeticOpponentImages = arithmeticImageAssets.filter(src => {
+      const filename = src.split('/').pop();
+      return arithmeticImagePattern.test(filename) && !arithmeticHeroPattern.test(filename);
+    });
     const sparkleColors = ['#fff36d', '#6ee7ff', '#ff8bd1', '#9cff7e', '#c4b5fd', '#ffffff'];
 
     function getRandomItem(items) {
       return items[Math.floor(Math.random() * items.length)];
     }
 
+    function getRandomItemExcept(items, excludedItems) {
+      const excluded = new Set(excludedItems.filter(Boolean));
+      const available = items.filter(item => !excluded.has(item));
+      return getRandomItem(available.length > 0 ? available : items);
+    }
+
+    function getRandomHeroImage() {
+      const hero = getRandomItemExcept(arithmeticHeroImages, [lastArithmeticHero]);
+      lastArithmeticHero = hero;
+      return hero;
+    }
+
     function getTwoRandomOpponents() {
-      const shuffled = [...arithmeticOpponentImages].sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, 2);
+      const first = getRandomItemExcept(arithmeticOpponentImages, lastArithmeticOpponents);
+      const second = getRandomItemExcept(arithmeticOpponentImages, [first]);
+      lastArithmeticOpponents = [first, second];
+      return [first, second];
+    }
+
+    function getStoredArithmeticMaxTarget() {
+      try {
+        return parseInt(localStorage.getItem('arithmeticMaxTarget'), 10);
+      } catch (error) {
+        return NaN;
+      }
+    }
+
+    function storeArithmeticMaxTarget(value) {
+      try {
+        localStorage.setItem('arithmeticMaxTarget', value);
+      } catch (error) {
+        // file:// pages can block storage; the game should still start.
+      }
+    }
+
+    function isWholeNumber(value) {
+      return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+    }
+
+    function askForArithmeticMaxTarget() {
+      const savedMax = getStoredArithmeticMaxTarget();
+      const currentMax = isWholeNumber(savedMax) ? savedMax : arithmeticMaxTarget;
+      const answer = prompt('Max number to add up to? Pick 2-10.', currentMax);
+
+      if (answer === null) {
+        arithmeticMaxTarget = Math.min(10, Math.max(2, currentMax));
+        return;
+      }
+
+      const parsed = parseInt(answer, 10);
+      arithmeticMaxTarget = isWholeNumber(parsed) ? Math.min(10, Math.max(2, parsed)) : 5;
+      storeArithmeticMaxTarget(arithmeticMaxTarget);
+    }
+
+    function getRandomDefensePair() {
+      const possiblePairs = [];
+      for (let first = 1; first <= 5; first++) {
+        for (let second = 1; second <= 5; second++) {
+          if (first + second <= arithmeticMaxTarget) {
+            possiblePairs.push([first, second]);
+          }
+        }
+      }
+      return getRandomItem(possiblePairs);
     }
 
     function generateArithmeticProblem() {
       isArithmeticAnimating = false;
-      opponent1Defense = Math.floor(Math.random() * 5) + 1;
-      opponent2Defense = Math.floor(Math.random() * 5) + 1;
+      [opponent1Defense, opponent2Defense] = getRandomDefensePair();
       targetAttack = opponent1Defense + opponent2Defense;
 
       const heroCard = document.getElementById('mathHeroCard');
@@ -1469,7 +1564,7 @@
       beam.classList.remove('active');
       overlay.classList.remove('show');
       sparkleLayer.innerHTML = '';
-      heroCard.innerHTML = `<img src="${getRandomItem(arithmeticHeroImages)}" alt="Iron Man">`;
+      heroCard.innerHTML = `<img src="${getRandomHeroImage()}" alt="Iron Man">`;
       opponentZone.innerHTML = '';
 
       [opponent1Defense, opponent2Defense].forEach((defense, index) => {
@@ -1477,7 +1572,9 @@
         card.className = 'opponent-card';
         card.innerHTML = `
           <div class="defense-stat">${defense}</div>
-          <img src="${opponents[index]}" alt="Opponent ${index + 1}">
+          <div class="opponent-art-frame">
+            <img src="${opponents[index]}" alt="Opponent ${index + 1}">
+          </div>
         `;
         opponentZone.appendChild(card);
       });
@@ -1606,6 +1703,7 @@
     }
 
     function initializeArithmeticMode() {
+      askForArithmeticMaxTarget();
       generateArithmeticProblem();
     }
 
