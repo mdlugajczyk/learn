@@ -21,6 +21,7 @@
       -ms-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
+      touch-action: manipulation;
     }
 
     /* Modal Styling - Ensuring it is visible by default via CSS */
@@ -175,11 +176,332 @@
     .next-word-btn:hover { background-color: #45a049; }
 
     /* --- ARITHMETIC MODE STYLES --- */
-    #arithmeticProblem {
-      font-size: 3rem;
+    #arithmeticMode {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255, 229, 110, 0.35), transparent 24%),
+        radial-gradient(circle at 78% 18%, rgba(89, 196, 255, 0.28), transparent 22%),
+        linear-gradient(135deg, #101c3f 0%, #1d3d6f 46%, #17314f 100%);
+      color: white;
+      justify-content: stretch;
+      overflow: hidden;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .superhero-stage {
+      width: 100%;
+      min-height: calc(100vh - 118px);
+      display: grid;
+      grid-template-columns: 30% 70%;
+      align-items: stretch;
+      position: relative;
+      padding: 18px 22px 8px;
+      box-sizing: border-box;
+    }
+
+    .hero-zone,
+    .opponent-zone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-width: 0;
+    }
+
+    .hero-card {
+      width: min(92%, 260px);
+      height: min(64vh, 340px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.45s ease, filter 0.45s ease;
+      transform-origin: center;
+    }
+
+    .hero-card.power-up {
+      transform: scale(1.12);
+      filter: drop-shadow(0 0 26px rgba(255, 227, 89, 0.95));
+    }
+
+    .hero-card img,
+    .opponent-card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .opponent-zone {
+      gap: 5vw;
+      padding-right: 3vw;
+    }
+
+    .opponent-card {
+      width: min(36%, 260px);
+      height: min(60vh, 330px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      transform-origin: center 62%;
+      transition: filter 0.25s ease;
+    }
+
+    .defense-stat {
+      font-size: clamp(4rem, 9vw, 6.4rem);
+      line-height: 0.9;
+      font-weight: 900;
+      color: #fff8a8;
+      text-shadow: 0 5px 0 #12315f, 0 0 22px rgba(255, 240, 128, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .opponent-card.teleport {
+      animation: opponent-teleport 0.95s ease-in forwards;
+      filter: drop-shadow(0 0 22px rgba(109, 244, 255, 0.9));
+    }
+
+    .math-beam {
+      position: absolute;
+      left: 23%;
+      top: 48%;
+      width: 0;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fffbe8 0%, #ffe45f 34%, #55e8ff 72%, rgba(85, 232, 255, 0) 100%);
+      box-shadow: 0 0 18px #fff2a8, 0 0 34px rgba(91, 233, 255, 0.9);
+      transform: rotate(-4deg);
+      transform-origin: left center;
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .math-beam.active {
+      animation: math-beam 0.8s ease-out forwards;
+    }
+
+    .sparkle-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 8;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      color: var(--sparkle-color, #ffe45f);
+      transform: translate(-50%, -50%) scale(0);
+      animation: sparkle-pop 900ms ease-out forwards;
+    }
+
+    .sparkle::before,
+    .sparkle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: currentColor;
+      clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
+    }
+
+    .sparkle::after {
+      transform: rotate(45deg) scale(0.62);
+      opacity: 0.8;
+    }
+
+    .great-job-overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: clamp(3.2rem, 10vw, 7.5rem);
+      font-weight: 900;
+      letter-spacing: 0;
+      color: #ffffff;
+      text-shadow: 0 7px 0 #1a5596, 0 0 28px rgba(255, 245, 117, 0.95);
+      opacity: 0;
+      transform: scale(0.84);
+      pointer-events: none;
+      z-index: 12;
+    }
+
+    .great-job-overlay.show {
+      animation: great-job 1.25s ease-out forwards;
+    }
+
+    .control-deck {
+      width: 100%;
+      min-height: 118px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1vw, 14px);
+      padding: 12px 14px 18px;
+      box-sizing: border-box;
+      background: rgba(4, 16, 36, 0.76);
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .math-number-choice {
+      width: clamp(48px, 8.4vw, 92px);
+      height: clamp(54px, 9vw, 96px);
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      border-radius: 16px;
+      color: #10223e;
+      font-size: clamp(2rem, 4.6vw, 4rem);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22), inset 0 2px 0 rgba(255, 255, 255, 0.55);
+      transition: transform 0.12s ease, filter 0.18s ease, box-shadow 0.18s ease;
+      touch-action: manipulation;
+    }
+
+    .math-number-choice:nth-child(5n + 1) { background: #ffdd57; }
+    .math-number-choice:nth-child(5n + 2) { background: #6ee7b7; }
+    .math-number-choice:nth-child(5n + 3) { background: #7dd3fc; }
+    .math-number-choice:nth-child(5n + 4) { background: #fca5a5; }
+    .math-number-choice:nth-child(5n) { background: #c4b5fd; }
+
+    .math-number-choice:hover,
+    .math-number-choice:focus-visible {
+      transform: translateY(-3px) scale(1.04);
+      filter: brightness(1.06);
+      outline: none;
+    }
+
+    .math-number-choice.selected {
+      transform: translateY(2px) scale(0.98);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.32), 0 0 0 5px rgba(255, 255, 255, 0.28);
+    }
+
+    .math-number-choice.try-again {
+      animation: math-shake 0.5s ease-in-out;
+    }
+
+    .math-number-choice.success {
+      animation: correct-bounce 0.6s ease;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.32), 0 0 24px rgba(118, 255, 190, 0.95);
+    }
+
+    .superhero-back-btn {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 20;
+      margin: 0;
+      padding: 9px 13px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.72);
+      background: rgba(9, 29, 56, 0.72);
+      color: white;
       font-weight: bold;
-      color: #333;
-      margin: 20px 0;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    @keyframes math-shake {
+      0%, 100% { transform: translateX(0); }
+      18% { transform: translateX(-10px) rotate(-2deg); }
+      36% { transform: translateX(9px) rotate(2deg); }
+      54% { transform: translateX(-7px) rotate(-1deg); }
+      72% { transform: translateX(5px) rotate(1deg); }
+    }
+
+    @keyframes math-beam {
+      0% { width: 0; opacity: 0; }
+      18% { opacity: 1; }
+      72% { width: 59%; opacity: 1; }
+      100% { width: 59%; opacity: 0; }
+    }
+
+    @keyframes opponent-teleport {
+      0% { transform: rotate(0deg) scale(1); opacity: 1; }
+      55% { transform: rotate(210deg) scale(0.72); opacity: 0.95; }
+      100% { transform: rotate(540deg) scale(0.08); opacity: 0; }
+    }
+
+    @keyframes sparkle-pop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+      28% { opacity: 1; }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--sparkle-x)), calc(-50% + var(--sparkle-y))) scale(1.4) rotate(220deg);
+      }
+    }
+
+    @keyframes great-job {
+      0% { opacity: 0; transform: scale(0.84); }
+      20% { opacity: 1; transform: scale(1.06); }
+      78% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.12); }
+    }
+
+    @media (max-height: 540px) and (orientation: landscape) {
+      .superhero-stage {
+        min-height: calc(100vh - 92px);
+        padding-top: 10px;
+      }
+
+      .hero-card,
+      .opponent-card {
+        height: 52vh;
+      }
+
+      .control-deck {
+        min-height: 92px;
+        padding: 8px 10px 10px;
+      }
+
+      .math-number-choice {
+        border-radius: 12px;
+      }
+    }
+
+    @media (orientation: portrait) {
+      .superhero-stage {
+        grid-template-columns: 1fr;
+        grid-template-rows: 36% 64%;
+        min-height: calc(100vh - 210px);
+        padding-top: 50px;
+      }
+
+      .hero-card {
+        height: 24vh;
+      }
+
+      .opponent-zone {
+        gap: 3vw;
+        padding-right: 0;
+      }
+
+      .opponent-card {
+        width: 42%;
+        height: 34vh;
+      }
+
+      .control-deck {
+        flex-wrap: wrap;
+        min-height: 210px;
+      }
+
+      .math-beam.active {
+        animation-name: math-beam-portrait;
+      }
+    }
+
+    @keyframes math-beam-portrait {
+      0% { width: 0; opacity: 0; }
+      18% { opacity: 1; }
+      72% { width: 52%; opacity: 1; }
+      100% { width: 52%; opacity: 0; }
     }
     
     .apples-container {
@@ -373,8 +695,21 @@
       font-size: 4rem;
       font-weight: bold;
       color: #333;
-      margin: 20px 0;
+      margin: 10px 0;
       letter-spacing: 2px;
+    }
+    #readingPhaseLabel {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #1f6feb;
+      margin-top: 8px;
+    }
+    #readingInstruction {
+      font-size: 1.05rem;
+      color: #444;
+      margin: 4px 0 8px;
+      min-height: 24px;
+      text-align: center;
     }
     #readingChoicesContainer {
       display: flex;
@@ -424,6 +759,24 @@
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+    #readingParentControls {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .parent-rating-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .parent-rating-btn.correct { background: #28a745; }
+    .parent-rating-btn.almost { background: #f39c12; }
+    .parent-rating-btn.help { background: #dc3545; }
 
   </style>
 </head>
@@ -478,8 +831,15 @@
   </div>
 
   <div id="readingMode" class="mode-container">
+    <div id="readingPhaseLabel"></div>
     <div id="readingTargetWord"></div>
+    <div id="readingInstruction"></div>
     <div id="readingChoicesContainer"></div>
+    <div id="readingParentControls">
+      <button class="parent-rating-btn correct" onclick="rateReadingDecode('correct')">Correct</button>
+      <button class="parent-rating-btn almost" onclick="rateReadingDecode('almost')">Almost</button>
+      <button class="parent-rating-btn help" onclick="rateReadingDecode('needs_help')">Needs Help</button>
+    </div>
     
     <button class="settings-btn" onclick="toggleReadingSettings()">Settings</button>
     <div class="reading-settings" id="readingSettings">
@@ -490,7 +850,7 @@
         </select>
     </div>
 
-    <button class="next-problem-btn" onclick="generateReadingProblem()">Next Word</button>
+    <button class="next-problem-btn" onclick="handleReadingNextStep()">Next</button>
     <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
   </div>
 
@@ -506,11 +866,17 @@
   </div>
 
   <div id="arithmeticMode" class="mode-container">
-    <div id="arithmeticProblem"></div>
-    <div class="apples-container" id="applesContainer"></div>
-    <div id="numberChoicesContainer"></div>
-    <button class="next-problem-btn" onclick="generateArithmeticProblem()">Next Problem</button>
-    <button class="back-to-selection-btn" onclick="backToModeSelection()">Back to Menu</button>
+    <button class="superhero-back-btn" onclick="backToModeSelection()">Menu</button>
+    <div class="superhero-stage">
+      <div class="hero-zone">
+        <div class="hero-card" id="mathHeroCard"></div>
+      </div>
+      <div class="opponent-zone" id="mathOpponentZone"></div>
+      <div class="math-beam" id="mathBeam"></div>
+      <div class="sparkle-layer" id="mathSparkleLayer"></div>
+      <div class="great-job-overlay" id="mathGreatJob">GREAT JOB!</div>
+    </div>
+    <div class="control-deck" id="numberChoicesContainer"></div>
   </div>
 
   <div id="digitsMode" class="mode-container">
@@ -713,6 +1079,23 @@
     let readingCurrentWord = '';
     let readingCase = 'uppercase'; // Default
     let isReadingAnimating = false;
+    const readingWords = ['mama', 'tata', 'dom', 'kot', 'ul', 'oko', 'ola', 'osa'];
+    const readingSessionSize = 5;
+    let readingCurrentStage = 'teach';
+    let readingGuidedRemaining = 0;
+    let readingStandardRemaining = 0;
+    let readingWordHadMistake = false;
+    let readingTrialHadMistake = false;
+    let readingSessionWords = [];
+    let readingSessionWordIndex = 0;
+    let readingReviewWords = [];
+    let readingInReview = false;
+    let readingReviewIndex = 0;
+    const readingStats = {};
+
+    readingWords.forEach(word => {
+      readingStats[word] = { shown: 0, correctFirstTry: 0, mistakes: 0, lastSeen: null };
+    });
 
     function toggleReadingSettings() {
         const settingsDiv = document.getElementById('readingSettings');
@@ -728,67 +1111,200 @@
         }
     }
 
-    function generateReadingProblem() {
-        document.querySelector('#readingMode .next-problem-btn').style.display = 'none';
-        isReadingAnimating = false;
+    function buildReadingSessionWords() {
+        const now = Date.now();
+        const scored = readingWords.map(word => {
+            const stat = readingStats[word];
+            const errorRate = (stat.mistakes + 1) / (stat.shown + 1);
+            const recencyBoost = stat.lastSeen ? Math.min((now - stat.lastSeen) / 10000000, 5) : 5;
+            return { word, score: errorRate + recencyBoost };
+        });
+        scored.sort((a, b) => b.score - a.score);
+        return scored.slice(0, readingSessionSize).map(x => x.word);
+    }
 
-        // 1. Pick a random word from the existing list
-        const randIndex = Math.floor(Math.random() * writingWords.length);
-        readingCurrentWord = writingWords[randIndex]; // e.g. "mama"
+    function initializeReadingSession() {
+        readingSessionWords = buildReadingSessionWords();
+        readingSessionWordIndex = 0;
+        readingReviewWords = [];
+        readingInReview = false;
+        readingReviewIndex = 0;
+        startReadingWord(readingSessionWords[0], false);
+    }
 
-        // 2. Display Word Text
+    function startReadingWord(word, isReviewWord) {
+        readingCurrentWord = word;
+        readingGuidedRemaining = isReviewWord ? 1 : 2;
+        readingStandardRemaining = isReviewWord ? 1 : 2;
+        readingWordHadMistake = false;
+        readingTrialHadMistake = false;
+        readingCurrentStage = isReviewWord ? 'guided' : 'teach';
+        renderReadingStep();
+    }
+
+    function setReadingDisplayWord() {
         const display = document.getElementById('readingTargetWord');
         display.textContent = readingCase === 'uppercase' ? readingCurrentWord.toUpperCase() : readingCurrentWord.toLowerCase();
+    }
 
-        // 3. Generate Image Choices (1 Correct + 3 Distractors)
-        let choices = [readingCurrentWord];
-        let availableDistractors = writingWords.filter(w => w !== readingCurrentWord);
-        
-        // Shuffle distractors and take 3
-        availableDistractors.sort(() => Math.random() - 0.5);
-        choices.push(...availableDistractors.slice(0, 3));
-        
-        // Shuffle final choices
-        choices.sort(() => Math.random() - 0.5);
+    function updateReadingUi(phaseName, instruction, nextLabel, showNext, showParentControls) {
+        document.getElementById('readingPhaseLabel').textContent = phaseName;
+        document.getElementById('readingInstruction').textContent = instruction;
+        const nextBtn = document.querySelector('#readingMode .next-problem-btn');
+        nextBtn.textContent = nextLabel;
+        nextBtn.style.display = showNext ? 'inline-block' : 'none';
+        document.getElementById('readingParentControls').style.display = showParentControls ? 'flex' : 'none';
+    }
 
-        // 4. Render Images
+    function renderReadingChoices(choiceCount) {
         const container = document.getElementById('readingChoicesContainer');
         container.innerHTML = '';
+        let choices = [readingCurrentWord];
+        const availableDistractors = readingWords.filter(w => w !== readingCurrentWord).sort(() => Math.random() - 0.5);
+        choices.push(...availableDistractors.slice(0, choiceCount - 1));
+        choices = choices.sort(() => Math.random() - 0.5);
 
         choices.forEach(word => {
             const choiceDiv = document.createElement('div');
             choiceDiv.className = 'reading-choice';
-            
             const img = document.createElement('img');
             img.src = `img/${word.toLowerCase()}.jpeg`;
             img.alt = word;
-            img.onerror = function() { this.style.display = 'none'; choiceDiv.textContent = word; }; // Fallback
-            
+            img.onerror = function() { this.style.display = 'none'; choiceDiv.textContent = word; };
             choiceDiv.appendChild(img);
             choiceDiv.onclick = () => selectReadingChoice(choiceDiv, word);
             container.appendChild(choiceDiv);
         });
+    }
 
-        // Apply font setting
+    function renderReadingTeachCard() {
+        const container = document.getElementById('readingChoicesContainer');
+        container.innerHTML = '';
+        const card = document.createElement('div');
+        card.className = 'reading-choice';
+        const img = document.createElement('img');
+        img.src = `img/${readingCurrentWord.toLowerCase()}.jpeg`;
+        img.alt = readingCurrentWord;
+        img.onerror = function() { this.style.display = 'none'; card.textContent = readingCurrentWord; };
+        card.appendChild(img);
+        container.appendChild(card);
+    }
+
+    function renderReadingStep() {
+        isReadingAnimating = false;
+        setReadingDisplayWord();
+        const progress = readingInReview
+            ? `Review ${readingReviewIndex + 1}/${readingReviewWords.length}`
+            : `Word ${readingSessionWordIndex + 1}/${readingSessionWords.length}`;
+
+        if (readingCurrentStage === 'teach') {
+            renderReadingTeachCard();
+            updateReadingUi(`Teach • ${progress}`, 'Read the word together, then tap Next.', 'Start Guided', true, false);
+        } else if (readingCurrentStage === 'guided') {
+            readingTrialHadMistake = false;
+            renderReadingChoices(2);
+            updateReadingUi(`Guided • ${progress}`, 'Pick the matching picture (2 choices).', 'Next', false, false);
+        } else if (readingCurrentStage === 'standard') {
+            readingTrialHadMistake = false;
+            renderReadingChoices(4);
+            updateReadingUi(`Practice • ${progress}`, 'Pick the matching picture (4 choices).', 'Next', false, false);
+        } else if (readingCurrentStage === 'decode') {
+            document.getElementById('readingChoicesContainer').innerHTML = '';
+            updateReadingUi(`Decode • ${progress}`, 'Child reads aloud. Parent rates it below.', 'Next', false, true);
+        } else if (readingCurrentStage === 'complete') {
+            document.getElementById('readingChoicesContainer').innerHTML = '';
+            document.getElementById('readingTargetWord').textContent = 'Great work!';
+            updateReadingUi('Session Complete', 'Tap restart to run another short session.', 'Restart Session', true, false);
+        }
+
         changeFont(document.getElementById('fontSelector').value || 'Arial');
     }
 
     function selectReadingChoice(choiceDiv, selectedWord) {
+        if (readingCurrentStage !== 'guided' && readingCurrentStage !== 'standard') return;
         if (isReadingAnimating) return;
         isReadingAnimating = true;
 
         if (selectedWord === readingCurrentWord) {
             choiceDiv.classList.add('correct');
             setTimeout(() => {
-                document.querySelector('#readingMode .next-problem-btn').style.display = 'inline-block';
+                const stat = readingStats[readingCurrentWord];
+                stat.shown += 1;
+                stat.lastSeen = Date.now();
+                if (!readingTrialHadMistake) {
+                    stat.correctFirstTry += 1;
+                }
+                if (readingCurrentStage === 'guided') {
+                    readingGuidedRemaining -= 1;
+                    readingCurrentStage = readingGuidedRemaining > 0 ? 'guided' : 'standard';
+                } else {
+                    readingStandardRemaining -= 1;
+                    readingCurrentStage = readingStandardRemaining > 0 ? 'standard' : 'decode';
+                }
                 isReadingAnimating = false;
+                renderReadingStep();
             }, 600);
         } else {
+            readingTrialHadMistake = true;
+            readingWordHadMistake = true;
+            readingStats[readingCurrentWord].mistakes += 1;
             choiceDiv.classList.add('incorrect');
             setTimeout(() => {
                 choiceDiv.classList.remove('incorrect');
                 isReadingAnimating = false;
             }, 500);
+        }
+    }
+
+    function advanceReadingWord() {
+        if (readingWordHadMistake && !readingReviewWords.includes(readingCurrentWord) && !readingInReview) {
+            readingReviewWords.push(readingCurrentWord);
+        }
+        if (!readingInReview) {
+            readingSessionWordIndex += 1;
+            if (readingSessionWordIndex < readingSessionWords.length) {
+                startReadingWord(readingSessionWords[readingSessionWordIndex], false);
+                return;
+            }
+            if (readingReviewWords.length > 0) {
+                readingInReview = true;
+                readingReviewIndex = 0;
+                startReadingWord(readingReviewWords[readingReviewIndex], true);
+                return;
+            }
+            readingCurrentStage = 'complete';
+            renderReadingStep();
+            return;
+        }
+        readingReviewIndex += 1;
+        if (readingReviewIndex < readingReviewWords.length) {
+            startReadingWord(readingReviewWords[readingReviewIndex], true);
+            return;
+        }
+        readingCurrentStage = 'complete';
+        renderReadingStep();
+    }
+
+    function rateReadingDecode(rating) {
+        if (readingCurrentStage !== 'decode') return;
+        if (rating === 'almost') {
+            readingWordHadMistake = true;
+            readingStats[readingCurrentWord].mistakes += 1;
+        } else if (rating === 'needs_help') {
+            readingWordHadMistake = true;
+            readingStats[readingCurrentWord].mistakes += 2;
+        }
+        advanceReadingWord();
+    }
+
+    function handleReadingNextStep() {
+        if (readingCurrentStage === 'teach') {
+            readingCurrentStage = 'guided';
+            renderReadingStep();
+            return;
+        }
+        if (readingCurrentStage === 'complete') {
+            initializeReadingSession();
         }
     }
 
@@ -913,76 +1429,71 @@
     }
 
     /* --- ARITHMETIC MODE SCRIPT --- */
-    let currentNum1, currentNum2, correctAnswer;
+    let opponent1Defense, opponent2Defense, targetAttack;
     let isArithmeticAnimating = false;
+    const arithmeticHeroImages = [
+      'img/ironman1.jpeg',
+      'img/arithmetic/ironman2.jpeg',
+      'img/arithmetic/ironman3.jpeg'
+    ];
+    const arithmeticOpponentImages = [
+      'img/arithmetic/dragon.jpeg',
+      'img/arithmetic/mega.jpeg',
+      'img/arithmetic/wolf.jpeg'
+    ];
+    const sparkleColors = ['#fff36d', '#6ee7ff', '#ff8bd1', '#9cff7e', '#c4b5fd', '#ffffff'];
 
-    function generateArithmeticProblem() {
-      document.querySelector('#arithmeticMode .next-problem-btn').style.display = 'none';
-      isArithmeticAnimating = false;
-      
-      currentNum1 = Math.floor(Math.random() * 5) + 1; 
-      const maxNum2 = Math.min(5, 9 - currentNum1); 
-      currentNum2 = Math.floor(Math.random() * maxNum2) + 1; 
-      correctAnswer = currentNum1 + currentNum2;
-      
-      document.getElementById('arithmeticProblem').innerHTML = `${currentNum1} + ${currentNum2} = ?`;
-      generateApples();
-      generateNumberChoices();
+    function getRandomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
     }
 
-    function generateApples() {
-      const container = document.getElementById('applesContainer');
-      container.innerHTML = '';
-      
-      const group1 = document.createElement('div');
-      group1.className = 'apple-group';
-      const label1 = document.createElement('div');
-      label1.className = 'apple-group-label';
-      label1.textContent = currentNum1;
-      group1.appendChild(label1);
-      const applesRow1 = document.createElement('div');
-      applesRow1.className = 'apples-row';
-      for (let i = 0; i < currentNum1; i++) {
-        const apple = document.createElement('div');
-        apple.className = 'apple';
-        applesRow1.appendChild(apple);
-      }
-      group1.appendChild(applesRow1);
-      
-      const plusSign = document.createElement('div');
-      plusSign.style.fontSize = '3rem';
-      plusSign.style.fontWeight = 'bold';
-      plusSign.style.color = '#333';
-      plusSign.style.alignSelf = 'center';
-      plusSign.textContent = '+';
-      
-      const group2 = document.createElement('div');
-      group2.className = 'apple-group';
-      const label2 = document.createElement('div');
-      label2.className = 'apple-group-label';
-      label2.textContent = currentNum2;
-      group2.appendChild(label2);
-      const applesRow2 = document.createElement('div');
-      applesRow2.className = 'apples-row';
-      for (let i = 0; i < currentNum2; i++) {
-        const apple = document.createElement('div');
-        apple.className = 'apple';
-        applesRow2.appendChild(apple);
-      }
-      group2.appendChild(applesRow2);
-      
-      container.appendChild(group1);
-      container.appendChild(plusSign);
-      container.appendChild(group2);
+    function getTwoRandomOpponents() {
+      const shuffled = [...arithmeticOpponentImages].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, 2);
+    }
+
+    function generateArithmeticProblem() {
+      isArithmeticAnimating = false;
+      opponent1Defense = Math.floor(Math.random() * 5) + 1;
+      opponent2Defense = Math.floor(Math.random() * 5) + 1;
+      targetAttack = opponent1Defense + opponent2Defense;
+
+      const heroCard = document.getElementById('mathHeroCard');
+      const opponentZone = document.getElementById('mathOpponentZone');
+      const beam = document.getElementById('mathBeam');
+      const overlay = document.getElementById('mathGreatJob');
+      const sparkleLayer = document.getElementById('mathSparkleLayer');
+      const opponents = getTwoRandomOpponents();
+
+      heroCard.classList.remove('power-up');
+      beam.classList.remove('active');
+      overlay.classList.remove('show');
+      sparkleLayer.innerHTML = '';
+      heroCard.innerHTML = `<img src="${getRandomItem(arithmeticHeroImages)}" alt="Iron Man">`;
+      opponentZone.innerHTML = '';
+
+      [opponent1Defense, opponent2Defense].forEach((defense, index) => {
+        const card = document.createElement('div');
+        card.className = 'opponent-card';
+        card.innerHTML = `
+          <div class="defense-stat">${defense}</div>
+          <img src="${opponents[index]}" alt="Opponent ${index + 1}">
+        `;
+        opponentZone.appendChild(card);
+      });
+
+      generateNumberChoices();
     }
 
     function generateNumberChoices() {
       const container = document.getElementById('numberChoicesContainer');
       container.innerHTML = '';
-      for (let i = 1; i <= 9; i++) {
+      for (let i = 1; i <= 10; i++) {
         const choice = document.createElement('button');
-        choice.className = 'number-choice';
+        choice.className = 'math-number-choice';
+        choice.type = 'button';
         choice.textContent = i;
+        choice.setAttribute('aria-label', `Choose ${i}`);
         choice.onclick = () => selectNumberChoice(choice, i);
         container.appendChild(choice);
       }
@@ -990,20 +1501,108 @@
 
     function selectNumberChoice(choiceEl, selectedNumber) {
       if (isArithmeticAnimating) return;
-      isArithmeticAnimating = true;
-      if (selectedNumber === correctAnswer) {
-        choiceEl.classList.add('correct');
-        setTimeout(() => {
-          document.querySelector('#arithmeticMode .next-problem-btn').style.display = 'inline-block';
-          isArithmeticAnimating = false;
-        }, 600);
+      choiceEl.classList.add('selected');
+      if (selectedNumber === targetAttack) {
+        isArithmeticAnimating = true;
+        choiceEl.classList.add('success');
+        playMathSuccessSound();
+        runCorrectMathAnimation();
       } else {
-        choiceEl.classList.add('incorrect');
+        isArithmeticAnimating = true;
+        choiceEl.classList.add('try-again');
+        playTryAgainSound();
         setTimeout(() => {
-          choiceEl.classList.remove('incorrect');
+          choiceEl.classList.remove('selected', 'try-again');
           isArithmeticAnimating = false;
         }, 500);
       }
+    }
+
+    function runCorrectMathAnimation() {
+      const heroCard = document.getElementById('mathHeroCard');
+      const beam = document.getElementById('mathBeam');
+      const overlay = document.getElementById('mathGreatJob');
+      const opponents = Array.from(document.querySelectorAll('#mathOpponentZone .opponent-card'));
+
+      heroCard.classList.add('power-up');
+      beam.classList.remove('active');
+      void beam.offsetWidth;
+      beam.classList.add('active');
+
+      setTimeout(() => {
+        opponents.forEach(opponent => opponent.classList.add('teleport'));
+        createOpponentSparkles(opponents);
+        overlay.classList.remove('show');
+        void overlay.offsetWidth;
+        overlay.classList.add('show');
+      }, 520);
+
+      setTimeout(generateArithmeticProblem, 2500);
+    }
+
+    function createOpponentSparkles(opponents) {
+      const layer = document.getElementById('mathSparkleLayer');
+      const layerRect = layer.getBoundingClientRect();
+      layer.innerHTML = '';
+
+      opponents.forEach(opponent => {
+        const rect = opponent.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2 - layerRect.left;
+        const centerY = rect.top + rect.height * 0.52 - layerRect.top;
+
+        for (let i = 0; i < 18; i++) {
+          const sparkle = document.createElement('div');
+          const angle = (Math.PI * 2 * i) / 18;
+          const distance = 42 + Math.random() * 76;
+          sparkle.className = 'sparkle';
+          sparkle.style.left = `${centerX}px`;
+          sparkle.style.top = `${centerY}px`;
+          sparkle.style.setProperty('--sparkle-x', `${Math.cos(angle) * distance}px`);
+          sparkle.style.setProperty('--sparkle-y', `${Math.sin(angle) * distance}px`);
+          sparkle.style.setProperty('--sparkle-color', getRandomItem(sparkleColors));
+          sparkle.style.animationDelay = `${Math.random() * 160}ms`;
+          layer.appendChild(sparkle);
+        }
+      });
+    }
+
+    function getAudioContext() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+      if (!window.mathAudioContext) {
+        window.mathAudioContext = new AudioContext();
+      }
+      if (window.mathAudioContext.state === 'suspended') {
+        window.mathAudioContext.resume();
+      }
+      return window.mathAudioContext;
+    }
+
+    function playTone(frequency, startOffset, duration, type, gainValue) {
+      const context = getAudioContext();
+      if (!context) return;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, context.currentTime + startOffset);
+      gain.gain.setValueAtTime(0.001, context.currentTime + startOffset);
+      gain.gain.exponentialRampToValueAtTime(gainValue, context.currentTime + startOffset + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + startOffset + duration);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(context.currentTime + startOffset);
+      oscillator.stop(context.currentTime + startOffset + duration + 0.03);
+    }
+
+    function playTryAgainSound() {
+      playTone(260, 0, 0.12, 'sine', 0.12);
+      playTone(185, 0.08, 0.16, 'sine', 0.1);
+    }
+
+    function playMathSuccessSound() {
+      playTone(392, 0, 0.11, 'triangle', 0.12);
+      playTone(523, 0.09, 0.13, 'triangle', 0.13);
+      playTone(659, 0.19, 0.18, 'triangle', 0.12);
     }
 
     function initializeArithmeticMode() {
@@ -1099,7 +1698,7 @@
             showWordSelection();
         } else if (mode === 'reading') {
             document.getElementById('readingMode').style.display = 'flex';
-            generateReadingProblem();
+            initializeReadingSession();
         } else if (mode === 'arithmetic') {
             document.getElementById('arithmeticMode').style.display = 'flex';
             initializeArithmeticMode();
@@ -1132,6 +1731,14 @@
       writingWords.forEach(word => {
         const img = new Image();
         img.src = `img/${word.toLowerCase()}.jpeg`;
+      });
+      readingWords.forEach(word => {
+        const img = new Image();
+        img.src = `img/${word.toLowerCase()}.jpeg`;
+      });
+      [...arithmeticHeroImages, ...arithmeticOpponentImages].forEach(src => {
+        const img = new Image();
+        img.src = src;
       });
     });
   </script>
