@@ -333,26 +333,6 @@
       opacity: 0.8;
     }
 
-    .great-job-overlay {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      font-size: clamp(3.2rem, 10vw, 7.5rem);
-      font-weight: 900;
-      letter-spacing: 0;
-      color: #ffffff;
-      text-shadow: 0 7px 0 #1a5596, 0 0 28px rgba(255, 245, 117, 0.95);
-      opacity: 0;
-      transform: scale(0.84);
-      pointer-events: none;
-      z-index: 12;
-    }
-
-    .great-job-overlay.show {
-      animation: great-job 1.25s ease-out forwards;
-    }
-
     .control-deck {
       width: 100%;
       min-height: 118px;
@@ -424,6 +404,75 @@
       touch-action: manipulation;
     }
 
+    .arithmetic-cap-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      background: rgba(5, 16, 35, 0.82);
+      backdrop-filter: blur(6px);
+    }
+
+    .arithmetic-cap-overlay.show {
+      display: flex;
+    }
+
+    .arithmetic-cap-panel {
+      width: min(92vw, 620px);
+      padding: 22px;
+      border-radius: 18px;
+      background: #ffffff;
+      color: #10223e;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
+    }
+
+    .arithmetic-cap-panel h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      color: #10223e;
+    }
+
+    .arithmetic-cap-panel p {
+      margin: 0 0 18px;
+      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      color: #41516c;
+    }
+
+    .arithmetic-cap-choices {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(42px, 1fr));
+      gap: 10px;
+    }
+
+    .arithmetic-cap-choice {
+      min-height: 64px;
+      border: 3px solid #d9e4f5;
+      border-radius: 14px;
+      background: #f7fbff;
+      color: #12315f;
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      font-weight: 900;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .arithmetic-cap-choice.current {
+      background: #ffdd57;
+      border-color: #f2b705;
+      box-shadow: 0 0 0 5px rgba(255, 221, 87, 0.24);
+    }
+
+    .arithmetic-cap-choice:hover,
+    .arithmetic-cap-choice:focus-visible {
+      outline: none;
+      transform: translateY(-2px);
+      border-color: #4da3ff;
+    }
+
     @keyframes math-shake {
       0%, 100% { transform: translateX(0); }
       18% { transform: translateX(-10px) rotate(-2deg); }
@@ -452,13 +501,6 @@
         opacity: 0;
         transform: translate(calc(-50% + var(--sparkle-x)), calc(-50% + var(--sparkle-y))) scale(1.4) rotate(220deg);
       }
-    }
-
-    @keyframes great-job {
-      0% { opacity: 0; transform: scale(0.84); }
-      20% { opacity: 1; transform: scale(1.06); }
-      78% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.12); }
     }
 
     @media (max-height: 540px) and (orientation: landscape) {
@@ -894,6 +936,13 @@
 
   <div id="arithmeticMode" class="mode-container">
     <button class="superhero-back-btn" onclick="backToModeSelection()">Menu</button>
+    <div class="arithmetic-cap-overlay" id="arithmeticCapOverlay">
+      <div class="arithmetic-cap-panel">
+        <h2>Max total?</h2>
+        <p>Pick the biggest number Iron Man should add up to.</p>
+        <div class="arithmetic-cap-choices" id="arithmeticCapChoices"></div>
+      </div>
+    </div>
     <div class="superhero-stage">
       <div class="hero-zone">
         <div class="hero-card" id="mathHeroCard"></div>
@@ -901,7 +950,6 @@
       <div class="opponent-zone" id="mathOpponentZone"></div>
       <div class="math-beam" id="mathBeam"></div>
       <div class="sparkle-layer" id="mathSparkleLayer"></div>
-      <div class="great-job-overlay" id="mathGreatJob">GREAT JOB!</div>
     </div>
     <div class="control-deck" id="numberChoicesContainer"></div>
   </div>
@@ -1461,6 +1509,8 @@
     let arithmeticMaxTarget = 10;
     let lastArithmeticHero = '';
     let lastArithmeticOpponents = [];
+    let recentArithmeticPairs = [];
+    const recentArithmeticPairLimit = 10;
     const arithmeticImageAssets = [
       'img/arithmetic/ironman1.jpeg',
       'img/arithmetic/ironman2.jpeg',
@@ -1521,19 +1571,44 @@
       return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
     }
 
-    function askForArithmeticMaxTarget() {
+    function showArithmeticMaxTargetPrompt() {
       const savedMax = getStoredArithmeticMaxTarget();
-      const currentMax = isWholeNumber(savedMax) ? savedMax : arithmeticMaxTarget;
-      const answer = prompt('Max number to add up to? Pick 2-10.', currentMax);
+      arithmeticMaxTarget = isWholeNumber(savedMax) ? Math.min(10, Math.max(2, savedMax)) : arithmeticMaxTarget;
 
-      if (answer === null) {
-        arithmeticMaxTarget = Math.min(10, Math.max(2, currentMax));
-        return;
+      const overlay = document.getElementById('arithmeticCapOverlay');
+      const choices = document.getElementById('arithmeticCapChoices');
+      choices.innerHTML = '';
+
+      for (let value = 2; value <= 10; value++) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `arithmetic-cap-choice${value === arithmeticMaxTarget ? ' current' : ''}`;
+        button.textContent = value;
+        button.setAttribute('aria-label', `Practice up to ${value}`);
+        button.onclick = () => selectArithmeticMaxTarget(value);
+        choices.appendChild(button);
       }
 
-      const parsed = parseInt(answer, 10);
-      arithmeticMaxTarget = isWholeNumber(parsed) ? Math.min(10, Math.max(2, parsed)) : 5;
+      overlay.classList.add('show');
+    }
+
+    function selectArithmeticMaxTarget(value) {
+      arithmeticMaxTarget = Math.min(10, Math.max(2, value));
       storeArithmeticMaxTarget(arithmeticMaxTarget);
+      recentArithmeticPairs = [];
+      document.getElementById('arithmeticCapOverlay').classList.remove('show');
+      generateArithmeticProblem();
+    }
+
+    function getArithmeticPairKey(pair) {
+      return `${pair[0]}+${pair[1]}`;
+    }
+
+    function rememberArithmeticPair(pair) {
+      recentArithmeticPairs.push(getArithmeticPairKey(pair));
+      if (recentArithmeticPairs.length > recentArithmeticPairLimit) {
+        recentArithmeticPairs = recentArithmeticPairs.slice(-recentArithmeticPairLimit);
+      }
     }
 
     function getRandomDefensePair() {
@@ -1545,7 +1620,11 @@
           }
         }
       }
-      return getRandomItem(possiblePairs);
+      const recent = new Set(recentArithmeticPairs);
+      const freshPairs = possiblePairs.filter(pair => !recent.has(getArithmeticPairKey(pair)));
+      const pair = getRandomItem(freshPairs.length > 0 ? freshPairs : possiblePairs);
+      rememberArithmeticPair(pair);
+      return pair;
     }
 
     function generateArithmeticProblem() {
@@ -1556,13 +1635,11 @@
       const heroCard = document.getElementById('mathHeroCard');
       const opponentZone = document.getElementById('mathOpponentZone');
       const beam = document.getElementById('mathBeam');
-      const overlay = document.getElementById('mathGreatJob');
       const sparkleLayer = document.getElementById('mathSparkleLayer');
       const opponents = getTwoRandomOpponents();
 
       heroCard.classList.remove('power-up');
       beam.classList.remove('active');
-      overlay.classList.remove('show');
       sparkleLayer.innerHTML = '';
       heroCard.innerHTML = `<img src="${getRandomHeroImage()}" alt="Iron Man">`;
       opponentZone.innerHTML = '';
@@ -1618,7 +1695,6 @@
     function runCorrectMathAnimation() {
       const heroCard = document.getElementById('mathHeroCard');
       const beam = document.getElementById('mathBeam');
-      const overlay = document.getElementById('mathGreatJob');
       const opponents = Array.from(document.querySelectorAll('#mathOpponentZone .opponent-card'));
 
       heroCard.classList.add('power-up');
@@ -1629,9 +1705,6 @@
       setTimeout(() => {
         opponents.forEach(opponent => opponent.classList.add('teleport'));
         createOpponentSparkles(opponents);
-        overlay.classList.remove('show');
-        void overlay.offsetWidth;
-        overlay.classList.add('show');
       }, 520);
 
       setTimeout(generateArithmeticProblem, 2500);
@@ -1703,8 +1776,7 @@
     }
 
     function initializeArithmeticMode() {
-      askForArithmeticMaxTarget();
-      generateArithmeticProblem();
+      showArithmeticMaxTargetPrompt();
     }
 
     /* --- DIGITS MODE SCRIPT --- */
