@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <meta name="theme-color" content="#f5f7f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Calm Arithmetic">
+  <title>Calm Arithmetic</title>
+  <link rel="manifest" href="calm-arithmetic.webmanifest">
+  <link rel="apple-touch-icon" href="calm-icon-192.png">
+  <link rel="stylesheet" href="calm-arithmetic.css">
+  <script src="calm-arithmetic.js" defer></script>
+</head>
+<body>
+  <main id="calmApp" class="calm-app">
+    <section id="setupScreen" class="calm-screen parent-scroll-screen" hidden>
+      <div class="setup-shell">
+        <div class="calm-brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="eyebrow">For a parent or caregiver</p>
+        <h1>Calm Arithmetic</h1>
+        <p class="setup-intro">
+          A short, quiet number session for learning quantities from one to five.
+          Everything stays on this device.
+        </p>
+
+        <form id="setupForm" class="settings-form">
+          <label class="field-label" for="nicknameInput">Child nickname</label>
+          <input
+            id="nicknameInput"
+            class="text-input"
+            name="nickname"
+            type="text"
+            maxlength="24"
+            autocomplete="off"
+            value="My learner"
+          >
+
+          <fieldset>
+            <legend>Language</legend>
+            <label class="setting-option">
+              <input type="radio" name="languageMode" value="en-en" checked>
+              <span>English</span>
+            </label>
+            <label class="setting-option">
+              <input type="radio" name="languageMode" value="pl-pl">
+              <span>Polski</span>
+            </label>
+            <label class="setting-option">
+              <input type="radio" name="languageMode" value="pl-en">
+              <span>Polskie instrukcje, English numbers</span>
+            </label>
+            <label class="setting-option">
+              <input type="radio" name="languageMode" value="en-pl">
+              <span>English instructions, polskie liczby</span>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Sound</legend>
+            <label class="setting-option">
+              <input type="radio" name="soundMode" value="full" checked>
+              <span>Instructions and feedback</span>
+            </label>
+            <label class="setting-option">
+              <input type="radio" name="soundMode" value="instructionsOnly">
+              <span>Instructions only</span>
+            </label>
+            <label class="setting-option">
+              <input type="radio" name="soundMode" value="off">
+              <span>No sound</span>
+            </label>
+          </fieldset>
+
+          <button class="primary-button" type="submit">Continue</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="homeScreen" class="calm-screen child-screen" hidden>
+      <header class="home-header">
+        <div class="calm-brand compact-brand">
+          <div class="calm-brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span>Calm Arithmetic</span>
+        </div>
+        <button
+          id="homeSoundButton"
+          class="icon-button"
+          type="button"
+          aria-label="Sound settings"
+          title="Sound"
+        >
+          <span aria-hidden="true">♪</span>
+        </button>
+      </header>
+
+      <div class="home-main">
+        <p id="homeGreeting" class="home-greeting"></p>
+        <h1 id="homeTitle">Ready for some numbers?</h1>
+        <p id="homeSubtitle" class="home-subtitle">
+          Eight short activities. Stop when the session is finished.
+        </p>
+        <button id="startSessionButton" class="start-button" type="button">
+          Start
+        </button>
+        <div id="resumeActions" class="resume-actions" hidden>
+          <button id="continueSessionButton" class="primary-button" type="button">
+            Continue
+          </button>
+          <button id="restartSessionButton" class="quiet-button" type="button">
+            Start again
+          </button>
+        </div>
+      </div>
+
+      <footer class="home-footer">
+        <button id="openParentGateButton" class="parent-link" type="button">
+          For parents
+        </button>
+      </footer>
+    </section>
+
+    <section id="sessionScreen" class="calm-screen child-screen session-screen" hidden>
+      <header class="session-header">
+        <div id="progressMarks" class="progress-marks" aria-label="Session progress"></div>
+        <button
+          id="replayInstructionButton"
+          class="icon-button"
+          type="button"
+          aria-label="Repeat instruction"
+          title="Repeat instruction"
+        >
+          <span aria-hidden="true">↻</span>
+        </button>
+      </header>
+
+      <div class="instruction-band" aria-live="polite">
+        <p id="activityInstruction" class="activity-instruction"></p>
+        <p id="activityFeedback" class="activity-feedback"></p>
+      </div>
+
+      <div id="activityWorkspace" class="activity-workspace"></div>
+
+      <div class="activity-controls">
+        <button id="helpButton" class="quiet-button control-button" type="button">
+          Help
+        </button>
+        <button id="doneButton" class="primary-button control-button" type="button" hidden>
+          Done
+        </button>
+      </div>
+    </section>
+
+    <section id="completionScreen" class="calm-screen child-screen" hidden>
+      <div class="completion-main">
+        <div class="completion-symbol" aria-hidden="true">✓</div>
+        <p class="eyebrow">Session complete</p>
+        <h1 id="completionTitle">Today you worked with quantities from one to five.</h1>
+        <p id="completionMessage">
+          You looked, counted, and made sets.
+        </p>
+        <button id="finishSessionButton" class="primary-button" type="button">
+          Finish
+        </button>
+      </div>
+    </section>
+
+    <section id="parentScreen" class="calm-screen parent-scroll-screen" hidden>
+      <header class="parent-header">
+        <button id="closeParentButton" class="icon-button" type="button" aria-label="Close parent area">
+          <span aria-hidden="true">←</span>
+        </button>
+        <div>
+          <p class="eyebrow">Parent area</p>
+          <h1>Calm Arithmetic</h1>
+        </div>
+      </header>
+
+      <div class="parent-content">
+        <section class="parent-section">
+          <h2>Profile and settings</h2>
+          <form id="parentSettingsForm" class="settings-form compact-form">
+            <label class="field-label" for="parentNicknameInput">Child nickname</label>
+            <input
+              id="parentNicknameInput"
+              class="text-input"
+              name="nickname"
+              type="text"
+              maxlength="24"
+              autocomplete="off"
+            >
+
+            <label class="field-label" for="parentLanguageSelect">Language</label>
+            <select id="parentLanguageSelect" class="select-input" name="languageMode">
+              <option value="en-en">English</option>
+              <option value="pl-pl">Polski</option>
+              <option value="pl-en">Polskie instrukcje, English numbers</option>
+              <option value="en-pl">English instructions, polskie liczby</option>
+            </select>
+
+            <label class="field-label" for="parentSoundSelect">Sound</label>
+            <select id="parentSoundSelect" class="select-input" name="soundMode">
+              <option value="full">Instructions and feedback</option>
+              <option value="instructionsOnly">Instructions only</option>
+              <option value="off">No sound</option>
+            </select>
+
+            <button class="primary-button compact-button" type="submit">Save settings</button>
+          </form>
+        </section>
+
+        <section class="parent-section">
+          <h2>Learning summary</h2>
+          <dl class="summary-list">
+            <div>
+              <dt>Current focus</dt>
+              <dd>Quantities one to five</dd>
+            </div>
+            <div>
+              <dt>Completed sessions</dt>
+              <dd id="completedSessionCount">0</dd>
+            </div>
+            <div>
+              <dt>Latest session</dt>
+              <dd id="latestSessionSummary">No session completed yet</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="parent-section">
+          <h2>Try away from the screen</h2>
+          <p>
+            Put five spoons on a table. Ask your child to count them, then place
+            exactly three on a plate. Ask: “How do you know there are three?”
+          </p>
+        </section>
+
+        <section class="parent-section">
+          <h2>Install and data</h2>
+          <p class="small-copy">
+            On iPhone or iPad, use Share → Add to Home Screen. Once opened online,
+            the learning session is available offline.
+          </p>
+          <div class="parent-actions">
+            <button id="exportDataButton" class="quiet-button" type="button">Export data</button>
+            <label class="quiet-button file-button">
+              Import data
+              <input id="importDataInput" type="file" accept="application/json">
+            </label>
+            <button id="resetDataButton" class="danger-button" type="button">Reset progress</button>
+            <button id="returnToMainAppButton" class="quiet-button" type="button">
+              Other learning activities
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div id="parentGate" class="parent-gate" hidden>
+      <div class="gate-dialog" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+        <button id="closeParentGateButton" class="gate-close" type="button" aria-label="Close">×</button>
+        <h2 id="gateTitle">Parent check</h2>
+        <p>Hold both corner circles at the same time for three seconds.</p>
+        <p class="keyboard-gate-copy">On a computer, hold the P key for three seconds.</p>
+        <div class="gate-hold-area">
+          <button id="gateLeft" class="gate-corner gate-corner-left" type="button" aria-label="Hold left corner"></button>
+          <div id="gateProgress" class="gate-progress" aria-live="polite">Waiting</div>
+          <button id="gateRight" class="gate-corner gate-corner-right" type="button" aria-label="Hold right corner"></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <noscript>Calm Arithmetic needs JavaScript to run.</noscript>
+</body>
+</html>

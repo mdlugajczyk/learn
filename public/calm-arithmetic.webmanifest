@@ -1,0 +1,23 @@
+{
+  "name": "Calm Arithmetic",
+  "short_name": "Arithmetic",
+  "description": "Short, calm number-sense sessions for young learners.",
+  "start_url": "./calm-arithmetic.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f5f7f6",
+  "theme_color": "#f5f7f6",
+  "icons": [
+    {
+      "src": "calm-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "calm-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
