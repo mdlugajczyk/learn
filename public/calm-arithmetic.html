@@ -13,6 +13,9 @@
   <title>Calm Arithmetic</title>
   <link rel="manifest" href="calm-arithmetic.webmanifest">
   <link rel="apple-touch-icon" href="calm-icon-192.png">
+  <link rel="preload" href="img/arithmetic/ironman1.jpeg" as="image">
+  <link rel="preload" href="img/arithmetic/ironman2.jpeg" as="image">
+  <link rel="preload" href="img/arithmetic/ironman3.jpeg" as="image">
   <link rel="stylesheet" href="calm-arithmetic.css">
   <script src="calm-arithmetic.js" defer></script>
 </head>
@@ -103,21 +106,37 @@
       </header>
 
       <div class="home-main">
-        <p id="homeGreeting" class="home-greeting"></p>
-        <h1 id="homeTitle">Ready for some numbers?</h1>
-        <p id="homeSubtitle" class="home-subtitle">
-          Eight short activities. Stop when the session is finished.
-        </p>
-        <button id="startSessionButton" class="start-button" type="button">
-          Start
-        </button>
-        <div id="resumeActions" class="resume-actions" hidden>
-          <button id="continueSessionButton" class="primary-button" type="button">
-            Continue
+        <div class="home-hero-stage" aria-hidden="true">
+          <div id="academyTitle" class="academy-ribbon">Iron Man’s Number Lab</div>
+          <div class="hero-sun"></div>
+          <img
+            class="home-hero"
+            src="img/arithmetic/ironman1.jpeg"
+            data-iron-man
+            alt=""
+            draggable="false"
+          >
+          <div class="hero-token-trail">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="home-copy">
+          <p id="homeGreeting" class="home-greeting"></p>
+          <h1 id="homeTitle">Ready to train with Iron Man?</h1>
+          <p id="homeSubtitle" class="home-subtitle">
+            Take it slow: look closely, count carefully, and power up each number.
+          </p>
+          <button id="startSessionButton" class="start-button" type="button">
+            Start mission
           </button>
-          <button id="restartSessionButton" class="quiet-button" type="button">
-            Start again
-          </button>
+          <div id="resumeActions" class="resume-actions" hidden>
+            <button id="continueSessionButton" class="primary-button" type="button">
+              Continue mission
+            </button>
+            <button id="restartSessionButton" class="quiet-button" type="button">
+              Start again
+            </button>
+          </div>
         </div>
       </div>
 
@@ -142,9 +161,21 @@
         </button>
       </header>
 
-      <div class="instruction-band" aria-live="polite">
-        <p id="activityInstruction" class="activity-instruction"></p>
-        <p id="activityFeedback" class="activity-feedback"></p>
+      <div class="instruction-band">
+        <div class="session-mentor" aria-hidden="true">
+          <div class="mentor-emblem">5</div>
+          <img
+            id="sessionHero"
+            src="img/arithmetic/ironman1.jpeg"
+            data-iron-man
+            alt=""
+            draggable="false"
+          >
+        </div>
+        <div class="instruction-copy" aria-live="polite">
+          <p id="activityInstruction" class="activity-instruction"></p>
+          <p id="activityFeedback" class="activity-feedback"></p>
+        </div>
       </div>
 
       <div id="activityWorkspace" class="activity-workspace"></div>
@@ -161,11 +192,20 @@
 
     <section id="completionScreen" class="calm-screen child-screen" hidden>
       <div class="completion-main">
-        <div class="completion-symbol" aria-hidden="true">✓</div>
-        <p class="eyebrow">Session complete</p>
-        <h1 id="completionTitle">Today you worked with quantities from one to five.</h1>
+        <div class="completion-hero-stage" aria-hidden="true">
+          <div class="completion-symbol">✓</div>
+          <img
+            class="completion-hero"
+            src="img/arithmetic/ironman1.jpeg"
+            data-iron-man
+            alt=""
+            draggable="false"
+          >
+        </div>
+        <p id="completionEyebrow" class="eyebrow">Mission complete</p>
+        <h1 id="completionTitle">Today you trained your number powers from one to five.</h1>
         <p id="completionMessage">
-          You looked, counted, and made sets.
+          You looked closely, counted carefully, and made sets.
         </p>
         <button id="finishSessionButton" class="primary-button" type="button">
           Finish

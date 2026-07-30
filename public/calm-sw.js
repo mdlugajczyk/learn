@@ -1,11 +1,14 @@
-const CACHE_NAME = 'calm-arithmetic-v1';
+const CACHE_NAME = 'calm-arithmetic-v3';
 const APP_SHELL = [
   './calm-arithmetic.html',
   './calm-arithmetic.css',
   './calm-arithmetic.js',
   './calm-arithmetic.webmanifest',
   './calm-icon-192.png',
-  './calm-icon-512.png'
+  './calm-icon-512.png',
+  './img/arithmetic/ironman1.jpeg',
+  './img/arithmetic/ironman2.jpeg',
+  './img/arithmetic/ironman3.jpeg'
 ];
 
 self.addEventListener('install', event => {

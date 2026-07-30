@@ -5,23 +5,34 @@
   const DB_VERSION = 1;
   const FALLBACK_KEY = 'calmArithmeticFallbackV1';
   const SESSION_ACTIVITY_COUNT = 8;
+  const LAST_HERO_KEY = 'calmArithmeticLastHero';
+  const superheroImageAssets = [
+    'img/arithmetic/ironman1.jpeg',
+    'img/arithmetic/ironman2.jpeg',
+    'img/arithmetic/ironman3.jpeg'
+  ];
+  const ironManPattern = /^ironman\d+\.(jpe?g|png|webp)$/i;
+  const ironManImages = superheroImageAssets.filter(source => {
+    return ironManPattern.test(source.split('/').pop());
+  });
 
   const copy = {
     en: {
       greeting: 'Hello, {name}.',
-      homeTitle: 'Ready for some numbers?',
-      homeSubtitle: 'Eight short activities. Stop when the session is finished.',
-      start: 'Start',
-      continue: 'Continue',
+      academyName: 'Iron Man’s Number Lab',
+      homeTitle: 'Ready to train with Iron Man?',
+      homeSubtitle: 'Take it slow: look closely, count carefully, and power up each number.',
+      start: 'Start mission',
+      continue: 'Continue mission',
       startAgain: 'Start again',
       forParents: 'For parents',
       help: 'Help',
       done: 'Done',
       next: 'Next',
       finish: 'Finish',
-      sessionComplete: 'Session complete',
-      completionTitle: 'Today you worked with quantities from one to five.',
-      completionMessage: 'You looked, counted, and made sets.',
+      sessionComplete: 'Mission complete',
+      completionTitle: 'Today you trained your number powers from one to five.',
+      completionMessage: 'You looked closely, counted carefully, and made sets.',
       dotInstruction: 'How many dots did you see?',
       dotWaiting: 'Look carefully.',
       patternGone: 'The dots are hidden. Choose the number.',
@@ -41,19 +52,20 @@
     },
     pl: {
       greeting: 'Cześć, {name}.',
-      homeTitle: 'Gotowi na liczby?',
-      homeSubtitle: 'Osiem krótkich zadań. Sesja kończy się sama.',
-      start: 'Start',
-      continue: 'Kontynuuj',
+      academyName: 'Laboratorium Liczb Iron Mana',
+      homeTitle: 'Gotowi na trening z Iron Manem?',
+      homeSubtitle: 'Bez pośpiechu: patrz uważnie, licz dokładnie i wzmacniaj każdą liczbę.',
+      start: 'Rozpocznij misję',
+      continue: 'Kontynuuj misję',
       startAgain: 'Zacznij od nowa',
       forParents: 'Dla rodziców',
       help: 'Pomoc',
       done: 'Gotowe',
       next: 'Dalej',
       finish: 'Zakończ',
-      sessionComplete: 'Koniec sesji',
-      completionTitle: 'Dziś ćwiczyliście ilości od jednego do pięciu.',
-      completionMessage: 'Patrzyliście, liczyliście i tworzyliście zbiory.',
+      sessionComplete: 'Misja zakończona',
+      completionTitle: 'Dziś ćwiczyliście moce liczb od jednego do pięciu.',
+      completionMessage: 'Patrzyliście uważnie, liczyliście dokładnie i tworzyliście zbiory.',
       dotInstruction: 'Ile kropek widziałeś?',
       dotWaiting: 'Popatrz uważnie.',
       patternGone: 'Kropki są ukryte. Wybierz liczbę.',
@@ -108,6 +120,7 @@
   let currentSession = null;
   let currentActivityState = null;
   let pendingResumeSession = null;
+  let homeHeroImage = null;
   let dotTimer = null;
   let gateTimer = null;
   let keyboardGateTimer = null;
@@ -141,6 +154,35 @@
 
   function numberWord(quantity) {
     return numberWords[numberLanguage()][quantity] || String(quantity);
+  }
+
+  function chooseIronManImage() {
+    if (ironManImages.length === 0) return '';
+
+    let previousImage = '';
+    try {
+      previousImage = sessionStorage.getItem(LAST_HERO_KEY) || '';
+    } catch (error) {
+      // Random selection still works if session storage is unavailable.
+    }
+
+    const choices = ironManImages.filter(source => source !== previousImage);
+    const pool = choices.length > 0 ? choices : ironManImages;
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+
+    try {
+      sessionStorage.setItem(LAST_HERO_KEY, selected);
+    } catch (error) {
+      // No persistence is required for the current mission.
+    }
+    return selected;
+  }
+
+  function showIronMan(source) {
+    if (!source) return;
+    document.querySelectorAll('[data-iron-man]').forEach(image => {
+      image.src = source;
+    });
   }
 
   function openDatabase() {
@@ -330,12 +372,12 @@
   function cacheElements() {
     [
       'setupScreen', 'setupForm', 'nicknameInput', 'homeScreen', 'homeGreeting',
-      'homeTitle', 'homeSubtitle', 'homeSoundButton', 'startSessionButton',
+      'academyTitle', 'homeTitle', 'homeSubtitle', 'homeSoundButton', 'startSessionButton',
       'resumeActions', 'continueSessionButton', 'restartSessionButton',
       'openParentGateButton', 'sessionScreen', 'progressMarks',
-      'replayInstructionButton', 'activityInstruction', 'activityFeedback',
+      'replayInstructionButton', 'sessionHero', 'activityInstruction', 'activityFeedback',
       'activityWorkspace', 'helpButton', 'doneButton', 'completionScreen',
-      'completionTitle', 'completionMessage', 'finishSessionButton',
+      'completionEyebrow', 'completionTitle', 'completionMessage', 'finishSessionButton',
       'parentScreen', 'closeParentButton', 'parentSettingsForm',
       'parentNicknameInput', 'parentLanguageSelect', 'parentSoundSelect',
       'completedSessionCount', 'latestSessionSummary', 'exportDataButton',
@@ -355,6 +397,7 @@
 
   function applyChildCopy() {
     elements.homeGreeting.textContent = text('greeting', { name: profile.nickname });
+    elements.academyTitle.textContent = text('academyName');
     elements.homeTitle.textContent = text('homeTitle');
     elements.homeSubtitle.textContent = text('homeSubtitle');
     elements.startSessionButton.textContent = text('start');
@@ -365,6 +408,7 @@
     elements.finishSessionButton.textContent = text('finish');
     elements.completionTitle.textContent = text('completionTitle');
     elements.completionMessage.textContent = text('completionMessage');
+    elements.completionEyebrow.textContent = text('sessionComplete');
     updateSoundButton();
   }
 
@@ -390,6 +434,17 @@
       .filter(session => !session.completedAt && session.completedActivityCount < session.plannedActivityCount)
       .sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)));
     pendingResumeSession = activeSessions[0] || null;
+
+    if (pendingResumeSession) {
+      if (!pendingResumeSession.heroImage) {
+        pendingResumeSession.heroImage = chooseIronManImage();
+        await repository.saveSession(pendingResumeSession);
+      }
+      homeHeroImage = pendingResumeSession.heroImage;
+    } else {
+      homeHeroImage = chooseIronManImage();
+    }
+    showIronMan(homeHeroImage);
 
     elements.startSessionButton.hidden = Boolean(pendingResumeSession);
     elements.resumeActions.hidden = !pendingResumeSession;
@@ -494,14 +549,17 @@
       targetSkillId: 'cardinality_to_5',
       skillIdsReviewed: ['subitise_1_3', 'count_objects_to_5'],
       endedReason: null,
+      heroImage: homeHeroImage || chooseIronManImage(),
       activities: createSessionPlan()
     };
+    showIronMan(currentSession.heroImage);
     await repository.saveSession(currentSession);
     renderCurrentActivity();
   }
 
   function resumeSession() {
     currentSession = pendingResumeSession;
+    showIronMan(currentSession.heroImage);
     renderCurrentActivity();
   }
 
@@ -519,6 +577,7 @@
   function resetActivityUi() {
     clearTimeout(dotTimer);
     elements.activityWorkspace.innerHTML = '';
+    elements.activityWorkspace.classList.remove('activity-enter');
     elements.activityFeedback.textContent = '';
     elements.activityFeedback.className = 'activity-feedback';
     elements.doneButton.hidden = true;
@@ -553,6 +612,7 @@
     if (activity.type === 'dotFlash') renderDotFlash(activity);
     if (activity.type === 'countSet') renderCountSet(activity);
     if (activity.type === 'makeSet') renderMakeSet(activity);
+    requestAnimationFrame(() => elements.activityWorkspace.classList.add('activity-enter'));
     speakCurrentInstruction();
   }
 
@@ -812,6 +872,9 @@
     const feedback = text(feedbackKey, { number: quantity });
     elements.activityFeedback.textContent = feedback;
     elements.activityFeedback.classList.add('correct');
+    elements.sessionHero.classList.remove('hero-encourage');
+    void elements.sessionHero.offsetWidth;
+    elements.sessionHero.classList.add('hero-encourage');
     speakFeedback(feedback);
 
     const attempt = {
@@ -905,9 +968,11 @@
       pl: copy.pl.completionTitle
     };
     await repository.saveSession(currentSession);
+    showIronMan(currentSession.heroImage);
     showScreen(elements.completionScreen);
     elements.completionTitle.textContent = text('completionTitle');
     elements.completionMessage.textContent = text('completionMessage');
+    elements.completionEyebrow.textContent = text('sessionComplete');
     elements.finishSessionButton.textContent = text('finish');
   }
 
