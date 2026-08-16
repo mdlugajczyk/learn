@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-site.mjs"
+    "build": "node scripts/build-site.mjs",
+    "validate": "node scripts/validate-czytaj.mjs --strict-audio",
+    "validate:structure": "node scripts/validate-czytaj.mjs",
+    "test": "node --test test/*.test.mjs",
+    "audio:generate": "node scripts/generate-reading-audio.mjs",
+    "audio:temporary": "node scripts/generate-temporary-reading-audio.mjs"
   }
 }

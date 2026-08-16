@@ -1,79 +1,90 @@
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { validateCzytaj } from './validate-czytaj.mjs';
 
 const projectRoot = process.cwd();
+const publicRoot = path.join(projectRoot, 'public');
 const outputRoot = path.join(projectRoot, 'dist');
+const clientRoot = path.join(outputRoot, 'client');
 const workerPath = path.join(outputRoot, 'server', 'index.js');
-const trackedPublicFiles = execFileSync('git', ['ls-files', 'public'], {
-  cwd: projectRoot,
-  encoding: 'utf8'
-})
-  .split('\n')
-  .filter(Boolean);
 
-const contentTypes = {
-  '.css': 'text/css; charset=utf-8',
-  '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg',
-  '.jpg': 'image/jpeg',
-  '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.png': 'image/png',
-  '.webmanifest': 'application/manifest+json; charset=utf-8'
-};
+await validateCzytaj({ strictAudio: true });
 
-const assets = {};
-for (const relativeFile of trackedPublicFiles) {
-  const extension = path.extname(relativeFile).toLowerCase();
-  if (!contentTypes[extension]) continue;
-  const requestPath = `/${relativeFile.replace(/^public\//, '')}`;
-  assets[requestPath] = {
-    body: (await readFile(path.join(projectRoot, relativeFile))).toString('base64'),
-    type: contentTypes[extension]
-  };
+const tracked = execFileSync('git', ['ls-files', 'public'], { cwd: projectRoot, encoding: 'utf8' }).split('\n').filter(Boolean);
+
+async function walk(directory) {
+  const files = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(absolute));
+    else if (entry.isFile() && entry.name !== '.DS_Store') files.push(absolute);
+  }
+  return files;
 }
+
+const czytajFiles = (await walk(path.join(publicRoot, 'czytaj'))).map((file) => path.relative(projectRoot, file));
+const sourceFiles = [...new Set([...tracked, ...czytajFiles])].filter((file) => !file.endsWith('.DS_Store'));
+
+await rm(outputRoot, { recursive: true, force: true });
+await mkdir(clientRoot, { recursive: true });
+for (const relativeFile of sourceFiles) {
+  const destination = path.join(clientRoot, relativeFile.replace(/^public\//, ''));
+  await mkdir(path.dirname(destination), { recursive: true });
+  await cp(path.join(projectRoot, relativeFile), destination);
+}
+
+const packFiles = (await walk(path.join(clientRoot, 'czytaj'))).filter((file) => !file.endsWith('offline-pack.json'));
+const packAssets = [];
+for (const file of packFiles) {
+  const contents = await readFile(file);
+  packAssets.push({
+    path: `/${path.relative(clientRoot, file).split(path.sep).join('/')}`,
+    bytes: contents.byteLength,
+    sha256: createHash('sha256').update(contents).digest('hex')
+  });
+}
+packAssets.sort((a, b) => a.path.localeCompare(b.path));
+const packManifest = {
+  schemaVersion: 1,
+  version: `czytaj-${createHash('sha256').update(JSON.stringify(packAssets)).digest('hex').slice(0, 12)}`,
+  generatedAt: new Date().toISOString(),
+  assetCount: packAssets.length,
+  totalBytes: packAssets.reduce((total, asset) => total + asset.bytes, 0),
+  assets: packAssets
+};
+await writeFile(path.join(clientRoot, 'czytaj', 'offline-pack.json'), `${JSON.stringify(packManifest, null, 2)}\n`);
 
 const workerSource = `
-const assets = ${JSON.stringify(assets)};
-
-function decodeBase64(value) {
-  const binary = atob(value);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index++) {
-    bytes[index] = binary.charCodeAt(index);
-  }
-  return bytes;
-}
-
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
+    if (!env?.ASSETS?.fetch) return new Response('Static asset binding unavailable', { status: 503 });
+    let response = await env.ASSETS.fetch(request);
     const url = new URL(request.url);
-    let requestPath;
-    try {
-      requestPath = decodeURIComponent(url.pathname);
-    } catch {
-      return new Response('Bad request', { status: 400 });
+    if (response.status === 404 && request.method === 'GET' && url.pathname.startsWith('/czytaj/') && request.headers.get('accept')?.includes('text/html')) {
+      response = await env.ASSETS.fetch(new Request(new URL('/czytaj/index.html', url), request));
     }
-
-    if (requestPath === '/') requestPath = '/index.html';
-    const asset = assets[requestPath];
-    if (!asset) return new Response('Not found', { status: 404 });
-
-    const isDocument = requestPath.endsWith('.html') || requestPath.endsWith('.js');
-    const headers = new Headers({
-      'Content-Type': asset.type,
-      'Cache-Control': isDocument ? 'no-cache' : 'public, max-age=3600',
-      'X-Content-Type-Options': 'nosniff',
-      'Referrer-Policy': 'no-referrer'
-    });
-    if (request.method === 'HEAD') return new Response(null, { headers });
-    return new Response(decodeBase64(asset.body), { headers });
+    const headers = new Headers(response.headers);
+    headers.set('X-Content-Type-Options', 'nosniff');
+    headers.set('Referrer-Policy', 'no-referrer');
+    headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    if (url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('sw.js')) headers.set('Cache-Control', 'no-cache');
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
   }
 };
 `;
-
-await rm(outputRoot, { recursive: true, force: true });
 await mkdir(path.dirname(workerPath), { recursive: true });
 await writeFile(workerPath, workerSource);
-console.log(`Built ${trackedPublicFiles.length} public files.`);
+
+const workerBytes = (await stat(workerPath)).size;
+if (workerBytes >= 1024 * 1024) throw new Error(`Worker exceeds 1 MB budget: ${workerBytes} bytes`);
+if (packManifest.totalBytes >= 60 * 1024 * 1024) throw new Error(`Offline pack exceeds 60 MB budget: ${packManifest.totalBytes} bytes`);
+if (packManifest.assetCount >= 900) throw new Error(`Offline pack exceeds 900 file budget: ${packManifest.assetCount}`);
+console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(workerBytes)} Worker.`);
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#151b46">
+  <meta name="description" content="Czytaj — spokojne, dziesięciominutowe misje do nauki czytania po polsku.">
+  <meta property="og:title" content="Czytaj — kosmiczne misje czytelnicze">
+  <meta property="og:description" content="Offline, bez reklam i bez konta. Spokojna nauka czytania po polsku.">
+  <meta property="og:image" content="/czytaj/assets/czytaj-space-card.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Czytaj</title>
+</head>
+<body>
+  <div class="star-field" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Wróć do menu głównego">
+      <span class="brand-mark">c</span><span>Czytaj</span>
+    </a>
+    <div class="top-actions">
+      <button id="replayButton" class="icon-button" type="button" aria-label="Powtórz polecenie" title="Powtórz polecenie">🔊</button>
+      <button id="parentButton" class="parent-button" type="button" aria-label="Tryb rodzica. Przytrzymaj przez trzy sekundy.">Rodzic</button>
+    </div>
+  </header>
+
+  <main id="app" class="app-shell" aria-live="polite"></main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="parentGate" class="dialog-card">
+    <form method="dialog" id="parentGateForm">
+      <p class="eyebrow">Tryb rodzica</p>
+      <h2>Wpisz RODZIC</h2>
+      <p>Ta blokada chroni tylko przed przypadkowym dotknięciem. Nie jest zabezpieczeniem konta.</p>
+      <label>Hasło kontrolne<input id="parentCode" autocomplete="off" autocapitalize="characters" inputmode="text"></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="button secondary">Anuluj</button>
+        <button id="parentGateSubmit" value="default" class="button primary">Otwórz</button>
+      </div>
+    </form>
+  </dialog>
+
+  <noscript>Ta aplikacja potrzebuje JavaScriptu do prowadzenia ćwiczeń i zapisywania postępu na urządzeniu.</noscript>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
