@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'czytaj-shell-v3';
+const SHELL_CACHE = 'czytaj-shell-v4';
 const PACK_PREFIX = 'czytaj-pack-';
 const SCOPE_URL = self.registration.scope;
 const SCOPE_PATH = new URL(SCOPE_URL).pathname;
@@ -46,11 +46,13 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
-  if (event.data?.type === 'VERIFY_PACK') event.waitUntil(verifyPack(event.data.manifest, event.ports[0]));
-  if (event.data?.type === 'DOWNLOAD_PACK') event.waitUntil(downloadPack(event.data.manifest, event.ports[0]));
+  const requestId = event.data?.requestId;
+  const reply = (data) => event.source?.postMessage({ ...data, requestId });
+  if (event.data?.type === 'VERIFY_PACK') event.waitUntil(verifyPack(event.data.manifest, reply));
+  if (event.data?.type === 'DOWNLOAD_PACK') event.waitUntil(downloadPack(event.data.manifest, reply));
 });
 
-async function downloadPack(manifest, port) {
+async function downloadPack(manifest, reply) {
   const cacheName = `${PACK_PREFIX}${manifest.version}`;
   const stagingName = `${cacheName}-staging`;
   await caches.delete(stagingName);
@@ -66,32 +68,36 @@ async function downloadPack(manifest, port) {
       if (asset.sha256 && await sha256(buffer) !== asset.sha256) throw new Error(`${asset.path}: nieprawidłowa suma kontrolna`);
       await cache.put(assetUrl, response);
       completed += 1;
-      port?.postMessage({ type: 'progress', completed, total: manifest.assets.length, bytes: manifest.totalBytes });
+      reply({ type: 'progress', completed, total: manifest.assets.length, bytes: manifest.totalBytes });
     }
     await caches.delete(cacheName);
     const destination = await caches.open(cacheName);
     for (const request of await cache.keys()) await destination.put(request, await cache.match(request));
     await caches.delete(stagingName);
-    port?.postMessage({ type: 'complete', completed, total: manifest.assets.length, bytes: manifest.totalBytes, version: manifest.version });
+    reply({ type: 'complete', completed, total: manifest.assets.length, bytes: manifest.totalBytes, version: manifest.version });
   } catch (error) {
     await caches.delete(stagingName);
-    port?.postMessage({ type: 'error', message: error.message });
+    reply({ type: 'error', message: error.message });
   }
 }
 
-async function verifyPack(manifest, port) {
-  let completed = 0;
-  for (const asset of manifest.assets) {
-    const assetUrl = new URL(asset.path, SCOPE_URL).href;
-    const response = await caches.match(assetUrl, { ignoreSearch: true });
-    if (!response) return port?.postMessage({ type: 'error', message: `Brakuje: ${asset.path}` });
-    const buffer = await response.clone().arrayBuffer();
-    if (asset.bytes && buffer.byteLength !== asset.bytes) return port?.postMessage({ type: 'error', message: `Uszkodzony plik: ${asset.path}` });
-    if (asset.sha256 && await sha256(buffer) !== asset.sha256) return port?.postMessage({ type: 'error', message: `Niepoprawna suma kontrolna: ${asset.path}` });
-    completed += 1;
-    port?.postMessage({ type: 'progress', completed, total: manifest.assets.length, bytes: manifest.totalBytes });
+async function verifyPack(manifest, reply) {
+  try {
+    let completed = 0;
+    for (const asset of manifest.assets) {
+      const assetUrl = new URL(asset.path, SCOPE_URL).href;
+      const response = await caches.match(assetUrl, { ignoreSearch: true });
+      if (!response) return reply({ type: 'error', message: `Brakuje: ${asset.path}` });
+      const buffer = await response.clone().arrayBuffer();
+      if (asset.bytes && buffer.byteLength !== asset.bytes) return reply({ type: 'error', message: `Uszkodzony plik: ${asset.path}` });
+      if (asset.sha256 && await sha256(buffer) !== asset.sha256) return reply({ type: 'error', message: `Niepoprawna suma kontrolna: ${asset.path}` });
+      completed += 1;
+      reply({ type: 'progress', completed, total: manifest.assets.length, bytes: manifest.totalBytes });
+    }
+    reply({ type: 'complete', completed, total: manifest.assets.length, bytes: manifest.totalBytes, version: manifest.version });
+  } catch (error) {
+    reply({ type: 'error', message: error.message });
   }
-  port?.postMessage({ type: 'complete', completed, total: manifest.assets.length, bytes: manifest.totalBytes, version: manifest.version });
 }
 
 async function sha256(buffer) {

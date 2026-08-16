@@ -211,21 +211,30 @@ async function downloadOrVerifyPack(verifyOnly = false) {
     const manifest = await packManifest();
     state.download = { ...state.download, total: manifest.assetCount };
     render();
-    const registration = state.swRegistration ?? await registerServiceWorker();
-    const worker = registration?.active ?? registration?.waiting ?? registration?.installing;
+    await (state.swRegistration ?? registerServiceWorker());
+    const registration = await navigator.serviceWorker.ready;
+    const worker = registration.active;
     if (!worker) throw new Error('Przeglądarka nie uruchomiła jeszcze pamięci offline. Odczekaj chwilę i spróbuj ponownie.');
     await new Promise((resolve, reject) => {
-      const channel = new MessageChannel();
-      channel.port1.onmessage = ({ data }) => {
+      const requestId = globalThis.crypto?.randomUUID?.() ?? `czytaj-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const timeout = setTimeout(() => finish(() => reject(new Error('Pobieranie nie odpowiedziało. Zamknij aplikację, otwórz ją ponownie i spróbuj jeszcze raz.'))), 120000);
+      const finish = (callback) => {
+        clearTimeout(timeout);
+        navigator.serviceWorker.removeEventListener('message', onMessage);
+        callback();
+      };
+      const onMessage = ({ data }) => {
+        if (data?.requestId !== requestId) return;
         if (data.type === 'progress') {
           state.download = { ...state.download, completed: data.completed, total: data.total };
           render();
         } else if (data.type === 'complete') {
           state.progress.offline = { version: data.version, verifiedAt: new Date().toISOString(), assetCount: data.total, totalBytes: data.bytes };
-          resolve();
-        } else if (data.type === 'error') reject(new Error(data.message));
+          finish(resolve);
+        } else if (data.type === 'error') finish(() => reject(new Error(data.message)));
       };
-      worker.postMessage({ type: verifyOnly ? 'VERIFY_PACK' : 'DOWNLOAD_PACK', manifest }, [channel.port2]);
+      navigator.serviceWorker.addEventListener('message', onMessage);
+      worker.postMessage({ type: verifyOnly ? 'VERIFY_PACK' : 'DOWNLOAD_PACK', manifest, requestId });
     });
     state.download.running = false;
     await save();
