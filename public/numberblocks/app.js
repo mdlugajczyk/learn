@@ -1,10 +1,7 @@
 import {
   chooseNumberChoices,
   formatEquation,
-  joinParts,
-  partitionKey,
-  splitPart,
-  suggestedSplit
+  partitionKey
 } from './engine.js';
 
 const STORAGE_KEY = 'tens-number-magic-v1';
@@ -26,10 +23,9 @@ const elements = {};
 const state = {
   target: 5,
   parts: [5],
+  positions: [{ x: .5, y: .46 }],
   history: [],
-  selectedIndex: 0,
-  joinMode: false,
-  joinFirstIndex: null,
+  coachVisible: false,
   choices: [5, 7, 10],
   discoveries: {},
   recent: {},
@@ -91,6 +87,7 @@ class SoundStudio {
       slide: [[280, 350, 0, .045, .025]],
       split: [[330, 520, 0, .16, .06], [520, 760, .08, .19, .055]],
       join: [[310, 390, 0, .18, .06], [390, 520, .06, .24, .055]],
+      bounce: [[245, 470, 0, .11, .045], [470, 620, .1, .14, .038]],
       discover: [[523, 620, 0, .2, .055], [659, 740, .09, .25, .05], [784, 880, .18, .3, .045]],
       back: [[460, 330, 0, .09, .045]]
     };
@@ -142,8 +139,7 @@ function cacheElements() {
     'homeScreen', 'playScreen', 'homeMentor', 'playMentor', 'welcomeMentor',
     'numberChoices', 'shuffleButton', 'offlinePill', 'offlineLabel', 'playTitle', 'playContent',
     'backButton', 'mentorText', 'replayButton', 'partsStage', 'equation',
-    'splitDock', 'splitTitle', 'splitRange', 'leftSplitValue', 'rightSplitValue',
-    'splitButton', 'undoButton', 'joinAllButton', 'joinButtonLabel', 'newWayButton', 'discoveryCount',
+    'undoButton', 'newWayButton', 'discoveryCount',
     'recentDiscoveries', 'welcomeOverlay', 'startButton', 'settingsButton',
     'settingsOverlay', 'closeSettingsButton', 'soundToggle', 'motionToggle',
     'settingsOfflineDot', 'settingsOfflineTitle', 'settingsOfflineCopy',
@@ -266,14 +262,13 @@ function shuffleChoices() {
 function startNumber(number) {
   state.target = number;
   state.parts = [number];
+  state.positions = defaultPositions(1);
   state.history = [];
-  state.selectedIndex = 0;
-  state.joinMode = false;
-  state.joinFirstIndex = null;
+  state.coachVisible = true;
   elements.homeScreen.hidden = true;
   elements.playScreen.hidden = false;
   elements.playTitle.textContent = numberName(number, true).toUpperCase();
-  setMentorText(`Let's find all the ways to make ${numberName(number)}!`);
+  setMentorText('Pull some blocks away. Bump friends together. Flick them up!');
   renderPlay();
   sounds.speak(`play-${number}.m4a`);
   requestAnimationFrame(() => { elements.playContent.scrollTop = 0; });
@@ -292,7 +287,7 @@ function setMentorText(text) {
 }
 
 function compositionSentence(parts = state.parts) {
-  const words = parts.map(number => numberName(number));
+  const words = canonicalParts(parts).map(number => numberName(number));
   let joined = words[0] || '';
   if (words.length === 2) joined = `${words[0]} and ${words[1]}`;
   if (words.length > 2) joined = `${words.slice(0, -1).join(', ')}, and ${words.at(-1)}`;
@@ -307,23 +302,65 @@ function compositionAudioFilename(parts = state.parts) {
 function renderPlay(options = {}) {
   renderParts(options);
   renderEquation();
-  renderSplitDock();
   renderActions();
   renderDiscoveries();
 }
 
+function clamp(value, minimum, maximum) {
+  return Math.min(maximum, Math.max(minimum, value));
+}
+
+function canonicalParts(parts = state.parts) {
+  return [...parts].sort((left, right) => right - left);
+}
+
+function defaultPositions(count) {
+  if (count === 1) return [{ x: .5, y: .46 }];
+  if (count <= 4) {
+    return Array.from({ length: count }, (_, index) => ({
+      x: .17 + (index * .66) / (count - 1),
+      y: .55 + (index % 2 ? .035 : -.015)
+    }));
+  }
+  const columns = Math.min(5, count);
+  const rows = Math.ceil(count / columns);
+  return Array.from({ length: count }, (_, index) => {
+    const row = Math.floor(index / columns);
+    const itemsInRow = Math.min(columns, count - row * columns);
+    const column = index % columns;
+    return {
+      x: (column + 1) / (itemsInRow + 1),
+      y: rows === 1 ? .56 : .38 + row * .31
+    };
+  });
+}
+
+function snapshotPlay() {
+  return {
+    parts: [...state.parts],
+    positions: state.positions.map(position => ({ ...position }))
+  };
+}
+
+function pushHistory() {
+  state.history.push(snapshotPlay());
+}
+
 function renderParts(options = {}) {
+  if (state.positions.length !== state.parts.length) state.positions = defaultPositions(state.parts.length);
   elements.partsStage.replaceChildren();
   elements.partsStage.className = `parts-stage parts-count-${state.parts.length}`;
   state.parts.forEach((number, index) => {
-    const isSelected = state.joinMode ? index === state.joinFirstIndex : index === state.selectedIndex;
-    const button = makeElement('button', `part-card${number > 1 && !state.joinMode ? ' splittable' : ''}${isSelected ? ' selected' : ''}`);
+    const button = makeElement('button', `part-card${number > 1 ? ' splittable' : ''}`);
     button.type = 'button';
     button.dataset.partIndex = String(index);
+    button.dataset.gesture = number > 1 ? 'split-move-join-juggle' : 'move-join-juggle';
     button.style.setProperty('--part-color', characterColor(number));
+    button.style.left = `${state.positions[index].x * 100}%`;
+    button.style.top = `${state.positions[index].y * 100}%`;
     button.setAttribute('aria-label', number > 1
-      ? `Number ${number}. Tap to split, or drag it onto another number to join.`
-      : 'Number one. Drag it onto another number to join.');
+      ? `Number ${number}. Pull its blocks apart to split. Drag its number badge onto a friend to join. Tap to bounce.`
+      : 'Number one. Drag its number badge onto a friend to join. Tap to bounce.');
     const host = makeElement('span', 'character-host part-character');
     host.appendChild(createCharacter(number));
     const label = makeElement('span', 'part-label', number);
@@ -336,55 +373,209 @@ function renderParts(options = {}) {
     attachPartGestures(button, index);
     elements.partsStage.appendChild(button);
   });
-  updatePreviewCubes();
+  if (state.coachVisible && state.parts.length === 1) renderGestureCoach();
 }
 
 function attachPartGestures(button, index) {
   let startX = 0;
   let startY = 0;
+  let lastX = 0;
+  let lastY = 0;
+  let lastTime = 0;
+  let velocityX = 0;
+  let velocityY = 0;
   let moved = false;
+  let armed = false;
   let targetIndex = null;
+  let mode = 'move';
+  let chunk = 0;
+  let startCenterX = 0;
+  let startCenterY = 0;
+  let preview = null;
+  let selectedCubes = [];
+  let activePointerId = null;
+  let splitTimer = null;
+  let joinTimer = null;
+  let settleTimer = null;
 
   button.addEventListener('pointerdown', event => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (activePointerId !== null) return;
+    event.preventDefault();
+    activePointerId = event.pointerId;
+    sounds.unlock();
+    dismissGestureCoach();
     startX = event.clientX;
     startY = event.clientY;
+    lastX = startX;
+    lastY = startY;
+    lastTime = performance.now();
+    velocityX = 0;
+    velocityY = 0;
     moved = false;
+    armed = false;
     targetIndex = null;
-    button.setPointerCapture(event.pointerId);
+    const cube = event.target.closest('.cube');
+    const value = state.parts[index];
+    mode = cube && value > 1 ? 'split' : 'move';
+    const cardRect = button.getBoundingClientRect();
+    startCenterX = cardRect.left + cardRect.width / 2;
+    startCenterY = cardRect.top + cardRect.height / 2;
+    if (mode === 'split') {
+      chunk = Math.min(Number(cube.dataset.cubeIndex) + 1, value - 1);
+      const cubes = [...button.querySelectorAll('.cube')];
+      selectedCubes = cubes.slice(0, chunk);
+      selectedCubes.forEach(item => item.classList.add('peel-cube'));
+      cubes.slice(chunk).forEach(item => item.classList.add('stay-cube'));
+      button.classList.add('peel-active');
+      preview = makeElement('span', 'split-preview', `${chunk} + ${value - chunk}`);
+      elements.partsStage.appendChild(preview);
+      moveSplitPreview(preview, event.clientX, event.clientY);
+    }
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', finish);
+    document.addEventListener('pointercancel', finish);
   });
 
-  button.addEventListener('pointermove', event => {
-    if (!button.hasPointerCapture(event.pointerId)) return;
+  const move = event => {
+    if (event.pointerId !== activePointerId) return;
+    event.preventDefault();
     const dx = event.clientX - startX;
     const dy = event.clientY - startY;
+    const now = performance.now();
+    const elapsed = Math.max(8, now - lastTime);
+    velocityX = (event.clientX - lastX) / elapsed;
+    velocityY = (event.clientY - lastY) / elapsed;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastTime = now;
     if (!moved && Math.hypot(dx, dy) < 9) return;
     moved = true;
+    if (mode === 'split') {
+      selectedCubes.forEach(item => {
+        item.style.setProperty('--peel-x', `${dx}px`);
+        item.style.setProperty('--peel-y', `${dy}px`);
+      });
+      armed = Math.hypot(dx, dy) > 38;
+      button.classList.toggle('split-armed', armed);
+      preview?.classList.toggle('armed', armed);
+      moveSplitPreview(preview, event.clientX, event.clientY);
+      if (armed && !splitTimer) {
+        splitTimer = setTimeout(() => {
+          if (activePointerId !== null && armed) {
+            finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
+          }
+        }, 140);
+      } else if (!armed && splitTimer) {
+        clearTimeout(splitTimer);
+        splitTimer = null;
+      }
+      return;
+    }
     button.classList.add('dragging');
-    button.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(1.04)`;
+    moveCard(button, startCenterX + dx, startCenterY + dy);
     targetIndex = findDropTarget(index, event.clientX, event.clientY);
-    document.querySelectorAll('.part-card').forEach(part => {
-      part.classList.toggle('drop-target', Number(part.dataset.partIndex) === targetIndex);
-    });
-  });
-
-  const finish = event => {
-    if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
-    button.style.transform = '';
-    button.classList.remove('dragging');
-    document.querySelectorAll('.part-card').forEach(part => part.classList.remove('drop-target'));
-    if (moved) {
-      button.dataset.suppressClick = 'true';
-      setTimeout(() => delete button.dataset.suppressClick, 80);
-      if (targetIndex !== null) joinSelectedParts(index, targetIndex);
+    showDropTarget(targetIndex);
+    clearTimeout(settleTimer);
+    settleTimer = null;
+    if (targetIndex !== null && !joinTimer) {
+      joinTimer = setTimeout(() => {
+        if (activePointerId !== null && targetIndex !== null) {
+          finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
+        }
+      }, 170);
+    } else if (targetIndex === null && joinTimer) {
+      clearTimeout(joinTimer);
+      joinTimer = null;
+    }
+    if (targetIndex === null) {
+      settleTimer = setTimeout(() => {
+        if (activePointerId !== null && targetIndex === null) {
+          finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
+        }
+      }, 220);
     }
   };
 
-  button.addEventListener('pointerup', finish);
-  button.addEventListener('pointercancel', finish);
-  button.addEventListener('click', () => {
-    if (button.dataset.suppressClick === 'true') return;
-    selectPart(index);
+  const finish = event => {
+    if (event.pointerId !== activePointerId) return;
+    clearTimeout(splitTimer);
+    clearTimeout(joinTimer);
+    clearTimeout(settleTimer);
+    splitTimer = null;
+    joinTimer = null;
+    settleTimer = null;
+    activePointerId = null;
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', finish);
+    document.removeEventListener('pointercancel', finish);
+    showDropTarget(null);
+    const cancelled = event.type === 'pointercancel';
+    if (mode === 'split') {
+      preview?.remove();
+      if (!cancelled && moved && armed) {
+        performGestureSplit(index, chunk, event.clientX, event.clientY);
+      } else {
+        button.classList.add('peel-return');
+        selectedCubes.forEach(item => {
+          item.style.removeProperty('--peel-x');
+          item.style.removeProperty('--peel-y');
+        });
+        setTimeout(() => button.classList.remove('peel-active', 'peel-return', 'split-armed'), 230);
+        if (!moved) hopPart(button);
+      }
+      return;
+    }
+    button.classList.remove('dragging');
+    if (!cancelled && moved) {
+      const finalRect = button.getBoundingClientRect();
+      state.positions[index] = positionFromCenter(finalRect.left + finalRect.width / 2, finalRect.top + finalRect.height / 2);
+      if (targetIndex !== null) {
+        joinSelectedParts(index, targetIndex);
+      } else if (velocityY < -.38 || Math.hypot(velocityX, velocityY) > .95) {
+        jugglePart(button, velocityX, velocityY);
+      } else {
+        button.classList.add('part-land');
+        setTimeout(() => button.classList.remove('part-land'), 380);
+      }
+    } else if (!cancelled) {
+      hopPart(button);
+    }
+  };
+
+  button.addEventListener('click', event => {
+    if (event.detail === 0) hopPart(button);
+  });
+}
+
+function moveCard(button, centerX, centerY) {
+  const stageRect = elements.partsStage.getBoundingClientRect();
+  const halfWidth = Math.min(button.offsetWidth / 2 + 6, stageRect.width / 2);
+  const halfHeight = Math.min(button.offsetHeight / 2 + 7, stageRect.height / 2);
+  const x = clamp(centerX, stageRect.left + halfWidth, stageRect.right - halfWidth);
+  const y = clamp(centerY, stageRect.top + halfHeight, stageRect.bottom - halfHeight);
+  button.style.left = `${x - stageRect.left}px`;
+  button.style.top = `${y - stageRect.top}px`;
+}
+
+function positionFromCenter(centerX, centerY) {
+  const stageRect = elements.partsStage.getBoundingClientRect();
+  return {
+    x: clamp((centerX - stageRect.left) / stageRect.width, .1, .9),
+    y: clamp((centerY - stageRect.top) / stageRect.height, .16, .84)
+  };
+}
+
+function moveSplitPreview(preview, clientX, clientY) {
+  if (!preview) return;
+  const stageRect = elements.partsStage.getBoundingClientRect();
+  preview.style.left = `${clamp(clientX - stageRect.left + 18, 46, stageRect.width - 46)}px`;
+  preview.style.top = `${clamp(clientY - stageRect.top - 28, 28, stageRect.height - 34)}px`;
+}
+
+function showDropTarget(targetIndex) {
+  elements.partsStage.querySelectorAll('.part-card').forEach(part => {
+    part.classList.toggle('drop-target', Number(part.dataset.partIndex) === targetIndex);
   });
 }
 
@@ -408,36 +599,6 @@ function findDropTarget(sourceIndex, x, y) {
   return best;
 }
 
-function selectPart(index) {
-  if (state.joinMode) {
-    if (state.joinFirstIndex === null) {
-      state.joinFirstIndex = index;
-      state.selectedIndex = index;
-      sounds.effect('tap');
-      setMentorText(`Great! Now tap another number friend to join with ${numberName(state.parts[index])}.`);
-      renderPlay();
-      return;
-    }
-    if (state.joinFirstIndex === index) {
-      state.joinFirstIndex = null;
-      setMentorText('Choose the first number friend to join.');
-      renderPlay();
-      return;
-    }
-    joinSelectedParts(state.joinFirstIndex, index);
-    return;
-  }
-  state.selectedIndex = index;
-  sounds.effect('tap');
-  const value = state.parts[index];
-  if (value > 1) {
-    setMentorText(`Slide the star, then split ${numberName(value)}!`);
-  } else {
-    setMentorText('One cannot split, but you can drag it onto a friend to join!');
-  }
-  renderPlay();
-}
-
 function renderEquation() {
   elements.equation.replaceChildren();
   if (state.parts.length === 1) {
@@ -447,7 +608,8 @@ function renderEquation() {
     return;
   }
 
-  const sequence = [state.target, '=', ...state.parts.flatMap((value, index) => index ? ['+', value] : [value])];
+  const parts = canonicalParts();
+  const sequence = [state.target, '=', ...parts.flatMap((value, index) => index ? ['+', value] : [value])];
   sequence.forEach((value, index) => {
     const numeric = Number.isInteger(value);
     const span = makeElement('span', numeric ? 'equation-token' : 'equation-symbol', value);
@@ -455,82 +617,49 @@ function renderEquation() {
     span.style.animationDelay = `${index * 28}ms`;
     elements.equation.appendChild(span);
   });
-  elements.equation.setAttribute('aria-label', formatEquation(state.target, state.parts));
+  elements.equation.setAttribute('aria-label', formatEquation(state.target, parts));
 }
 
-function renderSplitDock() {
-  const value = state.parts[state.selectedIndex];
-  if (state.joinMode || !value || value < 2) {
-    elements.splitDock.hidden = true;
-    updatePreviewCubes();
-    return;
-  }
-
-  elements.splitDock.hidden = false;
-  elements.splitTitle.textContent = `Split ${numberName(value)}`;
-  elements.splitRange.min = '1';
-  elements.splitRange.max = String(value - 1);
-  const current = Number(elements.splitRange.value);
-  const hint = suggestedSplit(value, state.discoveries[String(value)] || []);
-  const fallback = Math.min(hint?.left || Math.ceil(value / 2), value - 1);
-  elements.splitRange.value = String(current >= 1 && current < value ? current : fallback);
-  updateSplitValues();
-}
-
-function updateSplitValues() {
-  const selectedValue = state.parts[state.selectedIndex];
-  if (!selectedValue || selectedValue < 2) return;
-  const left = Number(elements.splitRange.value);
-  const right = selectedValue - left;
-  elements.leftSplitValue.value = String(left);
-  elements.leftSplitValue.textContent = String(left);
-  elements.rightSplitValue.value = String(right);
-  elements.rightSplitValue.textContent = String(right);
-  const max = selectedValue - 1;
-  const position = max <= 1 ? 50 : ((left - 1) / (max - 1)) * 100;
-  elements.splitRange.parentElement.style.setProperty('--range-position', `${position}%`);
-  updatePreviewCubes(left);
-}
-
-function updatePreviewCubes(leftValue = Number(elements.splitRange.value)) {
-  document.querySelectorAll('.part-card .cube').forEach(cube => cube.classList.remove('preview-a', 'preview-b'));
-  const selected = elements.partsStage.querySelector(`.part-card[data-part-index="${state.selectedIndex}"]`);
-  if (!selected || elements.splitDock.hidden) return;
-  [...selected.querySelectorAll('.cube')].forEach((cube, index) => {
-    cube.classList.add(index < leftValue ? 'preview-a' : 'preview-b');
-  });
-}
-
-function performSplit() {
-  const index = state.selectedIndex;
+function performGestureSplit(index, left, clientX, clientY) {
   const value = state.parts[index];
-  const left = Number(elements.splitRange.value);
   if (!value || value < 2 || left < 1 || left >= value) return;
   const oldCard = elements.partsStage.querySelector(`.part-card[data-part-index="${index}"]`);
   oldCard?.classList.add('part-splitting');
   sounds.effect('split');
   setTimeout(() => {
-    state.history.push([...state.parts]);
-    state.parts = splitPart(state.parts, index, left).sort((a, b) => b - a);
-    const newIndices = state.parts.map((_, partIndex) => partIndex);
-    state.selectedIndex = Math.max(0, state.parts.findIndex(part => part > 1));
+    pushHistory();
+    const originalPosition = state.positions[index];
+    const pulledPosition = positionFromCenter(clientX, clientY);
+    let directionX = pulledPosition.x - originalPosition.x;
+    let directionY = pulledPosition.y - originalPosition.y;
+    const distance = Math.hypot(directionX, directionY) || 1;
+    directionX /= distance;
+    directionY /= distance;
+    const restingPosition = {
+      x: clamp(originalPosition.x - directionX * .11, .1, .9),
+      y: clamp(originalPosition.y - directionY * .08, .16, .84)
+    };
+    state.parts.splice(index, 1, left, value - left);
+    state.positions.splice(index, 1, pulledPosition, restingPosition);
     const isNew = recordDiscovery();
     setMentorText(compositionSentence());
-    renderPlay({ arriveIndices: newIndices });
+    renderPlay({ arriveIndices: [index, index + 1] });
     sounds.speak(compositionAudioFilename());
     if (isNew) celebrateDiscovery();
-  }, state.gentleMotion ? 10 : 300);
+  }, state.gentleMotion ? 10 : 180);
 }
 
 function joinSelectedParts(firstIndex, secondIndex) {
   if (firstIndex === secondIndex) return;
   const combinedValue = state.parts[firstIndex] + state.parts[secondIndex];
-  state.history.push([...state.parts]);
-  state.parts = joinParts(state.parts, firstIndex, secondIndex).sort((a, b) => b - a);
-  const combinedIndex = state.parts.indexOf(combinedValue);
-  state.selectedIndex = combinedIndex;
-  state.joinMode = false;
-  state.joinFirstIndex = null;
+  pushHistory();
+  const combinedIndex = Math.min(firstIndex, secondIndex);
+  const removedIndex = Math.max(firstIndex, secondIndex);
+  const landingPosition = { ...state.positions[secondIndex] };
+  state.parts[combinedIndex] = combinedValue;
+  state.parts.splice(removedIndex, 1);
+  state.positions[combinedIndex] = landingPosition;
+  state.positions.splice(removedIndex, 1);
   const isWhole = state.parts.length === 1;
   const isNew = !isWhole && recordDiscovery();
   sounds.effect('join');
@@ -542,44 +671,73 @@ function joinSelectedParts(firstIndex, secondIndex) {
   if (isNew) celebrateDiscovery();
 }
 
-function joinAll() {
-  if (state.parts.length === 1) return;
-  if (state.parts.length === 2) {
-    joinSelectedParts(0, 1);
+function hopPart(button) {
+  sounds.effect('bounce');
+  button.classList.remove('part-hop');
+  requestAnimationFrame(() => button.classList.add('part-hop'));
+  setTimeout(() => button.classList.remove('part-hop'), 560);
+}
+
+function jugglePart(button, velocityX, velocityY) {
+  sounds.effect('bounce');
+  button.classList.add('juggling');
+  const host = button.querySelector('.part-character');
+  if (!host || state.gentleMotion) {
+    button.classList.remove('juggling');
     return;
   }
-  state.joinMode = !state.joinMode;
-  state.joinFirstIndex = null;
-  sounds.effect(state.joinMode ? 'tap' : 'back');
-  setMentorText(state.joinMode
-    ? 'Tap two number friends to join them together!'
-    : 'Tap a number friend to see what is inside!');
-  renderPlay();
+  const sideways = clamp(velocityX * 62, -58, 58);
+  const lift = clamp(velocityY * 145, -122, -68);
+  host.animate([
+    { transform: 'translate3d(0, 0, 0) rotate(0)' },
+    { transform: `translate3d(${sideways * .55}px, ${lift}px, 0) rotate(${sideways * .18}deg)`, offset: .42 },
+    { transform: `translate3d(${sideways}px, 0, 0) rotate(${-sideways * .08}deg)`, offset: .72 },
+    { transform: `translate3d(${sideways * .72}px, -18px, 0) rotate(${sideways * .04}deg)`, offset: .84 },
+    { transform: 'translate3d(0, 0, 0) rotate(0)' }
+  ], { duration: 880, easing: 'cubic-bezier(.2,.72,.3,1)' }).finished.finally(() => {
+    button.classList.remove('juggling');
+  });
+}
+
+function renderGestureCoach() {
+  const coach = makeElement('div', 'gesture-coach');
+  coach.setAttribute('aria-hidden', 'true');
+  const ghost = makeElement('span', 'coach-ghost');
+  const coachChunk = Math.min(2, state.target - 1);
+  for (let index = 0; index < Math.min(state.target, 5); index += 1) {
+    const cube = makeElement('i');
+    if (index < coachChunk) cube.classList.add('coach-pulled');
+    ghost.appendChild(cube);
+  }
+  const hand = makeElement('span', 'coach-hand', '☝');
+  const result = makeElement('span', 'coach-result', `${coachChunk} + ${state.target - coachChunk}`);
+  coach.append(ghost, hand, result);
+  elements.partsStage.appendChild(coach);
+}
+
+function dismissGestureCoach() {
+  if (!state.coachVisible) return;
+  state.coachVisible = false;
+  elements.partsStage.querySelector('.gesture-coach')?.classList.add('coach-leave');
 }
 
 function undo() {
   const previous = state.history.pop();
   if (!previous) return;
-  state.parts = previous;
-  state.joinMode = false;
-  state.joinFirstIndex = null;
-  state.selectedIndex = Math.max(0, state.parts.findIndex(value => value > 1));
+  state.parts = previous.parts;
+  state.positions = previous.positions;
   sounds.effect('back');
   setMentorText(state.parts.length === 1 ? `Here is ${numberName(state.target)} again.` : compositionSentence());
   renderPlay();
 }
 
 function startNewWay() {
-  if (state.parts.length > 1) state.history.push([...state.parts]);
+  if (state.parts.length > 1) pushHistory();
   state.parts = [state.target];
-  state.selectedIndex = 0;
-  state.joinMode = false;
-  state.joinFirstIndex = null;
-  const discovered = state.discoveries[String(state.target)] || [];
-  const hint = suggestedSplit(state.target, discovered);
-  if (hint) elements.splitRange.value = String(hint.left);
+  state.positions = defaultPositions(1);
+  state.coachVisible = true;
   sounds.effect('slide');
-  setMentorText(`Can you make ${numberName(state.target)} a different way?`);
+  setMentorText('Try a new way: pull a different block group away!');
   renderPlay({ joinedIndex: 0 });
   sounds.speak(`new-way-${state.target}.m4a`);
 }
@@ -610,9 +768,6 @@ function renderDiscoveries() {
 
 function renderActions() {
   elements.undoButton.disabled = state.history.length === 0;
-  elements.joinAllButton.disabled = state.parts.length === 1;
-  elements.joinAllButton.classList.toggle('action-button-accent', state.joinMode);
-  elements.joinButtonLabel.textContent = state.joinMode ? 'Cancel' : 'Join';
 }
 
 function celebrateDiscovery() {
@@ -740,13 +895,7 @@ function wireEvents() {
     sounds.effect('tap');
     sounds.speak(state.parts.length > 1 ? compositionAudioFilename() : `play-${state.target}.m4a`);
   });
-  elements.splitRange.addEventListener('input', () => {
-    updateSplitValues();
-    sounds.effect('slide');
-  });
-  elements.splitButton.addEventListener('click', performSplit);
   elements.undoButton.addEventListener('click', undo);
-  elements.joinAllButton.addEventListener('click', joinAll);
   elements.newWayButton.addEventListener('click', startNewWay);
   elements.soundButtons.forEach(button => button.addEventListener('click', toggleSound));
   elements.settingsButton.addEventListener('click', openSettings);

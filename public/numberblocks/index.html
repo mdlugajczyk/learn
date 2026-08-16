@@ -86,47 +86,24 @@
         <div class="mentor-strip">
           <div id="playMentor" class="character-host mentor-mini" aria-hidden="true"></div>
           <div class="speech-bubble">
-            <p id="mentorText">Tap a number friend to see what is inside!</p>
+            <p id="mentorText">Pull blocks apart. Bump friends together. Flick them up!</p>
             <button id="replayButton" class="replay-button" type="button" aria-label="Hear Ten again">♪</button>
           </div>
         </div>
 
-        <div id="partsStage" class="parts-stage" role="group" aria-label="Number parts"></div>
+        <div class="playground-shell">
+          <div id="partsStage" class="parts-stage" role="group" aria-label="Touch playground for number friends"></div>
+          <div class="stage-tools" aria-label="Playground recovery controls">
+            <button id="undoButton" class="stage-tool" type="button" disabled aria-label="Undo the last number change">
+              <span aria-hidden="true">↶</span>
+            </button>
+            <button id="newWayButton" class="stage-tool stage-tool-new" type="button" aria-label="Put the number back together and try a new way">
+              <span aria-hidden="true">✦</span>
+            </button>
+          </div>
+        </div>
 
         <div id="equation" class="equation" aria-live="polite"></div>
-
-        <section id="splitDock" class="split-dock" aria-labelledby="splitTitle" hidden>
-          <div class="split-heading">
-            <div>
-              <span class="split-kicker">SLIDE THE STAR</span>
-              <h2 id="splitTitle">Split five</h2>
-            </div>
-            <span class="split-sparkle" aria-hidden="true">✦</span>
-          </div>
-          <div class="split-control">
-            <output id="leftSplitValue" class="split-value split-value-left" for="splitRange">1</output>
-            <div class="range-shell">
-              <input id="splitRange" type="range" min="1" max="4" value="2" step="1" aria-label="Choose where to split">
-              <span class="range-star" aria-hidden="true">★</span>
-            </div>
-            <output id="rightSplitValue" class="split-value split-value-right" for="splitRange">4</output>
-          </div>
-          <button id="splitButton" class="magic-button" type="button">
-            <span>Split it!</span><span aria-hidden="true">✦</span>
-          </button>
-        </section>
-
-        <div class="play-actions" aria-label="Number actions">
-          <button id="undoButton" class="action-button" type="button" disabled>
-            <span aria-hidden="true">↶</span> Undo
-          </button>
-          <button id="joinAllButton" class="action-button" type="button" disabled>
-            <span aria-hidden="true">＋</span> <span id="joinButtonLabel">Join</span>
-          </button>
-          <button id="newWayButton" class="action-button action-button-accent" type="button">
-            <span aria-hidden="true">✦</span> New way
-          </button>
-        </div>
 
         <div class="discovery-card">
           <div class="discovery-title">

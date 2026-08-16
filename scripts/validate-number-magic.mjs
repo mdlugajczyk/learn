@@ -37,6 +37,16 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   if (manifest.orientation !== 'portrait-primary') errors.push('Manifest must prefer portrait orientation');
   if (!html.includes('viewport-fit=cover')) errors.push('Missing iPhone safe-area viewport support');
   if (!styles.includes('safe-area-inset-bottom')) errors.push('Missing safe-area CSS');
+  if (html.includes('splitButton') || html.includes('Split it!')) errors.push('The playground must not use a split button');
+  if (!appSource.includes("addEventListener('pointerdown'") || !appSource.includes('performGestureSplit')) {
+    errors.push('The playground must split through direct pointer gestures');
+  }
+  if (!appSource.includes('findDropTarget') || !appSource.includes('jugglePart')) {
+    errors.push('The playground must support animated joining and juggling');
+  }
+  if (!styles.includes('.gesture-coach') || !styles.includes('.peel-cube')) {
+    errors.push('The playground needs animated, visual gesture coaching');
+  }
   if (!worker.includes("cache.addAll")) errors.push('Service worker must atomically cache the app pack');
   if (!worker.includes("mode === 'navigate'")) errors.push('Service worker needs an offline navigation fallback');
   if (!Array.isArray(offlinePack.assets)) errors.push('Offline pack assets must be an array');

@@ -36,7 +36,7 @@ for (let target = 2; target <= 10; target += 1) {
   entries.push(
     {
       filename: `play-${target}.m4a`,
-      text: `Let's find all the ways to make ${numberNames[target]}!`
+      text: `Pull some of ${numberNames[target]}'s blocks away. Bump the number friends together, or flick them up!`
     },
     {
       filename: `together-${target}.m4a`,
@@ -57,9 +57,12 @@ for (let target = 2; target <= 10; target += 1) {
 }
 
 await mkdir(outputRoot, { recursive: true });
+const selectedEntries = process.argv.includes('--play-prompts-only')
+  ? entries.filter(entry => entry.filename.startsWith('play-'))
+  : entries;
 try {
-  for (let index = 0; index < entries.length; index += 1) {
-    const entry = entries[index];
+  for (let index = 0; index < selectedEntries.length; index += 1) {
+    const entry = selectedEntries[index];
     const aiffPath = path.join(temporaryRoot, `${String(index).padStart(3, '0')}.aiff`);
     const outputPath = path.join(outputRoot, entry.filename);
     await execFileAsync('/usr/bin/say', ['-v', voice, '-r', '177', '-o', aiffPath, entry.text]);
@@ -68,8 +71,8 @@ try {
       '-af', 'highpass=f=120,lowpass=f=9000,loudnorm=I=-18:LRA=7:TP=-2',
       '-c:a', 'aac', '-b:a', '56k', '-ar', '44100', '-ac', '1', outputPath
     ]);
-    if ((index + 1) % 25 === 0 || index + 1 === entries.length) {
-      console.log(`Generated ${index + 1}/${entries.length} narration clips.`);
+    if ((index + 1) % 25 === 0 || index + 1 === selectedEntries.length) {
+      console.log(`Generated ${index + 1}/${selectedEntries.length} narration clips.`);
     }
   }
 } finally {
