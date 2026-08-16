@@ -226,7 +226,7 @@ async function downloadOrVerifyPack(verifyOnly = false) {
     const registration = await navigator.serviceWorker.ready;
     const worker = registration.active;
     if (!worker) throw new Error('Przeglądarka nie uruchomiła jeszcze pamięci offline. Odczekaj chwilę i spróbuj ponownie.');
-    await new Promise((resolve, reject) => {
+    const requestPackAction = (type) => new Promise((resolve, reject) => {
       const requestId = globalThis.crypto?.randomUUID?.() ?? `czytaj-${Date.now()}-${Math.random().toString(16).slice(2)}`;
       const timeout = setTimeout(() => finish(() => reject(new Error('Pobieranie nie odpowiedziało. Zamknij aplikację, otwórz ją ponownie i spróbuj jeszcze raz.'))), 120000);
       const finish = (callback) => {
@@ -245,8 +245,16 @@ async function downloadOrVerifyPack(verifyOnly = false) {
         } else if (data.type === 'error') finish(() => reject(new Error(data.message)));
       };
       navigator.serviceWorker.addEventListener('message', onMessage);
-      worker.postMessage({ type: verifyOnly ? 'VERIFY_PACK' : 'DOWNLOAD_PACK', manifest, requestId });
+      worker.postMessage({ type, manifest, requestId });
     });
+    try {
+      await requestPackAction(verifyOnly ? 'VERIFY_PACK' : 'DOWNLOAD_PACK');
+    } catch (error) {
+      if (!verifyOnly) throw error;
+      state.download = { running: true, completed: 0, total: manifest.assetCount, error: null };
+      render();
+      await requestPackAction('DOWNLOAD_PACK');
+    }
     state.download.running = false;
     await save();
   } catch (error) {

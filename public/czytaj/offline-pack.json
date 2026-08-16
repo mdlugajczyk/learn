@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "czytaj-7287467297e6",
+  "version": "czytaj-9ab36a1b707f",
   "assetCount": 502,
-  "totalBytes": 10168274,
+  "totalBytes": 10168571,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 51478,
-      "sha256": "2fe32d6c1f00d44ff4816d8fbf2246737c8c5fdff30e417714c5259733c60e16"
+      "bytes": 51774,
+      "sha256": "1fcfcc6dcf79ed2d7af7c3ca8eab542e69d8b3f23180a5a6fb05cfe8737d867d"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -2511,8 +2511,8 @@
     },
     {
       "path": "sw.js",
-      "bytes": 5016,
-      "sha256": "627afab736ede0d196c8889f33c6b2bc92fbbe08301dba4ff78bbe209a110b5e"
+      "bytes": 5017,
+      "sha256": "177491886a0c41e067acd1dacb9e3512575e0c2451f998d27e55161663ec7a30"
     }
   ]
 }
