@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'czytaj-shell-v10';
+const SHELL_CACHE = 'czytaj-shell-v11';
 const PACK_PREFIX = 'czytaj-pack-';
 const SCOPE_URL = self.registration.scope;
 const SCOPE_PATH = new URL(SCOPE_URL).pathname;

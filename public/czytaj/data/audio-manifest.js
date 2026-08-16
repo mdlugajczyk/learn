@@ -11,7 +11,7 @@ const instructions = {
   'warmup-blend': 'Posłuchaj dźwięków. Połącz je w słowo i wybierz odpowiedź.',
   'review-choose': 'Posłuchaj dźwięku. Dotknij pasującej litery.',
   'mapping-new': 'Poznajemy nowy znak. Dotknij go, żeby usłyszeć jego dźwięk.',
-  'blend-swipe': 'Przeciągnij świecący punkt od lewej do prawej. Potem posłuchaj, jak dźwięki łączą się w słowo.',
+  'blend-swipe': 'Przesuń kropkę do końca. Potem posłuchaj całego słowa.',
   'build-word': 'Ułóż litery w pustych polach. Zacznij od pierwszego dźwięku.',
   'read-first': 'Przeczytaj słowo sam. Gdy będziesz gotowy, naciśnij Dalej.',
   'choose-meaning': 'Teraz wybierz obrazek, który pasuje do przeczytanego słowa.',

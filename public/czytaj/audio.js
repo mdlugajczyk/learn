@@ -14,29 +14,6 @@ export class AudioQueue extends EventTarget {
     this.audio.preload = 'auto';
   }
 
-  async unlock() {
-    if (this.unlocked) return true;
-    const entry = audioEntry('narrator-sample');
-    if (!entry) return false;
-    this.stop();
-    this.audio.muted = true;
-    this.audio.src = sourceUrl(entry);
-    this.audio.load();
-    try {
-      await this.audio.play();
-      this.audio.pause();
-      this.audio.currentTime = 0;
-      this.unlocked = true;
-      this.lastError = null;
-    } catch (error) {
-      this.unlocked = false;
-      this.lastError = error;
-    } finally {
-      this.audio.muted = false;
-    }
-    return this.unlocked;
-  }
-
   stop() {
     if (this.pendingResolve) {
       this.pendingResolve({ played: false, cancelled: true });

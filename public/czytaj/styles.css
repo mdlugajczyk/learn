@@ -167,12 +167,17 @@ button { -webkit-tap-highlight-color: transparent; }
 .grapheme.is-sounding { transform: translateY(-9px); background: #fff2bc; border-color: var(--yellow); box-shadow: 0 9px 0 #d7ae4d, 0 0 20px rgba(255,214,110,.45); }
 .grapheme.was-sounded { color: #1d6552; background: #e2faef; border-color: var(--mint); }
 .grapheme.is-crossed { color: #5f4a10; background: #fff3bc; border-color: var(--yellow); transform: translateY(-4px); }
+.graphemes.is-joining .grapheme { animation: letter-join .58s cubic-bezier(.2,.8,.25,1) both; animation-delay: calc(var(--i) * 75ms); }
 .beam-track { position: absolute; left: 5%; right: 5%; bottom: 20px; height: 5px; overflow: hidden; border-radius: 5px; background: #cfd2e6; }
 .beam-track::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent); transform: translateX(-100%); }
 .is-running .beam-track::after { animation: track-shine 1.1s linear infinite; }
 .beam { position: absolute; left: 5%; bottom: 13px; width: 20px; height: 20px; border: 3px solid white; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 22px var(--yellow); transform: translateX(0); }
 .beam.is-dragging { transform: scale(1.18); box-shadow: 0 0 30px var(--yellow); }
 .beam.moving { animation: beam var(--beam-duration) cubic-bezier(.3,.05,.65,1) forwards; }
+.blend-result { margin: 12px 0 2px; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; border: 2px solid rgba(31,118,92,.2); border-radius: 18px; background: #e2faef; animation: choice-rise .42s cubic-bezier(.2,.8,.25,1) both; }
+.blend-result span { color: var(--mint-dark); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.blend-result strong { color: var(--ink); font-size: clamp(1.8rem, 8vw, 2.5rem); line-height: 1; text-align: center; }
+.blend-replay { min-height: 48px; padding: 8px 11px; border: 0; border-radius: 14px; color: var(--ink); background: white; font-size: .86rem; font-weight: 750; box-shadow: 0 4px 0 #cde8dd; cursor: pointer; }
 
 .builder { padding-top: 4px; }
 .sound-boxes { width: 100%; min-height: 86px; display: grid; grid-template-columns: repeat(var(--grapheme-count), minmax(0, 1fr)); align-items: center; gap: clamp(5px, 1.8vw, 9px); padding: 8px 2px 12px; }
@@ -266,6 +271,7 @@ th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--lin
 @keyframes sound-ring { 0%, 38% { transform: scale(.72); opacity: 0; } 48% { opacity: .65; } 85%, 100% { transform: scale(1.08); opacity: 0; } }
 @keyframes scanner-spin { to { transform: rotate(360deg); } }
 @keyframes track-shine { to { transform: translateX(100%); } }
+@keyframes letter-join { 45% { transform: translateY(-8px) scale(1.06); background: #fff3bc; border-color: var(--yellow); } }
 @keyframes slot-land { 55% { transform: scale(1.1); } }
 @keyframes tile-arrive { from { opacity: 0; transform: translateY(10px) rotate(3deg); } }
 @keyframes picture-arrive { from { opacity: 0; transform: translateY(16px) scale(.94); } }

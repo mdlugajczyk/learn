@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "czytaj-9ab36a1b707f",
+  "version": "czytaj-5c0db3e89dd3",
   "assetCount": 502,
-  "totalBytes": 10168571,
+  "totalBytes": 10145297,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 51774,
-      "sha256": "1fcfcc6dcf79ed2d7af7c3ca8eab542e69d8b3f23180a5a6fb05cfe8737d867d"
+      "bytes": 51346,
+      "sha256": "e00524131357be0493a7f80f7ff1e5d3e3128fcb232b9d5f481acc22eee22299"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -41,8 +41,8 @@
     },
     {
       "path": "audio.js",
-      "bytes": 2951,
-      "sha256": "9909e96d031689b75fa22c1ee26e1a42320906990137c7ff1f85d0a7da19778f"
+      "bytes": 2385,
+      "sha256": "89fa4a602a0ca5413c70e8df0222b553ce25cafc4a12ac9791069cc3c2fce5f4"
     },
     {
       "path": "audio/alien-word.mp3",
@@ -86,8 +86,8 @@
     },
     {
       "path": "audio/blend-swipe.mp3",
-      "bytes": 61274,
-      "sha256": "e1972d8a7c148d225e2dccf9ae2582c480c3fff52a0548b7719decd0c8ba3545"
+      "bytes": 38077,
+      "sha256": "31e3c479d2436e9344169c6ed13530977ac6cd09ead021a7018d2e8bc3591608"
     },
     {
       "path": "audio/build-word.mp3",
@@ -176,8 +176,8 @@
     },
     {
       "path": "audio/manifest.json",
-      "bytes": 287334,
-      "sha256": "88ce4e246e440623c53e1e853bfaa9b17cece6e728dd67d9552190013412e283"
+      "bytes": 287289,
+      "sha256": "72cdcb49e9f8c0e94a8e8b4ce3f6365206e04fb86907d667696b53ce9b68eb44"
     },
     {
       "path": "audio/mapping-new.mp3",
@@ -2476,8 +2476,8 @@
     },
     {
       "path": "data/audio-manifest.js",
-      "bytes": 5151,
-      "sha256": "1896bf45794b04dd64991f8b11ba174d992f10e30466759ac8a91ea41ba7e189"
+      "bytes": 5106,
+      "sha256": "b68af6a99ad0c1cc4841d6a794c305c42f65623087ba6a94d72cbb49d55a6fbc"
     },
     {
       "path": "data/curriculum.js",
@@ -2506,13 +2506,13 @@
     },
     {
       "path": "styles.css",
-      "bytes": 29600,
-      "sha256": "61dd31d18df9a317ba7d0007c5a1ac2ac11ba6d2b65e7babdccd3417d64b2288"
+      "bytes": 30607,
+      "sha256": "ce3b28933161b1b0afea5ed70a240d55d50cb9f2222b514223558859584444c2"
     },
     {
       "path": "sw.js",
       "bytes": 5017,
-      "sha256": "177491886a0c41e067acd1dacb9e3512575e0c2451f998d27e55161663ec7a30"
+      "sha256": "482798428148d16004a7b527956f4e32b7b7532dc130831678cc91d5da7394e0"
     }
   ]
 }

@@ -17,7 +17,6 @@ const state = {
   progress: null,
   view: 'loading',
   onboardingStep: 0,
-  narratorApproved: false,
   lastInstruction: null,
   inputLocked: false,
   swRegistration: null,
@@ -26,8 +25,7 @@ const state = {
   meaningRevealed: false,
   buildSlots: [],
   sessionCompleted: false,
-  presentationToken: 0,
-  missionIntroPlayed: false
+  presentationToken: 0
 };
 
 const html = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
@@ -125,12 +123,8 @@ function onboardingProfile() {
 function onboardingVoice() {
   return `<div class="card"><p class="eyebrow">Jawne źródło głosu</p><h2>Głos narratora jest wygenerowany przez AI</h2>
     <p>Każde polecenie jest wcześniej przygotowanym plikiem MP3. Aplikacja nie wysyła tekstu ani danych dziecka do usługi głosowej i nigdy nie używa syntezy mowy działającej w przeglądarce.</p>
-    <div class="callout">Rodzimy użytkownik języka polskiego powinien zatwierdzić krytyczne klipy przed samodzielną pracą dziecka.</div>
-    <div class="button-row" style="margin-top:16px">
-      <button id="playSample" class="button secondary">🔊 Posłuchaj próbki</button>
-      <button id="approveVoice" class="button primary" ${state.narratorApproved ? '' : 'disabled'}>${state.narratorApproved ? 'Głos zaakceptowany' : 'Akceptuję ten głos'}</button>
-    </div>
-    <button id="voiceNext" class="button primary large" style="margin-top:16px" ${state.narratorApproved ? '' : 'disabled'}>Dalej</button>
+    <div class="callout">Obecny głos jest tymczasowy i służy do testowania aplikacji. Zostanie zastąpiony nagraniami ElevenLabs po przeglądzie polskiej wymowy.</div>
+    <button id="voiceNext" class="button primary large" style="margin-top:16px">Dalej</button>
   </div>`;
 }
 
@@ -174,17 +168,7 @@ function bindOnboarding() {
     state.onboardingStep = 1;
     render();
   });
-  document.querySelector('#playSample')?.addEventListener('click', async () => {
-    const played = await audio.play('narrator-sample');
-    if (!played) {
-      showToast('Nie udało się odtworzyć próbki. Odśwież aplikację i spróbuj ponownie.', 5500);
-      return;
-    }
-    state.narratorApproved = true;
-    render();
-  });
-  document.querySelector('#approveVoice')?.addEventListener('click', () => { state.narratorApproved = true; render(); });
-  document.querySelector('#voiceNext')?.addEventListener('click', () => { if (state.narratorApproved) { state.onboardingStep = 2; render(); } });
+  document.querySelector('#voiceNext')?.addEventListener('click', () => { state.onboardingStep = 2; render(); });
   document.querySelector('#downloadPack')?.addEventListener('click', () => downloadOrVerifyPack(Boolean(state.progress.offline.verifiedAt)));
   document.querySelector('#packNext')?.addEventListener('click', () => { if (state.progress.offline.verifiedAt) { state.onboardingStep = 3; render(); } });
   document.querySelector('#finishBaseline')?.addEventListener('click', async () => {
@@ -198,7 +182,7 @@ function bindOnboarding() {
     await save();
     state.view = 'home';
     render();
-    setInstruction('welcome-home');
+    setInstruction('welcome-home', false);
   });
 }
 
@@ -291,16 +275,15 @@ function renderHome() {
 
 async function startMission() {
   if (!state.progress.offline.verifiedAt) return;
-  await audio.unlock();
+  const created = !state.progress.activeSession;
   if (!state.progress.activeSession) {
     state.progress.activeSession = selectSession(state.progress);
-    await save();
   }
   state.view = 'session';
   state.meaningRevealed = false;
   state.buildSlots = [];
-  state.missionIntroPlayed = false;
   render();
+  if (created) await save();
 }
 
 function currentActivity() {
@@ -317,7 +300,7 @@ const ACTIVITY_UI = {
   warmup: ['Rozgrzewka dźwięków', '✦'],
   'hear-choose': ['Złap dźwięk', '◖'],
   mapping: ['Nowy znak', '⌁'],
-  blend: ['Połącz promieniem', '↝'],
+  blend: ['Połącz litery', '↝'],
   build: ['Zbuduj słowo', '◇'],
   meaning: ['Odkryj znaczenie', '◎'],
   nonword: ['Wiadomość kosmity', '☄'],
@@ -371,11 +354,6 @@ async function presentActivity(activity, instructionId) {
   const token = ++state.presentationToken;
   const session = state.progress.activeSession;
   if (!session) return;
-  if (session.activityIndex === 0 && !state.missionIntroPlayed) {
-    state.missionIntroPlayed = true;
-    await setInstruction(session.repair ? 'repair-session' : 'mission-start');
-  }
-  if (token !== state.presentationToken) return;
   await setInstruction(instructionId);
   if (token !== state.presentationToken) return;
   await pause(220);
@@ -389,7 +367,7 @@ function instructionText(id) {
     'warmup-blend': 'Posłuchaj dźwięków. Połącz je w słowo.',
     'review-choose': 'Posłuchaj dźwięku. Dotknij pasującej litery.',
     'mapping-new': 'Poznajemy nowy znak. Dotknij go, aby usłyszeć dźwięk.',
-    'blend-swipe': 'Przeciągnij promień pod literami i połącz dźwięki.',
+    'blend-swipe': 'Przesuń kropkę. Posłuchaj całego słowa.',
     'build-word': 'Ułóż litery w pustych polach.',
     'read-first': 'Przeczytaj słowo sam. Obrazki pojawią się później.',
     'choose-meaning': 'Wybierz obrazek, który pasuje do słowa.',
@@ -432,8 +410,8 @@ function activityMarkup(activity) {
   if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Możesz posłuchać kilka razy.</p><button id="mappingDone" class="button primary large">Znam ten dźwięk</button>`;
   if (activity.type === 'blend') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
-    const duration = Math.max(1.7, parts.length * .55).toFixed(2);
-    return `<div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"></span></div></div><p class="play-prompt">Przeciągnij świecący punkt od lewej do prawej.</p><button id="blendStart" class="button primary large action-with-icon"><span aria-hidden="true">↝</span> Przesuń promień</button><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Połączyłem dźwięki</button>`;
+    const duration = Math.max(1.1, 1 + parts.length * .14).toFixed(2);
+    return `<div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"></span></div></div><p class="play-prompt">Przesuń kropkę do końca. Momo powie całe słowo.</p><button id="blendStart" class="button primary large action-with-icon"><span aria-hidden="true">↝</span> Połącz i posłuchaj</button><div id="blendResult" class="blend-result hidden"><span>Razem</span><strong>${html(activity.item.answer)}</strong><button id="blendReplay" class="blend-replay" type="button" aria-label="Posłuchaj całego słowa jeszcze raz">🔊 Jeszcze raz</button></div><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Słyszę całe słowo</button>`;
   }
   if (activity.type === 'build') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
@@ -466,7 +444,7 @@ function bindActivity(activity) {
     const startButton = document.querySelector('#blendStart');
     let dragStart = null;
     let running = false;
-    const runBlend = async () => {
+    const runBlend = async ({ fromDrag = false } = {}) => {
       if (running) return;
       running = true;
       state.presentationToken += 1;
@@ -474,15 +452,21 @@ function bindActivity(activity) {
       startButton.disabled = true;
       document.querySelector('.blend-lab').classList.add('is-running');
       area.querySelectorAll('.grapheme').forEach((element) => element.classList.remove('is-crossed'));
-      beam.classList.remove('moving');
-      beam.style.transform = '';
-      void beam.offsetWidth;
-      beam.classList.add('moving');
-      await playSegmented(activity.item.answer, '.grapheme', token);
-      if (token !== state.presentationToken) return;
+      if (!fromDrag) {
+        beam.classList.remove('moving');
+        beam.style.transform = '';
+        void beam.offsetWidth;
+        beam.classList.add('moving');
+      }
+      area.classList.add('is-joining');
+      const played = await audio.play(activity.item.audioIds[0]);
+      area.classList.remove('is-joining');
+      if (!played || token !== state.presentationToken) return;
+      area.querySelectorAll('.grapheme').forEach((element) => element.classList.add('was-sounded'));
+      document.querySelector('#blendResult').classList.remove('hidden');
       document.querySelector('#blendDone').classList.remove('hidden');
     };
-    startButton.addEventListener('click', runBlend, { once: true });
+    startButton.addEventListener('click', () => runBlend(), { once: true });
     area.addEventListener('pointerdown', (event) => {
       if (running) return;
       dragStart = { x: event.clientX, pointerId: event.pointerId };
@@ -502,7 +486,7 @@ function bindActivity(activity) {
       const progress = (event.clientX - dragStart.x) / Math.max(1, bounds.width * .65);
       dragStart = null;
       beam.classList.remove('is-dragging');
-      if (progress >= .82) runBlend();
+      if (progress >= .82) runBlend({ fromDrag: true });
       else {
         beam.style.transform = '';
         area.querySelectorAll('.grapheme').forEach((element) => element.classList.remove('is-crossed'));
@@ -513,6 +497,7 @@ function bindActivity(activity) {
       beam.classList.remove('is-dragging');
       beam.style.transform = '';
     });
+    document.querySelector('#blendReplay').addEventListener('click', () => audio.play(activity.item.audioIds[0]));
     document.querySelector('#blendDone').addEventListener('click', () => finishActivity(activity, true));
   } else if (activity.type === 'build') {
     document.querySelectorAll('[data-tile]').forEach((button) => bindBuildTile(button, activity));
@@ -816,7 +801,6 @@ function bindParent() {
 }
 
 replayButton.addEventListener('click', async () => {
-  await audio.unlock();
   state.presentationToken += 1;
   if (state.lastInstruction) audio.play(state.lastInstruction);
 });

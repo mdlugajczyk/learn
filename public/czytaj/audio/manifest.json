@@ -127,15 +127,15 @@
     },
     {
       "id": "blend-swipe",
-      "text": "Przeciągnij świecący punkt od lewej do prawej. Potem posłuchaj, jak dźwięki łączą się w słowo.",
+      "text": "Przesuń kropkę do końca. Potem posłuchaj całego słowa.",
       "category": "instruction",
       "filename": "audio/blend-swipe.mp3",
       "source": "temporary-system",
       "model": "macos-say",
       "voice": "Zosia",
       "language": "pl",
-      "generatedAt": "2026-08-16T22:09:23.394Z",
-      "contentHash": "52ba1c3a14de07296da1e38363c59f721866fc7f386693d280c216396232babe",
+      "generatedAt": "2026-08-16T22:42:20.372Z",
+      "contentHash": "7d312ebfb0fc69abaf1ad580d83f4f3f188eb0189a418ffd6d3ab4f992286f40",
       "critical": true,
       "direction": "Mów naturalną polszczyzną, ciepło, spokojnie i odrobinę wolniej niż w rozmowie. Bez przesadnej kreskówkowej ekspresji.",
       "qaStatus": "temporary-not-approved-for-learning"
