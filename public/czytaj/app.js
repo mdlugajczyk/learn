@@ -201,7 +201,14 @@ function bindOnboarding() {
 async function packManifest() {
   const response = await fetch(new URL('offline-pack.json', APP_ROOT).href, { cache: 'no-store' });
   if (!response.ok) throw new Error('Manifest pakietu offline nie jest dostępny. Uruchom produkcyjny build.');
-  return response.json();
+  if (!response.headers.get('content-type')?.includes('application/json')) {
+    throw new Error('Serwer nie udostępnił pakietu offline. Wymagany jest plik offline-pack.json, a serwer zwrócił stronę HTML.');
+  }
+  const manifest = await response.json();
+  if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.assets) || manifest.assetCount !== manifest.assets.length) {
+    throw new Error('Manifest pakietu offline ma nieprawidłowy format.');
+  }
+  return manifest;
 }
 
 async function downloadOrVerifyPack(verifyOnly = false) {

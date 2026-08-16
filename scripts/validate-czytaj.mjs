@@ -115,6 +115,14 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
       const audioManifest = JSON.parse(await readFile(manifestFile, 'utf8'));
       assert(audioManifest.entries?.length === AUDIO_ENTRIES.length, `Audio manifest has ${audioManifest.entries?.length ?? 0}/${AUDIO_ENTRIES.length} entries`, errors);
     }
+    const offlineManifestFile = path.join(root, 'public', 'czytaj', 'offline-pack.json');
+    assert(await exists(offlineManifestFile), 'Missing published czytaj/offline-pack.json', errors);
+    if (await exists(offlineManifestFile)) {
+      const offlineManifest = JSON.parse(await readFile(offlineManifestFile, 'utf8'));
+      assert(offlineManifest.schemaVersion === 1, 'Invalid offline-pack schema version', errors);
+      assert(Array.isArray(offlineManifest.assets) && offlineManifest.assetCount === offlineManifest.assets.length, 'Invalid offline-pack asset list', errors);
+      assert(offlineManifest.assets?.every((asset) => asset.path && !asset.path.startsWith('/') && asset.bytes > 0 && /^[a-f0-9]{64}$/.test(asset.sha256)), 'Invalid offline-pack asset record', errors);
+    }
   }
 
   const appSource = await readFile(path.join(root, 'public', 'czytaj', 'app.js'), 'utf8');

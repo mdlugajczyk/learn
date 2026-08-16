@@ -1,0 +1,2518 @@
+{
+  "schemaVersion": 1,
+  "version": "czytaj-7b82341cf823",
+  "assetCount": 502,
+  "totalBytes": 10125206,
+  "assets": [
+    {
+      "path": "app.js",
+      "bytes": 39850,
+      "sha256": "6c4f2e2372b62185316ef684a4d79269ac1e671e2c7177dd9e0c7cbebc02cd18"
+    },
+    {
+      "path": "assets/AtkinsonHyperlegibleNext.woff2",
+      "bytes": 48188,
+      "sha256": "abde1ad5cf78b9ac575ef90d991f2e9101eb0b3b6668bde9a00e2e1e27d99afd"
+    },
+    {
+      "path": "assets/czytaj-space-card.png",
+      "bytes": 1468857,
+      "sha256": "98185c9fb9c962a2837770c298fddab81abc2f98e67802d945b43bcf01339598"
+    },
+    {
+      "path": "assets/icon-192.png",
+      "bytes": 50408,
+      "sha256": "f683f55cf496cd017111707d3368b639ed57f8242dcbbf7a2c4b743664d3767c"
+    },
+    {
+      "path": "assets/icon-512.png",
+      "bytes": 327965,
+      "sha256": "38f8dd94c793a00f42ce184d24450691c1c26843ea8bcc2a73822637ead73ad6"
+    },
+    {
+      "path": "assets/OFL-Atkinson.txt",
+      "bytes": 4431,
+      "sha256": "aca6a428580965d2297d1b718042dd427c2a9443ece3b0d02d758e161e0c4030"
+    },
+    {
+      "path": "assets/vocabulary-atlas.png",
+      "bytes": 2085316,
+      "sha256": "f2d2eb90cbc71e2e0aa455d789ee111a1c8c6f61afec79415033c42ddeb641f4"
+    },
+    {
+      "path": "audio.js",
+      "bytes": 2857,
+      "sha256": "e285b3a60c991a6fc9030925be680d0778d33268c18138faa136614b051ca1d8"
+    },
+    {
+      "path": "audio/alien-word.mp3",
+      "bytes": 54795,
+      "sha256": "7d8d2b63b782a65d8ddfadadb9082cf547bcca01b852813253c6a60ac40ace06"
+    },
+    {
+      "path": "audio/audio-missing.mp3",
+      "bytes": 45809,
+      "sha256": "92afa65885eaf603685615b5ec64fa6249c7fb8212dadb27dcbdec9870c0367f"
+    },
+    {
+      "path": "audio/baseline-blend.mp3",
+      "bytes": 34106,
+      "sha256": "a3f89ae35dde931e37a51de79b2958f0b3414c3beb0e8b0d02730dc76612c729"
+    },
+    {
+      "path": "audio/baseline-decode.mp3",
+      "bytes": 42047,
+      "sha256": "5039d805f7a02cf6a2579aaaa2db666086e7388713240510850977f65482861b"
+    },
+    {
+      "path": "audio/baseline-first-sound.mp3",
+      "bytes": 28673,
+      "sha256": "cd1289e27e35c77b5894408243ea13e25371c35b05e7ba808b5072450ea1b4cf"
+    },
+    {
+      "path": "audio/baseline-lowercase.mp3",
+      "bytes": 35151,
+      "sha256": "9f7a439548dba6fca8357603d1326188f5cf074675e6abc377013396004662c0"
+    },
+    {
+      "path": "audio/baseline-segment.mp3",
+      "bytes": 41003,
+      "sha256": "441ac1d343baa95730bbe11b6bcf1fa22d90870f26f07e418b59603a59e72314"
+    },
+    {
+      "path": "audio/baseline-sound.mp3",
+      "bytes": 30345,
+      "sha256": "1aa1abe53ddc1e6e525101839666b24634576b13d73743be069844911e0d7d3d"
+    },
+    {
+      "path": "audio/blend-swipe.mp3",
+      "bytes": 46018,
+      "sha256": "22933df7f59201e46e809f0ed7c67eebfc136899fbf8d4954eaa72f8ecb3dec8"
+    },
+    {
+      "path": "audio/build-word.mp3",
+      "bytes": 40167,
+      "sha256": "03df0a11ce8d3e0baa74959657e2bae5b2293a6b2ef7d27dce7471fad56bc6f3"
+    },
+    {
+      "path": "audio/choose-meaning.mp3",
+      "bytes": 38495,
+      "sha256": "1a096e05ae05f7a373043f8502acc390f81f4ce10eb024d11c22a566561e7db2"
+    },
+    {
+      "path": "audio/correct-choice.mp3",
+      "bytes": 15507,
+      "sha256": "fdab0fee986948538fff7cb236ab7454b052ba3dcd645e7fa9b365e6c05982bb"
+    },
+    {
+      "path": "audio/correct-short.mp3",
+      "bytes": 25329,
+      "sha256": "14194fdc4696a22075795881f37a55dab3b764dd39e9acc2e7a6a7f177e45c27"
+    },
+    {
+      "path": "audio/listening-01.mp3",
+      "bytes": 60856,
+      "sha256": "2a80104b2670c2c5092379de02304df808bb287cb24c93c69aec20ffff6005c9"
+    },
+    {
+      "path": "audio/listening-02.mp3",
+      "bytes": 52496,
+      "sha256": "ddca3db88dde8b0a5e286d96bff31bf5d1eab776246f245ea42729648298b803"
+    },
+    {
+      "path": "audio/listening-03.mp3",
+      "bytes": 49153,
+      "sha256": "115abec22cb598d4824d68ecc67990e776a15e91c879a8bd7b7fa5ae036356f8"
+    },
+    {
+      "path": "audio/listening-04.mp3",
+      "bytes": 56467,
+      "sha256": "de1c2864522d0dd512a4cc43d2a73b905e7824fd250956f1398756a060b87919"
+    },
+    {
+      "path": "audio/listening-05.mp3",
+      "bytes": 64826,
+      "sha256": "66fc8e4388e5b42581fd6213853bcad26e3dced54f44ec78e209ce4aa88ba4c8"
+    },
+    {
+      "path": "audio/listening-06.mp3",
+      "bytes": 63154,
+      "sha256": "12981b19b589fc1aee472676242586aad9d856cdd1664c5bbf61a76eb763f8b2"
+    },
+    {
+      "path": "audio/listening-07.mp3",
+      "bytes": 50616,
+      "sha256": "9dee7b1d40e00c175ae19c00dabf12838c7a96d8a6d62f0e64d8d3055caadbd9"
+    },
+    {
+      "path": "audio/listening-08.mp3",
+      "bytes": 48108,
+      "sha256": "783bf2733bf6f44cc7f49c78924c2d0752da32f9a26cbda7e2ad3bba93926d8e"
+    },
+    {
+      "path": "audio/listening-09.mp3",
+      "bytes": 71932,
+      "sha256": "2382291af60bc57f4906501283293d2a9eeb28967b010ad6363bd3088dc3765c"
+    },
+    {
+      "path": "audio/listening-10.mp3",
+      "bytes": 47481,
+      "sha256": "e4598c4860b681a31c7f00e9bc697b38d6d33ead67a6cce872f45572c92b0cac"
+    },
+    {
+      "path": "audio/listening-11.mp3",
+      "bytes": 60229,
+      "sha256": "144baf1cdbc22ae498425e63bee3592c36080a773ac912b1c8bca6a8a8f5ec65"
+    },
+    {
+      "path": "audio/listening-12.mp3",
+      "bytes": 62736,
+      "sha256": "0448c72633e0d1879896e4f5a5a22524c4d36934f7d4175cd787ddb6ffd0a10c"
+    },
+    {
+      "path": "audio/listening-scene.mp3",
+      "bytes": 41629,
+      "sha256": "aafe02cda77d89d1265264b9a010474a781ea4d7d829afc06814d3fee86184e5"
+    },
+    {
+      "path": "audio/manifest.json",
+      "bytes": 287308,
+      "sha256": "b8e32d913397bf85e895547389ea81e1a70017452a9861d466f53b465468cb11"
+    },
+    {
+      "path": "audio/mapping-new.mp3",
+      "bytes": 45600,
+      "sha256": "19535a9ebddfc8d436c870f6d2bfee1860013aafd8bf7f69b41cffdc831440cd"
+    },
+    {
+      "path": "audio/mission-complete.mp3",
+      "bytes": 58139,
+      "sha256": "39b4b2e6ca317ac96f07131f3165786998be7c7bf8c91db5b2a19a331ae86c14"
+    },
+    {
+      "path": "audio/mission-start.mp3",
+      "bytes": 58975,
+      "sha256": "f737c903de42a8934039b473157a70bf5fd832b8b6023e7343a5d81489579fe0"
+    },
+    {
+      "path": "audio/narrator-sample.mp3",
+      "bytes": 65871,
+      "sha256": "21a25ec0bcab180372be6b61a0d56d8d3d944299aa6f871993ed71e30c417daa"
+    },
+    {
+      "path": "audio/nonword-ama.mp3",
+      "bytes": 6730,
+      "sha256": "48d20af00434f227fc7f9e67538452bdf8c515f1b80cf0af3d1863d39af64685"
+    },
+    {
+      "path": "audio/nonword-atam.mp3",
+      "bytes": 7984,
+      "sha256": "2a56366d3b75c63803a1555c8edb0fa461ddd4321fbad383b34ecafd97a93f41"
+    },
+    {
+      "path": "audio/nonword-banko.mp3",
+      "bytes": 9029,
+      "sha256": "4d0b039e93dbe7c1111a08b012dc230a8ff0a4311b8f13d66c8588a7d58349c5"
+    },
+    {
+      "path": "audio/nonword-baruk.mp3",
+      "bytes": 8611,
+      "sha256": "e8233b59e4c7428a5a60f6ad119a668b316f2ea2dfb0e46815f7b5d65531f697"
+    },
+    {
+      "path": "audio/nonword-becor.mp3",
+      "bytes": 8611,
+      "sha256": "91fed2c6963700ea7a428e800d6d9ae2ee883bd38fa152d791f137b046b8bc81"
+    },
+    {
+      "path": "audio/nonword-blistawa.mp3",
+      "bytes": 10283,
+      "sha256": "a5f964e1ce38f9be688f25fffe07fade7e2ecfc2889b97759f5cf5d769038abd"
+    },
+    {
+      "path": "audio/nonword-calum.mp3",
+      "bytes": 7984,
+      "sha256": "f8ce3f399c4d314931697158cf3bd648fe2e6c9c1211b588912cf2626ff69e36"
+    },
+    {
+      "path": "audio/nonword-chelus.mp3",
+      "bytes": 8820,
+      "sha256": "e6718f9faa517f86858742abf8bc15276f5b34fdcc602b81f47738c299d89bd4"
+    },
+    {
+      "path": "audio/nonword-cholek.mp3",
+      "bytes": 8611,
+      "sha256": "3f39f38561bcc1b8a671e3009fd6c13b10e5936ac0681b68e7cf8ddab5225fa7"
+    },
+    {
+      "path": "audio/nonword-ciorum.mp3",
+      "bytes": 7775,
+      "sha256": "6b8af36dcb077542e447be7a08a86339caca59ca284e094180fcf3469a6887b9"
+    },
+    {
+      "path": "audio/nonword-cugon.mp3",
+      "bytes": 8402,
+      "sha256": "0fd99ed5cc400555c9c3c3b474ce34f831bee51807de9db5dd728d5023ff95ee"
+    },
+    {
+      "path": "audio/nonword-czalim.mp3",
+      "bytes": 7984,
+      "sha256": "0a945ea06acfadfd2241a96c30d91e70c7d4d849f4cb8e1c9f8328e1b6ce7d83"
+    },
+    {
+      "path": "audio/nonword-dranek.mp3",
+      "bytes": 9447,
+      "sha256": "5dbd1d3b3f1524137df981c0c97966cebff0f077bf4d85e14d70dc4db91a0271"
+    },
+    {
+      "path": "audio/nonword-dzapa.mp3",
+      "bytes": 8820,
+      "sha256": "ef8bd901b9911bc3429e8a65110df8a5b9cd637b27e11568cb139e67394b47d0"
+    },
+    {
+      "path": "audio/nonword-dzarak.mp3",
+      "bytes": 8611,
+      "sha256": "ac8e4cd05d42b6ca7bf5ea1ff8dcde2e8694b1825e9b14bd88feeb7b2941e5c0"
+    },
+    {
+      "path": "audio/nonword-dzelum.mp3",
+      "bytes": 8402,
+      "sha256": "02510ffaf606f482638766a09b1c6df9901ad472ed7c0aa8a4ff22256e1b5432"
+    },
+    {
+      "path": "audio/nonword-dziopa.mp3",
+      "bytes": 7775,
+      "sha256": "00401139f42f9662fb391f4f1cd3932d0161c5ff154b083b6ce6b778f9ec7b68"
+    },
+    {
+      "path": "audio/nonword-ekat.mp3",
+      "bytes": 9238,
+      "sha256": "aa7138e7ad970835841f17a92fad00716629f282370ca6158c45f57c1a3dbfa8"
+    },
+    {
+      "path": "audio/nonword-felun.mp3",
+      "bytes": 7984,
+      "sha256": "af4c084b392cc19aa10751ef2b854a3745a05398f06b9afbb96039aa9b98a8b9"
+    },
+    {
+      "path": "audio/nonword-fucho.mp3",
+      "bytes": 7566,
+      "sha256": "dcd65f99b65030a278c344f1385fc42628271d3503eb66c0b9b8b5b70652081c"
+    },
+    {
+      "path": "audio/nonword-fuzak.mp3",
+      "bytes": 8820,
+      "sha256": "2fce749d9918db899aaab564f40a3d69b2cc5d8fdd430b53c195013982862fc3"
+    },
+    {
+      "path": "audio/nonword-gajun.mp3",
+      "bytes": 8402,
+      "sha256": "a3cbc5e8aa47e69a06a5e2bb5baa8412e4ec725f187ff51d51eaa49c8722e34e"
+    },
+    {
+      "path": "audio/nonword-glonek.mp3",
+      "bytes": 10074,
+      "sha256": "1a1226cfe2943e44333dca109fdfe86b21ba13d31894762e978082b126fb414b"
+    },
+    {
+      "path": "audio/nonword-gorach.mp3",
+      "bytes": 8820,
+      "sha256": "f9f0c1c0d492db29154d67761cf087cded003d48eb81ec0b0067ead8f6565162"
+    },
+    {
+      "path": "audio/nonword-gosnik.mp3",
+      "bytes": 10492,
+      "sha256": "66e9e978bcb89e9a17fe4983ece4eea6cf2ca7aa2aa15a6e98c0f55b552ae9ee"
+    },
+    {
+      "path": "audio/nonword-grzuma.mp3",
+      "bytes": 8611,
+      "sha256": "5af313aa54c94bd4748333d01db6efed1ace7212b893904b177727ad6c78dc8e"
+    },
+    {
+      "path": "audio/nonword-humar.mp3",
+      "bytes": 7984,
+      "sha256": "cb2249ef60386cf4b853030073ba9908d6569ba948e7c15568dd7b6214c09830"
+    },
+    {
+      "path": "audio/nonword-jomar.mp3",
+      "bytes": 8193,
+      "sha256": "26cd84eb6dea115f2ad59d10db135b7f1a64d079a1618840033ac06d9d680574"
+    },
+    {
+      "path": "audio/nonword-kasin.mp3",
+      "bytes": 8402,
+      "sha256": "ddb0babeade81051af149b2db832d614221979b6fb8f307f1461d34be2d8c99e"
+    },
+    {
+      "path": "audio/nonword-kazer.mp3",
+      "bytes": 7357,
+      "sha256": "df477231684b855fca2eb685261515503a614cf0b8743e3a2a90f4e63d8e6f78"
+    },
+    {
+      "path": "audio/nonword-kimo.mp3",
+      "bytes": 6939,
+      "sha256": "a5176f85152acbc0536ac011b508b992a3e9d2b17e99d39c8974536390cace96"
+    },
+    {
+      "path": "audio/nonword-kosmurek.mp3",
+      "bytes": 10074,
+      "sha256": "5df314b11564a388424551876eac6a68ad085a44089fb337f940959552ac07b5"
+    },
+    {
+      "path": "audio/nonword-lamek.mp3",
+      "bytes": 8820,
+      "sha256": "7c18e13fbd5d5479638384299b246dd8dbecb3616e13c397be1f035061dd0958"
+    },
+    {
+      "path": "audio/nonword-lamer.mp3",
+      "bytes": 7984,
+      "sha256": "3092721866f00afcd6d46933602f7c5033b9670d392c15c473c2df165ea28448"
+    },
+    {
+      "path": "audio/nonword-lonek.mp3",
+      "bytes": 9029,
+      "sha256": "5d91447a99e0a289088ca42bd948a6cbd9877d128d9989e17f210be7c88e676f"
+    },
+    {
+      "path": "audio/nonword-lusek.mp3",
+      "bytes": 9238,
+      "sha256": "64ccde02940299db6a940b2df5d07cdbb554b17d2e5be6d87610a970b238fd37"
+    },
+    {
+      "path": "audio/nonword-malko.mp3",
+      "bytes": 9447,
+      "sha256": "ec62eceb5aaa86f21e6177f9c6e0622eb89861a9e289d959eb9dade042903d05"
+    },
+    {
+      "path": "audio/nonword-mato.mp3",
+      "bytes": 7984,
+      "sha256": "924426e095d2feadb9b57aa24fdbc42fb70f3b2ba850858bd489a8a146fa651f"
+    },
+    {
+      "path": "audio/nonword-mota.mp3",
+      "bytes": 7775,
+      "sha256": "af17951f18fc75f0fc146e5a598079138097f05b031aa9d5a93c9f7abdfdb10d"
+    },
+    {
+      "path": "audio/nonword-mynos.mp3",
+      "bytes": 9029,
+      "sha256": "c470fe473a82f432401e249176f7b21d894fb0c0d282322bd5c8f33bf5b13504"
+    },
+    {
+      "path": "audio/nonword-myszor.mp3",
+      "bytes": 8193,
+      "sha256": "e2759e6ee81ea61038c2983fcbb8fcf38264e4b10de8d00b3970bfd841422652"
+    },
+    {
+      "path": "audio/nonword-nako.mp3",
+      "bytes": 8193,
+      "sha256": "ecd9e89b4d64e1294bdcff34e998fa49d9a7f5ce7b412f6df3de4df2b4c553b8"
+    },
+    {
+      "path": "audio/nonword-nielak.mp3",
+      "bytes": 9238,
+      "sha256": "4b4f5ea46ba8dbfd9aba9206e70c5c2d5b3254c361af84f22d404901ca9c9913"
+    },
+    {
+      "path": "audio/nonword-nigat.mp3",
+      "bytes": 9447,
+      "sha256": "f7476abcacc572612713f701d8f72c9b46487c5317ab20f2487364dedb22cd02"
+    },
+    {
+      "path": "audio/nonword-oltek.mp3",
+      "bytes": 9238,
+      "sha256": "46b912029c240ee7973cbd28e194d423b1db76bad5b959e6bcde448fc0550ba8"
+    },
+    {
+      "path": "audio/nonword-omam.mp3",
+      "bytes": 7775,
+      "sha256": "328a4e630f6e71aea90723eef771fcc1430d17b9e2a352007b8741460fd5d21e"
+    },
+    {
+      "path": "audio/nonword-pados.mp3",
+      "bytes": 8402,
+      "sha256": "6b24a78bfe3d49cfa23e56653dcf8cbacd518437e0e2204a0f85aeefbba0340a"
+    },
+    {
+      "path": "audio/nonword-padzek.mp3",
+      "bytes": 9447,
+      "sha256": "77a7142a1b008ac052130b8330db51ff0d24651caf2adfc4ca5dd468b5da736d"
+    },
+    {
+      "path": "audio/nonword-piastun.mp3",
+      "bytes": 9656,
+      "sha256": "6ba566319469b9050da031c68ff185d8ade983d9e67bb23d200c28532e9d4a64"
+    },
+    {
+      "path": "audio/nonword-prastulek.mp3",
+      "bytes": 10700,
+      "sha256": "923f9beb8ae8bd23bc38082e8a41ca447dc5e8cf5aa8cf082d1b00ae647d3ae3"
+    },
+    {
+      "path": "audio/nonword-redza.mp3",
+      "bytes": 8402,
+      "sha256": "78dffcecaf5005ce784b27d232b865a131615479d9d6c67cdcfbecb6b4171012"
+    },
+    {
+      "path": "audio/nonword-rymak.mp3",
+      "bytes": 8611,
+      "sha256": "f6e8e460ecbad15ba28cffe3685e6780b01eb73a7528d0ab0e8acbeaf503a496"
+    },
+    {
+      "path": "audio/nonword-rzefon.mp3",
+      "bytes": 8820,
+      "sha256": "dc86957d66b5fb791d326ef14a87e979db353d510f056a14399d05a737cbd46f"
+    },
+    {
+      "path": "audio/nonword-siadek.mp3",
+      "bytes": 9029,
+      "sha256": "d1eb70d682586c718d07f869c415fcfa9bae1f39e4608bf4e2202456363e1e0e"
+    },
+    {
+      "path": "audio/nonword-skrzydun.mp3",
+      "bytes": 10909,
+      "sha256": "a5f5032413648ea0e6570a23932fcf964c15cab519f0c164c0f8fd3b639a9de2"
+    },
+    {
+      "path": "audio/nonword-snorek.mp3",
+      "bytes": 9865,
+      "sha256": "b89d5ebe4e59f6895051e933e62e87ea99ecb8192a9b9f09f590f9ffbd28785a"
+    },
+    {
+      "path": "audio/nonword-soper.mp3",
+      "bytes": 8402,
+      "sha256": "fd58ec6b7c2ca3a4fc9070810c896015e530878f3c9bf96d6620c25ff89f744a"
+    },
+    {
+      "path": "audio/nonword-sulem.mp3",
+      "bytes": 8402,
+      "sha256": "79fc538e053042deb04071fc44a00ac52d40dadfddb0693b8666fffdbd612d28"
+    },
+    {
+      "path": "audio/nonword-szorek.mp3",
+      "bytes": 8611,
+      "sha256": "f78cdd90b292b4b792bba163a8a8d906f8f6d8558e779fe7c762d0196bba2e94"
+    },
+    {
+      "path": "audio/nonword-telesoma.mp3",
+      "bytes": 9656,
+      "sha256": "9a401c078ecd9bab239976392f9ffe194025d4d4b894d62479decbcf080e62c3"
+    },
+    {
+      "path": "audio/nonword-teli.mp3",
+      "bytes": 6521,
+      "sha256": "ef7d133a562f225b11857344d7adedf42e3228be0374b255c174dae26e51f071"
+    },
+    {
+      "path": "audio/nonword-toma.mp3",
+      "bytes": 6730,
+      "sha256": "09be52df9db6c0dbef262c197e8b00f6e1eda7fc935beb6b650efa170fe8a6e5"
+    },
+    {
+      "path": "audio/nonword-tuno.mp3",
+      "bytes": 6730,
+      "sha256": "b95ae90aad8374ddb2e767f911056d701594b43990d4f9e86f78f1a6af7da3c4"
+    },
+    {
+      "path": "audio/nonword-wazop.mp3",
+      "bytes": 9029,
+      "sha256": "4312a800a7a9fb8eac790e182ecae43074481f3009cc901339fba4b4aba9f2ad"
+    },
+    {
+      "path": "audio/nonword-wedom.mp3",
+      "bytes": 9238,
+      "sha256": "f836d1696589e355b72771a53fe6d786a5312db1ca225f7117e091d46fb5b4fc"
+    },
+    {
+      "path": "audio/nonword-wedrolot.mp3",
+      "bytes": 10700,
+      "sha256": "254ef0103e887c242dc9133c51cc0aeaad7edbbdb9db137e3ff716f2a0ce3ffa"
+    },
+    {
+      "path": "audio/nonword-wostu.mp3",
+      "bytes": 8820,
+      "sha256": "c761346ac28743c17b35447966244072043690c47050b18cbedaa4fad0c3a9a8"
+    },
+    {
+      "path": "audio/nonword-wurem.mp3",
+      "bytes": 7984,
+      "sha256": "1a1c9d9d9595d2f19e77e48dfe287486daba372dc07bf955af04efa8e4976ddb"
+    },
+    {
+      "path": "audio/nonword-ziamek.mp3",
+      "bytes": 9238,
+      "sha256": "d2565d80d35b3e065afcd67ede4ac9aa2c553b775797f75acf2935dc738ef2e3"
+    },
+    {
+      "path": "audio/nonword-zofil.mp3",
+      "bytes": 8820,
+      "sha256": "ecdf259d6a4bcce3be315254740b63ee3bffa87d8196e8d7dee83ab88c0d7652"
+    },
+    {
+      "path": "audio/nonword-zupak.mp3",
+      "bytes": 9447,
+      "sha256": "aaa07e0ae198af092de8ec656ad9eea4137b9ddc332a2ed4f8c9d93d15395d7f"
+    },
+    {
+      "path": "audio/nonword-zwema.mp3",
+      "bytes": 8820,
+      "sha256": "1b80a8258f8707b32a4af2d9004172baa9af401df2820526dacd90f3b77cbbaa"
+    },
+    {
+      "path": "audio/parent-probe.mp3",
+      "bytes": 51660,
+      "sha256": "92976d7a687423b64aa79c465263ad1582c65460f0dd30c5c26487f4ee2c305a"
+    },
+    {
+      "path": "audio/read-first.mp3",
+      "bytes": 41838,
+      "sha256": "41e67ace9d8ad97a85af9580033eda45d4a487be01a89db377faa59ed0e26357"
+    },
+    {
+      "path": "audio/RECORDING.md",
+      "bytes": 808,
+      "sha256": "116e8cea2375ac85fcf45160828ac0ad431bf54ffb58cbf7514fca0215677ce4"
+    },
+    {
+      "path": "audio/repair-session.mp3",
+      "bytes": 39540,
+      "sha256": "97f6922ca0591ec8d88b5a3f4a6e136f200d2a4cea199a7095c0d3adf99b4c14"
+    },
+    {
+      "path": "audio/retry-gentle.mp3",
+      "bytes": 44555,
+      "sha256": "a2640167cd82b720b8cbcf603d569cbd14e94d80479ded39cae07f3adf79c1fa"
+    },
+    {
+      "path": "audio/review-choose.mp3",
+      "bytes": 33479,
+      "sha256": "650a185eed9051688a7e31c1d292453cc143c5a0f7258c058f162f5282cfb32c"
+    },
+    {
+      "path": "audio/sound-a.mp3",
+      "bytes": 4431,
+      "sha256": "50cbc7fdb91dea39282f624ca1582d193a048013dd2e318df613578b739e97cc"
+    },
+    {
+      "path": "audio/sound-ą.mp3",
+      "bytes": 5476,
+      "sha256": "45aea3ee72a84aae21f8e1a1023e73fe04417014e2b6ded571f963baf37582fe"
+    },
+    {
+      "path": "audio/sound-b.mp3",
+      "bytes": 5267,
+      "sha256": "f65893ecfa402707167ad422fb370c7b3f23f39263297f66c4f36e6bfcc0e252"
+    },
+    {
+      "path": "audio/sound-c.mp3",
+      "bytes": 5058,
+      "sha256": "643cef3119a8c9deb1fb52835df0a06183451442bcdaec7e5980ef502b01b4ee"
+    },
+    {
+      "path": "audio/sound-ć.mp3",
+      "bytes": 5058,
+      "sha256": "e41e9b4e7d97dca20347dae3ee4f4e20f10c74549b6b5edfc15d1517b4be8c2f"
+    },
+    {
+      "path": "audio/sound-ch.mp3",
+      "bytes": 7148,
+      "sha256": "164172d905ba2bc0f61d73d5f5008832785ed707cc1555cb887c4118b342bba8"
+    },
+    {
+      "path": "audio/sound-ci.mp3",
+      "bytes": 5058,
+      "sha256": "deba7aff5efc8a1d7482accbceaca511fc578b2d06d97cf3fe93cc0252e1a70e"
+    },
+    {
+      "path": "audio/sound-cz.mp3",
+      "bytes": 8820,
+      "sha256": "b1eaa5ec80e3d3b0046d377a3984de7a1cbbcc412ffd39578c56fd6a920b3e61"
+    },
+    {
+      "path": "audio/sound-d.mp3",
+      "bytes": 5267,
+      "sha256": "7fafacc6e351efa88b83aa8013ffc769c064cc3dd766064b07edfa4d86a537b4"
+    },
+    {
+      "path": "audio/sound-dz.mp3",
+      "bytes": 9238,
+      "sha256": "f8d74c6461898a51f8a9b8a4f066a8a08a3ff80d1cabf9975811bc370d377c81"
+    },
+    {
+      "path": "audio/sound-dź.mp3",
+      "bytes": 9238,
+      "sha256": "36797f61fef9b3a655683534694bd33b7c57b02c0e45049cc79400da2342fc74"
+    },
+    {
+      "path": "audio/sound-dż.mp3",
+      "bytes": 9238,
+      "sha256": "6a15fa01773af448c2f8604e76ae6b2fd9d5fe60b16f0e769cc23ca03e284652"
+    },
+    {
+      "path": "audio/sound-dzi.mp3",
+      "bytes": 5267,
+      "sha256": "5b3e0be0fb183056299643d2085e67e05261de32207af87aa488d5456d430a83"
+    },
+    {
+      "path": "audio/sound-e.mp3",
+      "bytes": 5476,
+      "sha256": "3b5f3a564af9304229e7036db914c7459bccc0296df8a674c1b02e68d619249e"
+    },
+    {
+      "path": "audio/sound-ę.mp3",
+      "bytes": 5476,
+      "sha256": "b821b0b2033befedf7b22d93d722d1008c9029bec74d346c13b5e22e00035a49"
+    },
+    {
+      "path": "audio/sound-f.mp3",
+      "bytes": 6103,
+      "sha256": "ca5aefc4ed60b489817b7cabdd5f264f71732e29e544b71c90870a25948adad8"
+    },
+    {
+      "path": "audio/sound-g.mp3",
+      "bytes": 6521,
+      "sha256": "9bde9fd818dbd15a3f0938ef5d778416f9543382f6fa8a13b822028bd1d00073"
+    },
+    {
+      "path": "audio/sound-h.mp3",
+      "bytes": 5267,
+      "sha256": "9b3b110d935ee201e53595b4125927fe0d7d2bccfb9f50f18137dc9b4cc2587d"
+    },
+    {
+      "path": "audio/sound-i.mp3",
+      "bytes": 5476,
+      "sha256": "002c32eb58d1ec8854532fbdbe84c0b5cde6ec83f562d11bd2d2127ab60ff7f9"
+    },
+    {
+      "path": "audio/sound-j.mp3",
+      "bytes": 6939,
+      "sha256": "a02ad00a34f29f965c5537d90f3183d985b23fd24d6cd890a9ae57e55e5bd035"
+    },
+    {
+      "path": "audio/sound-k.mp3",
+      "bytes": 4849,
+      "sha256": "1b59ae1022d58e984825a3515dabfe3b8d720bda6c44db89322c0088d0709450"
+    },
+    {
+      "path": "audio/sound-l.mp3",
+      "bytes": 5685,
+      "sha256": "28c49842f5dc786a411334f8a6a5bc87d73a484081d19b3da04852bc5a8aec61"
+    },
+    {
+      "path": "audio/sound-ł.mp3",
+      "bytes": 5685,
+      "sha256": "d9ea6d3c5fc8e9719a58f0c63ed59274202b60a686dd0c0859ecc3a9164272d3"
+    },
+    {
+      "path": "audio/sound-m.mp3",
+      "bytes": 5685,
+      "sha256": "a547cf25fcf9ccf44df3c9dbc60d4ba41dd927fc21e0a236fb2e181aa6477cca"
+    },
+    {
+      "path": "audio/sound-n.mp3",
+      "bytes": 5685,
+      "sha256": "259f6c0f947cdcfde43696f8daf52fa87a1d7c63f72bf70abcc7ebc11b6a4fc6"
+    },
+    {
+      "path": "audio/sound-ń.mp3",
+      "bytes": 5685,
+      "sha256": "ea742c9bc2f4276c1ead7f5b4ce79e1d1bcd99eb0451c851bd7f33f99161e0a6"
+    },
+    {
+      "path": "audio/sound-ni.mp3",
+      "bytes": 5476,
+      "sha256": "7f439a057c69e462b4844698332be6a03d426aa5851e7d344a42d03c79c205a7"
+    },
+    {
+      "path": "audio/sound-o.mp3",
+      "bytes": 5476,
+      "sha256": "4da081dfffd710ba882c96551a9f283bef85b007d4461da62dfe7add909fe282"
+    },
+    {
+      "path": "audio/sound-ó.mp3",
+      "bytes": 10909,
+      "sha256": "3a4bcc3b17c8a39d95601b407cc8425f5eb5de06327e7795a8380a6cd8c474d7"
+    },
+    {
+      "path": "audio/sound-p.mp3",
+      "bytes": 4431,
+      "sha256": "df9a7ec95c890eff6b73c6bd9fe932b47e97fbf757da86c74dc61235eaa98106"
+    },
+    {
+      "path": "audio/sound-r.mp3",
+      "bytes": 5058,
+      "sha256": "2d0bf51d072e0064b135c7b7366f56d1ac32d7677465ac1ab62bd4dd6ff4e0c2"
+    },
+    {
+      "path": "audio/sound-rz.mp3",
+      "bytes": 8820,
+      "sha256": "5fa6d6a616c64e1b7332de75e36392f5eabac4def667f33d6211d6071d9461fe"
+    },
+    {
+      "path": "audio/sound-s.mp3",
+      "bytes": 6103,
+      "sha256": "dd80c9be67b4cce08d39204175ad01f7f9f9b1d8012626fd0a01ca0b78d95d44"
+    },
+    {
+      "path": "audio/sound-ś.mp3",
+      "bytes": 6103,
+      "sha256": "9953c605d59cd9cbf18e4a0b82a416ceb61637650f5941f590030804e2009082"
+    },
+    {
+      "path": "audio/sound-si.mp3",
+      "bytes": 5476,
+      "sha256": "2ed219868e0f4b51f84d3befd1f9a437e8e725e82f5db271b09f34d21c1a3870"
+    },
+    {
+      "path": "audio/sound-sz.mp3",
+      "bytes": 9447,
+      "sha256": "7085532f98222d341683661c9ee610ca27ee72d64a512a343a0c4c0ab8b32f92"
+    },
+    {
+      "path": "audio/sound-t.mp3",
+      "bytes": 4431,
+      "sha256": "9de66fdeeffbf41c6476fe8eeb81dc0ce911707450d6dc6c9e871f99714c4f90"
+    },
+    {
+      "path": "audio/sound-u.mp3",
+      "bytes": 5476,
+      "sha256": "b95e2e7c7f59ff16653671785261a4a209461f53d955c1f9d1cd753ef99b0ae6"
+    },
+    {
+      "path": "audio/sound-w.mp3",
+      "bytes": 5267,
+      "sha256": "5c58765e50f5e1e909cfb71d132448924ebecb3d1d101ab2c2a94458ff1b5275"
+    },
+    {
+      "path": "audio/sound-y.mp3",
+      "bytes": 7984,
+      "sha256": "d3e77ba7552c1a9716a32ee12e6a37dc8581a6e31f2543998f34e0f413b7fa46"
+    },
+    {
+      "path": "audio/sound-z.mp3",
+      "bytes": 7148,
+      "sha256": "dff402cf93be7a725268bb732324fa6059a5681fd03a96a881f0d3b0e679dcdd"
+    },
+    {
+      "path": "audio/sound-ź.mp3",
+      "bytes": 7148,
+      "sha256": "1ec897c8aab44a578ebd1a28ce0edb12ae7e081697d5c3a60ca54c9eaad1de7a"
+    },
+    {
+      "path": "audio/sound-ż.mp3",
+      "bytes": 7148,
+      "sha256": "94d0fe87c467030f9f24749e116ccde38e8a75c3e14c25d689b6086f866bcdae"
+    },
+    {
+      "path": "audio/sound-zi.mp3",
+      "bytes": 5476,
+      "sha256": "c367f93d6b915e661b56c4314d58ad7f96284d18cd891e34b0477ae4397fce0a"
+    },
+    {
+      "path": "audio/story-01-sentence-1.mp3",
+      "bytes": 10074,
+      "sha256": "8a0533eb6a7e50cf74ad5fab07111ea8104e7efd685dfdfd0928ff289d771ddd"
+    },
+    {
+      "path": "audio/story-01-sentence-2.mp3",
+      "bytes": 11118,
+      "sha256": "f4e0d182613a21c2d23eaa7ee10e445de9d4c6b2026cfeb01be8445dbc8eff5d"
+    },
+    {
+      "path": "audio/story-02-sentence-1.mp3",
+      "bytes": 10700,
+      "sha256": "0bb3c49e9a32474e267dfdb1d5abf04ad979d153363de05ced678053115059da"
+    },
+    {
+      "path": "audio/story-02-sentence-2.mp3",
+      "bytes": 10700,
+      "sha256": "de54044efa2584f28a6bf6492d8d0ea5370ebc4474b4f49d484c6d47be00105c"
+    },
+    {
+      "path": "audio/story-03-sentence-1.mp3",
+      "bytes": 11954,
+      "sha256": "07500c35de20e76de5885c4e4c4a49868ba545a46cc5af315f12f4c0ff0aee54"
+    },
+    {
+      "path": "audio/story-03-sentence-2.mp3",
+      "bytes": 12372,
+      "sha256": "1fc66abc0450cd1c1a7eb2f70aefab48e51fd82b137ef14a15a5e8ba486c9b22"
+    },
+    {
+      "path": "audio/story-04-sentence-1.mp3",
+      "bytes": 12372,
+      "sha256": "564852306729f786f6d348a8d1ffc3885c61d20f864fabbb54f196be5b1fd0da"
+    },
+    {
+      "path": "audio/story-04-sentence-2.mp3",
+      "bytes": 12372,
+      "sha256": "93cc22d1b0fa47ae0065372ee53d23bd4c98ad3fa13ef89c36eb38e25204d139"
+    },
+    {
+      "path": "audio/story-05-sentence-1.mp3",
+      "bytes": 12581,
+      "sha256": "716b3c91e096890526ca2968e025ce2b6508b106bf758ee49379e70cc575847e"
+    },
+    {
+      "path": "audio/story-05-sentence-2.mp3",
+      "bytes": 12581,
+      "sha256": "a72e212f47fe93a8c2748cad16f1713ad02375cff9cbff54b54c074f39f8d0e7"
+    },
+    {
+      "path": "audio/story-06-sentence-1.mp3",
+      "bytes": 13835,
+      "sha256": "0c7a6d86b139c364c5d101958f3769112de176ceebe6f080b99a24a0a3eced62"
+    },
+    {
+      "path": "audio/story-06-sentence-2.mp3",
+      "bytes": 13417,
+      "sha256": "544a92589dc7238bc84aad2bc2f7acf13143b2ab2a93203f27eacd4b83290ca6"
+    },
+    {
+      "path": "audio/story-07-sentence-1.mp3",
+      "bytes": 9029,
+      "sha256": "4d95d3a3048d2fc506e700606b654355c21f741342d8bd731ecf0f8cfea131d4"
+    },
+    {
+      "path": "audio/story-07-sentence-2.mp3",
+      "bytes": 11536,
+      "sha256": "da47018743c7d8473e150bf72c306c1f826c4991b91f4786c398dfd44db6998e"
+    },
+    {
+      "path": "audio/story-08-sentence-1.mp3",
+      "bytes": 14044,
+      "sha256": "a1c39d6c0116f586f1933cf160d735aacd41eb7764fe54bd523dc501d8fe8f6f"
+    },
+    {
+      "path": "audio/story-08-sentence-2.mp3",
+      "bytes": 14671,
+      "sha256": "d7cd0247a35ed1b34f6c0cbec2f18832c06d05222797571a989ca416dcc8baf3"
+    },
+    {
+      "path": "audio/story-09-sentence-1.mp3",
+      "bytes": 13835,
+      "sha256": "3461ab9003c72d06093367960bf915ea175c5a2b237fdcbfc57e7bb19c23efb6"
+    },
+    {
+      "path": "audio/story-09-sentence-2.mp3",
+      "bytes": 11954,
+      "sha256": "46e09dafcb43143429495c713417ba78f0ddb162d4153cd365d8852c88c95e80"
+    },
+    {
+      "path": "audio/story-10-sentence-1.mp3",
+      "bytes": 16552,
+      "sha256": "dd3a479dddaf6cad6bf964a0074eb0f5080b29438c572c7f544263daaec793a9"
+    },
+    {
+      "path": "audio/story-10-sentence-2.mp3",
+      "bytes": 13626,
+      "sha256": "069bc8bf8cd504ee6d51030f96a7a4fabb2ba6555eb1695137f119e540157e1d"
+    },
+    {
+      "path": "audio/story-11-sentence-1.mp3",
+      "bytes": 12581,
+      "sha256": "f9402990feb187d1b960ef3c5f6ef3173b0a8a7ca7ecd048b642c231d8d392aa"
+    },
+    {
+      "path": "audio/story-11-sentence-2.mp3",
+      "bytes": 15298,
+      "sha256": "373063caa246aecd575f24d3605b7a6894fdcc60e625689136a768a372fdc9c3"
+    },
+    {
+      "path": "audio/story-12-sentence-1.mp3",
+      "bytes": 16970,
+      "sha256": "51d607f094ba3df94a909963b8a6964af57bb0fb0b733d91fba1dcd82aff8f1b"
+    },
+    {
+      "path": "audio/story-12-sentence-2.mp3",
+      "bytes": 14253,
+      "sha256": "60afe4e777459b85f4119ef557fc9acff9a03a2dfb52c941b9beebfaa486a72b"
+    },
+    {
+      "path": "audio/story-13-sentence-1.mp3",
+      "bytes": 12999,
+      "sha256": "617cb454d8567124a953a0c05e4d395f91616457ff8e9ff0522a49baa47257b0"
+    },
+    {
+      "path": "audio/story-13-sentence-2.mp3",
+      "bytes": 14462,
+      "sha256": "f8fdcd7771344a836da6fed70f422929f38fa739f66b3987fbe6a056667e2604"
+    },
+    {
+      "path": "audio/story-14-sentence-1.mp3",
+      "bytes": 12372,
+      "sha256": "c2c82e5691afeac7bc741f2bfe19a8aaf789ed189556a42c87a8682690c3e5cd"
+    },
+    {
+      "path": "audio/story-14-sentence-2.mp3",
+      "bytes": 15298,
+      "sha256": "79b5475adab38f375caaf6ac36f2166f8bff95e3d2f818e90bc67ff752f4120d"
+    },
+    {
+      "path": "audio/story-15-sentence-1.mp3",
+      "bytes": 15925,
+      "sha256": "c2b77dfaccfe2ae160035a80104aa03de1ccde2101e462e61f152a98be2aec71"
+    },
+    {
+      "path": "audio/story-15-sentence-2.mp3",
+      "bytes": 17388,
+      "sha256": "b150606fd1514bc7af5b03caf800c5ebb34b59bbbba8e6c8c5102f42266cb042"
+    },
+    {
+      "path": "audio/story-16-sentence-1.mp3",
+      "bytes": 14462,
+      "sha256": "25afed0040f5168139a85e1a8a07491adf8db59bfdab2ca5eb3c9b74b2db510d"
+    },
+    {
+      "path": "audio/story-16-sentence-2.mp3",
+      "bytes": 14671,
+      "sha256": "ae70b6e527e5f688f45fc1a8965694768b9992edb9200ba3f78dc31439ba10f6"
+    },
+    {
+      "path": "audio/story-17-sentence-1.mp3",
+      "bytes": 17597,
+      "sha256": "3eee220203fdad95bf0a72acbf3bf8d2ef895764184fbce3a6d7cea92f850bcc"
+    },
+    {
+      "path": "audio/story-17-sentence-2.mp3",
+      "bytes": 16552,
+      "sha256": "0a56203ac400e65747100ee8f1730467304a036cc2cea8c98d8dc65559bcbb1e"
+    },
+    {
+      "path": "audio/story-18-sentence-1.mp3",
+      "bytes": 16970,
+      "sha256": "c723a6c272b22694676ce1b98dbc6843e044222690373af1199044fb464b277f"
+    },
+    {
+      "path": "audio/story-18-sentence-2.mp3",
+      "bytes": 15507,
+      "sha256": "2771101222ae384593df533ba30f1ad414db465446a5d55a2231b8f4d6298398"
+    },
+    {
+      "path": "audio/story-19-sentence-1.mp3",
+      "bytes": 14253,
+      "sha256": "75980be7a6362ca2694d607941cc81ee9fdf3c4cac80c6d8e7b9bc4a2522e6f9"
+    },
+    {
+      "path": "audio/story-19-sentence-2.mp3",
+      "bytes": 16134,
+      "sha256": "6d66209bfa84c431ee2694d1b71e99c66ae15b89fa904c6f5ea11d3acb5223d8"
+    },
+    {
+      "path": "audio/story-20-sentence-1.mp3",
+      "bytes": 18642,
+      "sha256": "0c9fe18374836707857c596388b9d2adf034f14170440627843052d50b2744b1"
+    },
+    {
+      "path": "audio/story-20-sentence-2.mp3",
+      "bytes": 18015,
+      "sha256": "8555e25a786e92ab9bfc2f882f1617a258eb458a6487f4b427c32dac19000cc0"
+    },
+    {
+      "path": "audio/story-21-sentence-1.mp3",
+      "bytes": 17179,
+      "sha256": "7471efc44a929a6611ef2085d982eff7e8e9df2978d6e458e2343bc83001eafd"
+    },
+    {
+      "path": "audio/story-21-sentence-2.mp3",
+      "bytes": 15925,
+      "sha256": "70b806da03ce7dfbab1a71547cb43aaaeae33289f30d1b90055f6e5736a92fce"
+    },
+    {
+      "path": "audio/story-22-sentence-1.mp3",
+      "bytes": 20732,
+      "sha256": "dd9be2acd3cce0e6429603c8fa906dbd815500eb14b1b67f0ffb41f0ba53587c"
+    },
+    {
+      "path": "audio/story-22-sentence-2.mp3",
+      "bytes": 17388,
+      "sha256": "491aa68f6f7db353e8f7c49792c4ac53e979a6b29f1003e8286b28efe86331a0"
+    },
+    {
+      "path": "audio/story-23-sentence-1.mp3",
+      "bytes": 22403,
+      "sha256": "874b912d0538db49408836daece629b8f8d04aa67c7ecd6021462d6be4af9d69"
+    },
+    {
+      "path": "audio/story-23-sentence-2.mp3",
+      "bytes": 22821,
+      "sha256": "f39880348185883ad80583a18c14a6521653da902d326116ded6420eda72214c"
+    },
+    {
+      "path": "audio/story-24-sentence-1.mp3",
+      "bytes": 23657,
+      "sha256": "e3a3371be66d96fe2efe0540481d5a9135f7e0b1f63551a6c3faa9c5337f92a9"
+    },
+    {
+      "path": "audio/story-24-sentence-2.mp3",
+      "bytes": 20732,
+      "sha256": "8da2c5626b26eaa9ac11693f430b3bc1e12a09893788c5d065ff2da525da4d67"
+    },
+    {
+      "path": "audio/story-attempt.mp3",
+      "bytes": 37450,
+      "sha256": "ebd0eb3e0ba50c66075c6245622f163573a81c939b9d43ef2db153ff01a84813"
+    },
+    {
+      "path": "audio/tap-continue.mp3",
+      "bytes": 27419,
+      "sha256": "9e35ded2badfe2f59c2e01ae9e08acda902c1063329f1d47ccf621dfcf87e049"
+    },
+    {
+      "path": "audio/warmup-blend.mp3",
+      "bytes": 38077,
+      "sha256": "220cd937162b1a7c3da2e53e53cdf98ef35655933247f74b2d13e9999fa35568"
+    },
+    {
+      "path": "audio/welcome-home.mp3",
+      "bytes": 48108,
+      "sha256": "5c9cc846334887b86adaffe0344b1704ef8583f4f471cf9c9118de2266b293bc"
+    },
+    {
+      "path": "audio/word-ala.mp3",
+      "bytes": 6312,
+      "sha256": "a17588bd72f713b55f10be33748bc866a264a2aac01880a3c89a1bc5252398ec"
+    },
+    {
+      "path": "audio/word-alfabet.mp3",
+      "bytes": 10074,
+      "sha256": "ac981f7c1f612aa849c76fa73d4ddcd75ba44712a0e16f49113b260eb4052333"
+    },
+    {
+      "path": "audio/word-astronauta.mp3",
+      "bytes": 11954,
+      "sha256": "a923dc697fab599ce2858d7ef589cc65132a17031edf40a588c458b0af259ca4"
+    },
+    {
+      "path": "audio/word-atom.mp3",
+      "bytes": 7775,
+      "sha256": "7b366e879a3dd4da478cb60651ef335ed4d359f5712bfa673c7a614848adb2cf"
+    },
+    {
+      "path": "audio/word-babcia.mp3",
+      "bytes": 9029,
+      "sha256": "c9aae81f5c9e28b50a99dcd72e52e8772a8bcba0bd4c2953613c570b5f038557"
+    },
+    {
+      "path": "audio/word-bajka.mp3",
+      "bytes": 9029,
+      "sha256": "e17ae3a75ccafc9a0c12a54a6bb074fafdf4933d7a1b7bbb8b441a8a38358512"
+    },
+    {
+      "path": "audio/word-bak.mp3",
+      "bytes": 8611,
+      "sha256": "8e2aa3481e3e705eb7b2e8b3fd6d539eac29ad06d501ffc95ec9334e7da5f9f1"
+    },
+    {
+      "path": "audio/word-balon.mp3",
+      "bytes": 8402,
+      "sha256": "432d6cc0cd64300195b4c4865159ebfe8c41ca41989b167f03c980548741a8e1"
+    },
+    {
+      "path": "audio/word-banan.mp3",
+      "bytes": 8611,
+      "sha256": "b36e5b92d0fb0f069b8d3f74e801aea9ebf5bf2a563c6862011a61b6f38c8ad6"
+    },
+    {
+      "path": "audio/word-banka.mp3",
+      "bytes": 8820,
+      "sha256": "888270e5abefde6c632b86e63854fda8ea6842d773809ff20e74fe97467035d5"
+    },
+    {
+      "path": "audio/word-biblioteka.mp3",
+      "bytes": 11745,
+      "sha256": "1f05447123db3bfd48bf17a40b668b098432bb569d8b7e802135b3bd9558766f"
+    },
+    {
+      "path": "audio/word-bocian.mp3",
+      "bytes": 9447,
+      "sha256": "7916609bf7db2bda56b67faaa8e749e2fce2c6bd773a222728cc60aa281a9d91"
+    },
+    {
+      "path": "audio/word-bok.mp3",
+      "bytes": 7357,
+      "sha256": "80e06c10a13e99f7763a8c016f18ec9f3d3ac0a93d48606a07e832f27e068a7e"
+    },
+    {
+      "path": "audio/word-bol.mp3",
+      "bytes": 6939,
+      "sha256": "f349bcdec6138d9a61baaad35f520409055f06792fd68494380e00d3a8b07f16"
+    },
+    {
+      "path": "audio/word-bonus.mp3",
+      "bytes": 9029,
+      "sha256": "36aca08e6dfe2fff79dfbe793b100bdbc922b5bbed8873e6ae4abe4716413f8d"
+    },
+    {
+      "path": "audio/word-brac.mp3",
+      "bytes": 8402,
+      "sha256": "3f8cfe6b7df5d668891ba136515455319d85b0e2824a3c14c3d5fc12a2715ad5"
+    },
+    {
+      "path": "audio/word-bulka.mp3",
+      "bytes": 9447,
+      "sha256": "ee0a09208f0d152bc654da0234368460445fc443600287833e46cccf8426b0ba"
+    },
+    {
+      "path": "audio/word-burza.mp3",
+      "bytes": 7566,
+      "sha256": "7fbdd707f5f271b7087413e4036a082a26d582c40dbd8b202bac250567dbc783"
+    },
+    {
+      "path": "audio/word-but.mp3",
+      "bytes": 7566,
+      "sha256": "2c25bfb4605a8a57d24ba42a681d3be520f009dcd5866c5d0bd7c70ad344ab13"
+    },
+    {
+      "path": "audio/word-cebula.mp3",
+      "bytes": 8193,
+      "sha256": "84f4ef3ef4f2d08d9c06f36650b142c0d31d996a6b8fcb6fc0d16c21dd067730"
+    },
+    {
+      "path": "audio/word-cena.mp3",
+      "bytes": 7148,
+      "sha256": "c0f63453281b46ec82db2b235eb3bcfe13205c07efd5dd7a0decc1669245317d"
+    },
+    {
+      "path": "audio/word-chata.mp3",
+      "bytes": 7775,
+      "sha256": "7a17cc6db0b3c2354c34323dd8ea10eba0ea58b7c2bdbcdbb2ff9569d6548387"
+    },
+    {
+      "path": "audio/word-chleb.mp3",
+      "bytes": 7984,
+      "sha256": "1ebaf29a0d385c209ef74168b0cbaf4784f3121182ba00e83a65c83ba57d40c2"
+    },
+    {
+      "path": "audio/word-chmura.mp3",
+      "bytes": 8193,
+      "sha256": "7689766c8b56762186a7adbfaf254187eb15d5fc4d0014691a345c062d7accc5"
+    },
+    {
+      "path": "audio/word-chodze.mp3",
+      "bytes": 7566,
+      "sha256": "0d0d08190cf89994ee67f2ae3f99f078e9a79d979fb6985bc5b6ba3f6b2166e2"
+    },
+    {
+      "path": "audio/word-choinka.mp3",
+      "bytes": 10074,
+      "sha256": "61eb5d12dab32a14bca7cf2abc0e1921c4e18c63f281faa0a6d67d3cb67e258a"
+    },
+    {
+      "path": "audio/word-chomik.mp3",
+      "bytes": 8820,
+      "sha256": "9324c13b3ea52bd28e8007f9a530c8a3d3d52d5ef687a04640d0361dde5cd6f4"
+    },
+    {
+      "path": "audio/word-choroba.mp3",
+      "bytes": 8193,
+      "sha256": "b9c03d3604ff8ff1b35f12c1b97422a40745faeb7ee0064499be772655c42ee4"
+    },
+    {
+      "path": "audio/word-ciasto.mp3",
+      "bytes": 8611,
+      "sha256": "531bbcfc9bc0838eebe936670c723d0b7051d8082812110d8561b74acb4d6177"
+    },
+    {
+      "path": "audio/word-cieplo.mp3",
+      "bytes": 8193,
+      "sha256": "a40ae0a562d17a8d026a8177b918384a95343c54174199dd8020a96b65de5abc"
+    },
+    {
+      "path": "audio/word-ciocia.mp3",
+      "bytes": 7984,
+      "sha256": "c09d8edc6bcbf912fa05b39aa1d2cfda93a9876b4881d30bedebbb3d81f0d987"
+    },
+    {
+      "path": "audio/word-cma.mp3",
+      "bytes": 6939,
+      "sha256": "ac7cd890cd841ff26dd868e2438b2d22f3482b44912b70c9ad6328891fab5a84"
+    },
+    {
+      "path": "audio/word-cukier.mp3",
+      "bytes": 8611,
+      "sha256": "a3010ea3720f4f4c29aa24f8c8be0680a0d0503ebf0accfaaad6f78c91d65366"
+    },
+    {
+      "path": "audio/word-cyrk.mp3",
+      "bytes": 7566,
+      "sha256": "d93b21a090483e9faa4a4fcf60f755453a19f276c79ef7102f4330837443f7b0"
+    },
+    {
+      "path": "audio/word-czapka.mp3",
+      "bytes": 8611,
+      "sha256": "5a08e8283cc2f468e78c8110740c32dcde2a9a6bb078405e48e6599ee38fdc80"
+    },
+    {
+      "path": "audio/word-czapla.mp3",
+      "bytes": 8193,
+      "sha256": "e7727de1a1f5528825cbc779df072135484bfbfa626ed8cc9796d549a762f722"
+    },
+    {
+      "path": "audio/word-dab.mp3",
+      "bytes": 8820,
+      "sha256": "bd5447c13501ad994114f8a5019539f0764a0b75dd01c911349c7e5ba5b7561c"
+    },
+    {
+      "path": "audio/word-dach.mp3",
+      "bytes": 7775,
+      "sha256": "bd36cb97671d41134fe817cf06f13d1e7ba004d59f4cbd6c8bb36201ddc33294"
+    },
+    {
+      "path": "audio/word-deska.mp3",
+      "bytes": 8820,
+      "sha256": "d3e6b300ab121d1b80bc9476e4b982bab3c43bef583fe2e5d39e39387ab4470a"
+    },
+    {
+      "path": "audio/word-dinozaur.mp3",
+      "bytes": 9656,
+      "sha256": "423c2ad6e32f8934daac90900705c9475c8f503280bb73895012c52642f3a2ce"
+    },
+    {
+      "path": "audio/word-dlon.mp3",
+      "bytes": 8193,
+      "sha256": "ba1ec22e3d839f2534740a43e5c31ab0d0391626e3c23f5b0d3c0d8cbb17d511"
+    },
+    {
+      "path": "audio/word-dom.mp3",
+      "bytes": 6939,
+      "sha256": "d7522d34ab5f9755fe52ad0dfef13f7c7ece3c2cef7ca74f466e9058ec47961e"
+    },
+    {
+      "path": "audio/word-drewno.mp3",
+      "bytes": 8820,
+      "sha256": "40f98c69e525edafe840f94f4a728449b9cde024961616cbafb7980e22d15d86"
+    },
+    {
+      "path": "audio/word-drozdze.mp3",
+      "bytes": 9238,
+      "sha256": "954e908ff97a9adf6efcb1697ad30cce87529d8f88eb771ef9937ad3aa8feb3d"
+    },
+    {
+      "path": "audio/word-drut.mp3",
+      "bytes": 7984,
+      "sha256": "4bd40a4049540a549de115b3a1727fd639eb1440c4f1483fd0f3bab051b013a6"
+    },
+    {
+      "path": "audio/word-drwal.mp3",
+      "bytes": 8402,
+      "sha256": "27a5a1526ba6a51c35f44874e12ab621dc1eeea22a70da4e764efd23bbabf83a"
+    },
+    {
+      "path": "audio/word-drzewo.mp3",
+      "bytes": 8611,
+      "sha256": "e85b2d2eedbb69afdabbff6d6cd97b1b77768fa5ac1554f896eaf7cff58b0fd0"
+    },
+    {
+      "path": "audio/word-duch.mp3",
+      "bytes": 7357,
+      "sha256": "9dd76218ce1dd38f67383247555bdd1aac27170d531ba613769badf60520767f"
+    },
+    {
+      "path": "audio/word-dywan.mp3",
+      "bytes": 8402,
+      "sha256": "86e71a7afbffce1224daacb2e0f35c1841a19d667f46980c730f17c12043a09f"
+    },
+    {
+      "path": "audio/word-dzban.mp3",
+      "bytes": 8611,
+      "sha256": "0abd3646e57c703b73d91a7ed09920adfab8bbdf0276f84596c711125aae65c9"
+    },
+    {
+      "path": "audio/word-dzem.mp3",
+      "bytes": 8193,
+      "sha256": "6300fdcc975c55d9cad3976cce450fc5df3b477e31446e361f4e0e25c9ac134a"
+    },
+    {
+      "path": "audio/word-dziecko.mp3",
+      "bytes": 9447,
+      "sha256": "6f392b05c88a54becaf04ef3e8646aec59cd7da274b6344bbc41f300ffb626c1"
+    },
+    {
+      "path": "audio/word-dzien.mp3",
+      "bytes": 6939,
+      "sha256": "105ed98d387307607798d5255ffc761ade8aba6d3f542b866ed66436bb54209d"
+    },
+    {
+      "path": "audio/word-dzik.mp3",
+      "bytes": 7357,
+      "sha256": "2450b828b80702bbd533b77a89631c78af828c8886207167a41f09536f5418da"
+    },
+    {
+      "path": "audio/word-dziob.mp3",
+      "bytes": 7566,
+      "sha256": "e85e0789afd49041b73dd5588f01c5cdc94b17bbf84bc24426f61de6b7069a2a"
+    },
+    {
+      "path": "audio/word-dzungla.mp3",
+      "bytes": 9238,
+      "sha256": "c5f4d0d910bcb23422aa034fd3c0e12b665d98805c66132be05bd1b6e2bdd015"
+    },
+    {
+      "path": "audio/word-dzwon.mp3",
+      "bytes": 7566,
+      "sha256": "533354cafbba42e21cc6b74bc5fafdb128f0a2b07c991a464761524ba9b28380"
+    },
+    {
+      "path": "audio/word-echo.mp3",
+      "bytes": 7148,
+      "sha256": "edd83ba94448afb2c0929d46998c0644095e090f885f595f72669bd23e33ab08"
+    },
+    {
+      "path": "audio/word-ela.mp3",
+      "bytes": 6521,
+      "sha256": "426021d25fe5f57cc121ea50a8da03c9d0ef46dc2c4626b15e4a4364c49bd63b"
+    },
+    {
+      "path": "audio/word-fala.mp3",
+      "bytes": 7148,
+      "sha256": "de3855114a4e01e56fd20308d35ba6429154eb1edf8bbae954c0906aabe500de"
+    },
+    {
+      "path": "audio/word-fasola.mp3",
+      "bytes": 8611,
+      "sha256": "ce570cfa8bfb2f47b91342be1571cf8faa866de73d4fa9efbc5f11b8088f54df"
+    },
+    {
+      "path": "audio/word-flaga.mp3",
+      "bytes": 8402,
+      "sha256": "9005a49bbbbbf7dd02918654570c399f37c86f4b9f9dff9d679e9cca6e63e734"
+    },
+    {
+      "path": "audio/word-flet.mp3",
+      "bytes": 7775,
+      "sha256": "46261974ce9fd55feac186b322d859268313a2f697a447db6a22f7708164e24d"
+    },
+    {
+      "path": "audio/word-foka.mp3",
+      "bytes": 7984,
+      "sha256": "ac35acff4a17dd95c63d5aa3fa885d29885bfe9004721280f449f1235972310e"
+    },
+    {
+      "path": "audio/word-fotel.mp3",
+      "bytes": 8402,
+      "sha256": "13162761459179ae78af3109728f6d64accc370334a21732d71e64946883a043"
+    },
+    {
+      "path": "audio/word-gaj.mp3",
+      "bytes": 6521,
+      "sha256": "704dce903cd66cab650b875f24527cb54f6256dcb54995480f2f72b8002ed82d"
+    },
+    {
+      "path": "audio/word-galaz.mp3",
+      "bytes": 9029,
+      "sha256": "6d0e6151c589dcb5903cf829dfc492348830a990611ceadb19b64a418ddd9687"
+    },
+    {
+      "path": "audio/word-garnek.mp3",
+      "bytes": 9447,
+      "sha256": "44b89be896d5cd1c15d21a1f28c69fc7bb7a9f8f016a052932c17dbd288a8a8f"
+    },
+    {
+      "path": "audio/word-gaska.mp3",
+      "bytes": 8820,
+      "sha256": "db13fee0a7c3ec5bfb4fb13fe6e038e7fb3762bf5aea441de3bc64461bd050a1"
+    },
+    {
+      "path": "audio/word-glowa.mp3",
+      "bytes": 8402,
+      "sha256": "cbdd82c010d219711e90891e7799d887f1de30cd344a366047a59854b321df90"
+    },
+    {
+      "path": "audio/word-gora.mp3",
+      "bytes": 7148,
+      "sha256": "e1502c58ed1fdc03d498eac7a821063aab912051a73b994133b32880de1a6dc0"
+    },
+    {
+      "path": "audio/word-gosc.mp3",
+      "bytes": 8193,
+      "sha256": "94453fe6de8cc8cf34399452574333d866bc12b5bcf1494eb6501f459ad5f412"
+    },
+    {
+      "path": "audio/word-gra.mp3",
+      "bytes": 6312,
+      "sha256": "b716e556600434c2ee07d28e7ff127748327088595a5c94f3b1314042cbb1062"
+    },
+    {
+      "path": "audio/word-grzyb.mp3",
+      "bytes": 8820,
+      "sha256": "167de726896b0faff6da45427db88def538aeb7e26e5a5b97115590153e384a8"
+    },
+    {
+      "path": "audio/word-guma.mp3",
+      "bytes": 7566,
+      "sha256": "73259e8e82217206c6d1e0b92ff2826e83e5f9ad8daf401c4866952f778e04bf"
+    },
+    {
+      "path": "audio/word-gwiazda.mp3",
+      "bytes": 10283,
+      "sha256": "cd3121dcfd8ed190f3ce4759ca7757de9bfdae294d0994b6e0482a1a4d015128"
+    },
+    {
+      "path": "audio/word-gwozdz.mp3",
+      "bytes": 9029,
+      "sha256": "5f6d42d185fdebc526d98e1b7265c765dd6c3709a3f817ad658a94ba18b178e6"
+    },
+    {
+      "path": "audio/word-hak.mp3",
+      "bytes": 7566,
+      "sha256": "04a7d9c613f9eac84caf095a10317eecdbed8a44fc1daa627bc919476ac69ac3"
+    },
+    {
+      "path": "audio/word-hamak.mp3",
+      "bytes": 9029,
+      "sha256": "c584aca28243cd7fa98ca4642d87b0ff3b70a3547a20e5efe5a8093de7044aff"
+    },
+    {
+      "path": "audio/word-herbata.mp3",
+      "bytes": 9656,
+      "sha256": "b2b8685abee9589c224f2e1a5f5220df3acb0ae9b4542e5b882f7b262afff144"
+    },
+    {
+      "path": "audio/word-hotel.mp3",
+      "bytes": 8611,
+      "sha256": "3758e33310247514569955eb411faa51dbc42bad2b2fcce75a15a284d85a378a"
+    },
+    {
+      "path": "audio/word-hula.mp3",
+      "bytes": 7148,
+      "sha256": "298a3f07fbc35440282e50a051c19d8e7883914ff250e77b148ea0615af39db9"
+    },
+    {
+      "path": "audio/word-jablko.mp3",
+      "bytes": 10700,
+      "sha256": "66f41cf6c1af06733463f5d46750facef9081f420eae0c07801e1acf3f5f78fa"
+    },
+    {
+      "path": "audio/word-jagoda.mp3",
+      "bytes": 8402,
+      "sha256": "04b76884665d6c3ef5229e5729f72c4426f46d4eff88a51e09da3b159abe1634"
+    },
+    {
+      "path": "audio/word-jajka.mp3",
+      "bytes": 9029,
+      "sha256": "b2f0eabed32ce1d1a77ac72f42bb1dd0deee00274b1a4fcaf3dc495af3287589"
+    },
+    {
+      "path": "audio/word-jajko.mp3",
+      "bytes": 9238,
+      "sha256": "f691dcbbe061f6503571706467b71077dfbc16b9989b24638011281a8cb9b1ba"
+    },
+    {
+      "path": "audio/word-jajo.mp3",
+      "bytes": 7566,
+      "sha256": "9645cfb4918a8f76c3c23d2f551e6bc791f9ddd3d90e3efe9bfb2794240f4a8e"
+    },
+    {
+      "path": "audio/word-jedza.mp3",
+      "bytes": 7984,
+      "sha256": "4136c60e7b6e51e0889c942957b6e2b5e8f09227f0ff22b2815fa410a866463b"
+    },
+    {
+      "path": "audio/word-jez.mp3",
+      "bytes": 7357,
+      "sha256": "fd069906830eb190804cce58a63209f417c54df19bcd586b95aced03ff7e673f"
+    },
+    {
+      "path": "audio/word-kaczka.mp3",
+      "bytes": 8820,
+      "sha256": "dc9eeb0b50121e6d9d1aea9cc05618cb42aaa5c83ed4150f6cfc2a3901fbe426"
+    },
+    {
+      "path": "audio/word-kajak.mp3",
+      "bytes": 8611,
+      "sha256": "326dfa0f7f28d87082fb604f0670e14efadf19005da4cf329a1e041c825f880b"
+    },
+    {
+      "path": "audio/word-kalka.mp3",
+      "bytes": 8611,
+      "sha256": "79a3a16abc2431d328df4d8c022ae4a2275c35f89fadf76a65e941a6c039f723"
+    },
+    {
+      "path": "audio/word-kaloryfer.mp3",
+      "bytes": 9656,
+      "sha256": "da14daee3b81ef24787854a2cae123aa77dc286b1efbc64019d55ba74cdc58a1"
+    },
+    {
+      "path": "audio/word-kapcie.mp3",
+      "bytes": 8402,
+      "sha256": "8a7f3b6407b4162e6bb8d4e9c6bbd5ef61933bceeded831ae48651d348f15b3b"
+    },
+    {
+      "path": "audio/word-kapec.mp3",
+      "bytes": 8820,
+      "sha256": "3e558b362576c7784a70f6781ff05caf069158d8badaa9d736c2242fc536d33f"
+    },
+    {
+      "path": "audio/word-kasa.mp3",
+      "bytes": 7148,
+      "sha256": "3ded80936c0ec2440b99483c21c0e3f86172738b495cd65cc0c1b8aafc1550b3"
+    },
+    {
+      "path": "audio/word-kat.mp3",
+      "bytes": 7775,
+      "sha256": "3529a379aa8793c5f41c721496e2435765d0edc8561a102e4543eb3d3a52fa41"
+    },
+    {
+      "path": "audio/word-kilka.mp3",
+      "bytes": 8611,
+      "sha256": "610a8c1edc957169dbcc6e947bd7e1d5a267d644eadfefe0caa2ecd947d106be"
+    },
+    {
+      "path": "audio/word-kino.mp3",
+      "bytes": 6939,
+      "sha256": "1069c2c2390d93b56a1c79ac0eb44a52b151ba4624212b994e8c506e2eb79b06"
+    },
+    {
+      "path": "audio/word-koc.mp3",
+      "bytes": 6939,
+      "sha256": "a5c3790f9d77d168bb38700668aef7ea02a428ac82cb61a6cb75567b2351b51a"
+    },
+    {
+      "path": "audio/word-koledzy.mp3",
+      "bytes": 7984,
+      "sha256": "18fcb396c528c21776ca11ed02328293991246718e54c286bd74fd31213bdb51"
+    },
+    {
+      "path": "audio/word-kometa.mp3",
+      "bytes": 8402,
+      "sha256": "1806a62558b091634983cfc248b4dd77e8d30d922e0475cae7e0508b7a3e85cb"
+    },
+    {
+      "path": "audio/word-komputer.mp3",
+      "bytes": 9447,
+      "sha256": "13650d0eb6140307c756abe1f51155ff9cd40590b13bba4c8c06316de3a563a9"
+    },
+    {
+      "path": "audio/word-kon.mp3",
+      "bytes": 6312,
+      "sha256": "4b0220f48145b2a44852194740123994780789ce6911df9a444ac59aa968b27b"
+    },
+    {
+      "path": "audio/word-kosc.mp3",
+      "bytes": 7566,
+      "sha256": "c1bf91c43ec6c5a636e02f15d76209d897dbfd16c41f02928a0f057e79a7a4f9"
+    },
+    {
+      "path": "audio/word-kosmonauta.mp3",
+      "bytes": 11536,
+      "sha256": "eac227ebca35438f19fa52785088706226aabb7d42a72993147205e0dd2cba0b"
+    },
+    {
+      "path": "audio/word-kosz.mp3",
+      "bytes": 6730,
+      "sha256": "3b81ceae7ab2e864bb0e47ee99f7c07ef75f3e75c7e53322b6f075445fb523b5"
+    },
+    {
+      "path": "audio/word-kot.mp3",
+      "bytes": 6939,
+      "sha256": "b530517eeeeb93b6cbf5753360a8f2e87be98c9aa2171207b192ba78088fa52b"
+    },
+    {
+      "path": "audio/word-kotek.mp3",
+      "bytes": 8402,
+      "sha256": "5b3f0de1366eea6183ee5b1f04f23d242f553fed189a5f6b34793c6273d9a779"
+    },
+    {
+      "path": "audio/word-koza.mp3",
+      "bytes": 6939,
+      "sha256": "e245d53345674d6a5e78e958b2ae62b027e361307f956ddd8c200a8c88850084"
+    },
+    {
+      "path": "audio/word-krol.mp3",
+      "bytes": 6939,
+      "sha256": "f907825668cc9e119142260fb2ae67f7e442596bbf7a085063ef88865d32b1da"
+    },
+    {
+      "path": "audio/word-krzeslo.mp3",
+      "bytes": 9029,
+      "sha256": "1ebbc03327a8c16c0374e77aa2578bc18d304f883d3527658ddc9b9737f4d4bf"
+    },
+    {
+      "path": "audio/word-ksiezyc.mp3",
+      "bytes": 9865,
+      "sha256": "500330e9c78f19c33966722279f8ad6fc4a95f4964dcf6d3489102e587f1cd0e"
+    },
+    {
+      "path": "audio/word-kuna.mp3",
+      "bytes": 6730,
+      "sha256": "0f9bd924ab672524436b6b7888714103e9f200912f875eb87a70b40f8085d007"
+    },
+    {
+      "path": "audio/word-kura.mp3",
+      "bytes": 6521,
+      "sha256": "2af71a06994a2331641f3af24e0abdf1a4b010d9166f276b6bff2dd442087c42"
+    },
+    {
+      "path": "audio/word-kwiat.mp3",
+      "bytes": 9238,
+      "sha256": "f1817f44c6e026aec0e0c71aa85285a92fa05801b1315acbb5c756cd15b2c841"
+    },
+    {
+      "path": "audio/word-lapa.mp3",
+      "bytes": 7984,
+      "sha256": "0953e278068fb493b05f5a086ed4a1252d5416a846ef09ee156a604c18475d31"
+    },
+    {
+      "path": "audio/word-las.mp3",
+      "bytes": 7775,
+      "sha256": "f1b4614e576a4fdc7e315e051473a9a4bfc47d4ad53dfc0dde052761398c3e71"
+    },
+    {
+      "path": "audio/word-lata.mp3",
+      "bytes": 7775,
+      "sha256": "c8420732c50f79f2c2963e00c1340ff7790fce5ff3b91f7b5151bd4c71bbc84e"
+    },
+    {
+      "path": "audio/word-lato.mp3",
+      "bytes": 7984,
+      "sha256": "ce4475e44cc779defd7910a804edee98ae17190f186fe8666b637020e4a90e82"
+    },
+    {
+      "path": "audio/word-lekarz.mp3",
+      "bytes": 9656,
+      "sha256": "dd8318a9d627c5f78a6d59995bc3fb21baad017f0a861833b4e03d8b6ead6b60"
+    },
+    {
+      "path": "audio/word-lina.mp3",
+      "bytes": 7566,
+      "sha256": "656c2513480b67eaf359d6bb44cb213ce6e7bb4563ecf2360d876c4e94da9ead"
+    },
+    {
+      "path": "audio/word-lis.mp3",
+      "bytes": 7775,
+      "sha256": "b1ad48074d37e2bbeb5602b87eca8e4cd1c59af64321873c9efc7987e603280d"
+    },
+    {
+      "path": "audio/word-list.mp3",
+      "bytes": 8402,
+      "sha256": "2175faa78a6e16a76c9697e2490f797a12f1af7462f5dd8cfb1240b94485acf5"
+    },
+    {
+      "path": "audio/word-lizak.mp3",
+      "bytes": 9238,
+      "sha256": "fe156f24f40669e58cd0185eecad34643a25c6462aa0dcd7d25060c7f6fcb51d"
+    },
+    {
+      "path": "audio/word-lobuz.mp3",
+      "bytes": 9238,
+      "sha256": "18d4f44484fcac66fce1c51e0ad91c562b5f1afed39a73fda68c2071e4702c10"
+    },
+    {
+      "path": "audio/word-lod.mp3",
+      "bytes": 7357,
+      "sha256": "650a5fbb16425af7dbb471daac480fcd36132ebc1adf34d90e7a5a824c415c36"
+    },
+    {
+      "path": "audio/word-lodka.mp3",
+      "bytes": 9029,
+      "sha256": "b73a9825c4bdea3ac7052f7f32d24e0952acffda2607c2091c42acceba0333b5"
+    },
+    {
+      "path": "audio/word-lodz.mp3",
+      "bytes": 7775,
+      "sha256": "11f64846161f3f44c80edfa3bbef3fce3e97b9d4ea5675543f68ce716c38b096"
+    },
+    {
+      "path": "audio/word-lok.mp3",
+      "bytes": 7357,
+      "sha256": "fa2338cc12b369ea08375d8fa6eb73fad7215fc52d2eafc233157751ef0e2c3c"
+    },
+    {
+      "path": "audio/word-lokomotywa.mp3",
+      "bytes": 11118,
+      "sha256": "71a98b20de3fa57ba50acdf6358a79357857206d07fcb31e56c60530b46d831e"
+    },
+    {
+      "path": "audio/word-los.mp3",
+      "bytes": 7775,
+      "sha256": "87ca745770e9930d0d47188f4cd5b11093ea4aa5d4a079587e48f971eacb01e6"
+    },
+    {
+      "path": "audio/word-lot.mp3",
+      "bytes": 7357,
+      "sha256": "d61e0030dbf6003a75dd6f277082c4964a6b9d25912c027acf7e56fe6373e2ab"
+    },
+    {
+      "path": "audio/word-lotka.mp3",
+      "bytes": 8820,
+      "sha256": "2193ae0c27f9bfb8582a12949c50edfbe04103110904d8a0538e7da062bb3583"
+    },
+    {
+      "path": "audio/word-lufa.mp3",
+      "bytes": 7566,
+      "sha256": "ffc8d46f4b6e60f29d5cdc7cd9f5791e17927bf3af7519ba827ff649fccca23f"
+    },
+    {
+      "path": "audio/word-luk.mp3",
+      "bytes": 7566,
+      "sha256": "cffccc16ac7783058bffd28bcba7a5d90eaf3d41622dabe3f6fbcdeb7e3afb95"
+    },
+    {
+      "path": "audio/word-ma.mp3",
+      "bytes": 5685,
+      "sha256": "28af056166d5ca779490579f15e436071deff3605abf1ffb5b4a4a0dcfafd147"
+    },
+    {
+      "path": "audio/word-madry.mp3",
+      "bytes": 8611,
+      "sha256": "41ad931a901d5d7a056c8e4711ea25690ad300e6c0effb38068e3e0ec6251cd5"
+    },
+    {
+      "path": "audio/word-mak.mp3",
+      "bytes": 7566,
+      "sha256": "5e0285296d891e33b52672dd39c023ebc5b65cda743029ba6f09e5f28de8a605"
+    },
+    {
+      "path": "audio/word-maki.mp3",
+      "bytes": 8193,
+      "sha256": "8b7940057a5a33879181fae563224189c640d77d27f3d73c0523eac565fc563f"
+    },
+    {
+      "path": "audio/word-mama.mp3",
+      "bytes": 7566,
+      "sha256": "1f4ebea81e1eb12af2b88e982293518222da7308ee6a8625c4ce170eb4c1e66c"
+    },
+    {
+      "path": "audio/word-masc.mp3",
+      "bytes": 8402,
+      "sha256": "e130d8a207f47461390c38b111f22194f30b042bbb5a5b8368b088c4b72124a4"
+    },
+    {
+      "path": "audio/word-maska.mp3",
+      "bytes": 8820,
+      "sha256": "4bb233890b65c3550099b2d274321d78e54e656332846a8e1a79ec93870bc00b"
+    },
+    {
+      "path": "audio/word-mata.mp3",
+      "bytes": 7775,
+      "sha256": "314e2230e1c486a965949d5cb9428d26e7045b9b152f3ebd0e74f4a7648c2c28"
+    },
+    {
+      "path": "audio/word-maz.mp3",
+      "bytes": 7148,
+      "sha256": "c53266ce5f91bf7e8daf4c6fb4de26ace955c8f8656c294ad4de7bda9686f544"
+    },
+    {
+      "path": "audio/word-mech.mp3",
+      "bytes": 7357,
+      "sha256": "3c02c4a7ddaec7bf86fad3b6826ef26f0fb1968f36231f6b7c529625638e7c76"
+    },
+    {
+      "path": "audio/word-mecz.mp3",
+      "bytes": 7566,
+      "sha256": "12641b4f52a174f7111a9cd3941133e8e58667800cf68b5bc98676df664af58f"
+    },
+    {
+      "path": "audio/word-meta.mp3",
+      "bytes": 7775,
+      "sha256": "af8bccbaf3161f8d4c4c9d099e41990f7cc4f7afca9ec2e054feec4919326aa5"
+    },
+    {
+      "path": "audio/word-miasto.mp3",
+      "bytes": 9447,
+      "sha256": "00cc8525f896b6fe210790b1c2ca3463a026fbf784f5e46e2a4493de0ab1e67d"
+    },
+    {
+      "path": "audio/word-mikroskop.mp3",
+      "bytes": 11954,
+      "sha256": "d819ebd4bc487951bd9c64b1358e845da57e49b0102dfca21185945b6160c07d"
+    },
+    {
+      "path": "audio/word-misa.mp3",
+      "bytes": 7775,
+      "sha256": "7a02c0cded4726ace8689ca4775d4c8cbeab329acf6ac614f6e82028b55dc957"
+    },
+    {
+      "path": "audio/word-miska.mp3",
+      "bytes": 8820,
+      "sha256": "5af1de2ec8b31626f775bba25008e63fb9addb3b9fdfa34f5a965cd3439d6456"
+    },
+    {
+      "path": "audio/word-mleko.mp3",
+      "bytes": 9447,
+      "sha256": "cf7b27932abc20e686bf97b6899d451af5710dc86eef96650efb872ec3bcd28f"
+    },
+    {
+      "path": "audio/word-mlodosc.mp3",
+      "bytes": 10909,
+      "sha256": "11c4146dae510ec1511174d2f632abc54a98782cedb1490081fce7005af2fc9d"
+    },
+    {
+      "path": "audio/word-molo.mp3",
+      "bytes": 7357,
+      "sha256": "21701a6a5ccd42f18840d353041d639b34288e79d6b31d3dd75eeb7a463fb2e1"
+    },
+    {
+      "path": "audio/word-morze.mp3",
+      "bytes": 7566,
+      "sha256": "2869e3b61f4fa4aad22a1f4af0aea55670cca2cc8753186a2012077ec0699dfb"
+    },
+    {
+      "path": "audio/word-most.mp3",
+      "bytes": 7984,
+      "sha256": "cb76835a6446d61c4fdfda588634c0fa11872680a4f12b9b9ead70367ac5411a"
+    },
+    {
+      "path": "audio/word-motek.mp3",
+      "bytes": 9029,
+      "sha256": "4f47c89cb336999eecae1e121a1d86b11de0140f9e213b701b2264fb4ee179e7"
+    },
+    {
+      "path": "audio/word-mucha.mp3",
+      "bytes": 7775,
+      "sha256": "d5df062c623f4a6330172cc20e6d52f70414a492c18251eddfe2cc28fe1c2644"
+    },
+    {
+      "path": "audio/word-mysz.mp3",
+      "bytes": 7148,
+      "sha256": "4c1b97a5175c6b3aa248a42a83cc2e59b03f50244fac6b7384312a0dabbbf876"
+    },
+    {
+      "path": "audio/word-nalesniki.mp3",
+      "bytes": 11536,
+      "sha256": "4696624095b2634b6c24ffab71b3c35413afb6e7945a4833034fd152f4889e4f"
+    },
+    {
+      "path": "audio/word-niebieski.mp3",
+      "bytes": 10074,
+      "sha256": "d28764678f12901d7a306acce62de295c0dded26f7a7e24bd60110c0667e224d"
+    },
+    {
+      "path": "audio/word-niebo.mp3",
+      "bytes": 7775,
+      "sha256": "97dbe0ad59f32bea3e10ff87f0932faedfa9804d8e893115434f43b92960bead"
+    },
+    {
+      "path": "audio/word-niespodzianka.mp3",
+      "bytes": 11954,
+      "sha256": "4a01708aa984dbadb7fded1f94076216ac456e5cc669c2e9371ca06a3d42d0e6"
+    },
+    {
+      "path": "audio/word-nisko.mp3",
+      "bytes": 9238,
+      "sha256": "d61fa9616ea206438e1a6765e7f4711742e0afe010d1aec0185bb7d982fd2379"
+    },
+    {
+      "path": "audio/word-noc.mp3",
+      "bytes": 7566,
+      "sha256": "e2448acd8930d6736f977ded70283192d67f0cbf2c2d32ec166c6e590dfb0557"
+    },
+    {
+      "path": "audio/word-noga.mp3",
+      "bytes": 7566,
+      "sha256": "bba29616fbcd874a3ae5fba4ac950983d71af0184e78cd703775bebe1492f76f"
+    },
+    {
+      "path": "audio/word-nora.mp3",
+      "bytes": 6939,
+      "sha256": "037cf4e3f33ccde01a7680da0d9a2e89c8ec532174d38408899294a5987f9780"
+    },
+    {
+      "path": "audio/word-nos.mp3",
+      "bytes": 7566,
+      "sha256": "2a7789c9e4fc65efd60761da1ed313bf299d7b0a62b0ebad65feed4450fb6f96"
+    },
+    {
+      "path": "audio/word-nuta.mp3",
+      "bytes": 7775,
+      "sha256": "faca2f058526ddcb7203fe5525096fac28e7e80bf40d685c0687b879392a5895"
+    },
+    {
+      "path": "audio/word-nuty.mp3",
+      "bytes": 7775,
+      "sha256": "1f2fbbd943275721c810167899d4e2aedb7894b0aa0367338b9e2b233913a0da"
+    },
+    {
+      "path": "audio/word-ognisko.mp3",
+      "bytes": 10074,
+      "sha256": "cccddd2a54e504ac4017d27f23ff035d1f52c15d24d017240cabc72888f193d4"
+    },
+    {
+      "path": "audio/word-ogrodnik.mp3",
+      "bytes": 10700,
+      "sha256": "a3b1c8c0254d812fd1b3fb955447bcc36adac25c5098ee81c100af663c0cc2b0"
+    },
+    {
+      "path": "audio/word-okno.mp3",
+      "bytes": 7984,
+      "sha256": "68259edb13cd36b10302b7815da31e67baadb07d3a4d2d95ffe22623ad642339"
+    },
+    {
+      "path": "audio/word-opowiadanie.mp3",
+      "bytes": 10909,
+      "sha256": "0911020b3ee767e20ec3aa9e7023aac3b9ccad22b16526900037e17e024b5f83"
+    },
+    {
+      "path": "audio/word-orzech.mp3",
+      "bytes": 8193,
+      "sha256": "f19b2246347831e051259adca7fdea058b2b57b7d69dcf5d688c98d1ba6eb10a"
+    },
+    {
+      "path": "audio/word-os.mp3",
+      "bytes": 6521,
+      "sha256": "f92ebb95adc8704051dfc36d3d6f1f2adc5a6f1847f3aa1c919b7b5290fa24a8"
+    },
+    {
+      "path": "audio/word-osa.mp3",
+      "bytes": 6939,
+      "sha256": "39d426652fba245b97511fcb19d579cc3dd6bba1c1c972e2f4c030c60d5552e9"
+    },
+    {
+      "path": "audio/word-osc.mp3",
+      "bytes": 7148,
+      "sha256": "107d17186ea6af92fc3f67847a792d055d8a59375f9d1a8a5e40e7c8fbc702ee"
+    },
+    {
+      "path": "audio/word-oto.mp3",
+      "bytes": 7148,
+      "sha256": "b4d999164a927597fe52e4621cf6f8eeb7d8a87d88d5fecd9e632f9b259306bc"
+    },
+    {
+      "path": "audio/word-pajak.mp3",
+      "bytes": 8820,
+      "sha256": "c72ca368d86996da999933c30c3059e8150996878c933acd570d40e04ad261a1"
+    },
+    {
+      "path": "audio/word-paproc.mp3",
+      "bytes": 9238,
+      "sha256": "535ceb090b8b56c0aa6221381078fa258d142661e94e8a673ad1bdaa79627268"
+    },
+    {
+      "path": "audio/word-para.mp3",
+      "bytes": 6312,
+      "sha256": "1ec75b336686561371345c4f7928f33f369dec6904ec9373721114589bb13d30"
+    },
+    {
+      "path": "audio/word-parasolka.mp3",
+      "bytes": 10700,
+      "sha256": "f07a0af72a9f4ad4d02969f07da8328cd5fc42bf42265ee0f64bca202c004913"
+    },
+    {
+      "path": "audio/word-park.mp3",
+      "bytes": 7148,
+      "sha256": "4847e33659cc6dde90d90f5bea472d69216054601b4a9133c6e585833a161a8a"
+    },
+    {
+      "path": "audio/word-pedzel.mp3",
+      "bytes": 9029,
+      "sha256": "bee5c1a41118cb1ed03a9ad615288f7865cd13f62df84e1558e9f4af65d2203f"
+    },
+    {
+      "path": "audio/word-peron.mp3",
+      "bytes": 7357,
+      "sha256": "b4740deb2d01dfca8c9bdfb9b2df63833b5f06cd0e4f4ec6f651457e5983bbcf"
+    },
+    {
+      "path": "audio/word-piasek.mp3",
+      "bytes": 9029,
+      "sha256": "5475a50e93813e11cc41bd0123f529d0398822bc4483dbbf2e452220e0019aca"
+    },
+    {
+      "path": "audio/word-pies.mp3",
+      "bytes": 7775,
+      "sha256": "a20e6a860e662444c8d65e84e7f7fd41a5bff8e4e4e30cc6fba332babf083c6f"
+    },
+    {
+      "path": "audio/word-piosenka.mp3",
+      "bytes": 9865,
+      "sha256": "3b03a00e17c3ddfe3e16d315d853d68f8a97d322c156f6d2e06eb89998b1d4c6"
+    },
+    {
+      "path": "audio/word-planeta.mp3",
+      "bytes": 8820,
+      "sha256": "6e37aad21dfbdeb56178a5c1950fbb10becda9653d6afae393023463e93e2923"
+    },
+    {
+      "path": "audio/word-pociag.mp3",
+      "bytes": 9656,
+      "sha256": "35a557d4d846023935907ce7f9b23c737595d393fe5e80dcab8809a3031a1d6a"
+    },
+    {
+      "path": "audio/word-podworko.mp3",
+      "bytes": 9447,
+      "sha256": "e81c489be46fcc274340a390ac420b5c9baf8484770f1f3e92bcab42fe001c3f"
+    },
+    {
+      "path": "audio/word-pole.mp3",
+      "bytes": 6521,
+      "sha256": "2eef3dc5672c7a5b205e5cfe104c6fc0e457c0db9c4cb2a3376f76e8623d0575"
+    },
+    {
+      "path": "audio/word-pora.mp3",
+      "bytes": 6103,
+      "sha256": "5215fe685459829bad960419edf67b16157c7dd238cee293704c215767faa32e"
+    },
+    {
+      "path": "audio/word-prac.mp3",
+      "bytes": 7566,
+      "sha256": "9aa52d287f54b6e0d965f4cfd91120c53a3a975a87a86b5b057f5e0fabef7c76"
+    },
+    {
+      "path": "audio/word-pralka.mp3",
+      "bytes": 9029,
+      "sha256": "a15f325f569c0ba1a09f2a249240209955cb6865d0c028619a89a8760356d697"
+    },
+    {
+      "path": "audio/word-przedszkole.mp3",
+      "bytes": 10700,
+      "sha256": "bb27211ee84948a854949e564fc57b580ca6cce3d6d741cac0e80bbf1793d6ea"
+    },
+    {
+      "path": "audio/word-przygoda.mp3",
+      "bytes": 8611,
+      "sha256": "69a6b6683424ce3b47d848232f3470f1cf535ffc2d67c13fd756eaef3374d3f4"
+    },
+    {
+      "path": "audio/word-przyjaciel.mp3",
+      "bytes": 10492,
+      "sha256": "f6900a8d300c26d28ba4cc3aecfde077358811f9bf997e66bc95c116d361aee5"
+    },
+    {
+      "path": "audio/word-puch.mp3",
+      "bytes": 6521,
+      "sha256": "67516dd96b4d2642f380d85660249c5ae82546910d5b01fb921885d50946fab1"
+    },
+    {
+      "path": "audio/word-puder.mp3",
+      "bytes": 6939,
+      "sha256": "b0f98795b26a852340af6a08fdaadf13fdfe5ea39a6701c2d0951d9a92a8a071"
+    },
+    {
+      "path": "audio/word-radosc.mp3",
+      "bytes": 9447,
+      "sha256": "36fc93c908995224db3875502f090ab55df0c83a0c2f4951d73f9a18de4dee49"
+    },
+    {
+      "path": "audio/word-rakieta.mp3",
+      "bytes": 9238,
+      "sha256": "2d86c273a449e708247caeb595132fbaca5d3ca24c4af619275a6eec51c60d0f"
+    },
+    {
+      "path": "audio/word-rama.mp3",
+      "bytes": 7148,
+      "sha256": "f5018a04a5624037c4132cf9e1f0ef7caf98218ace3b5d622b9f38e84b83c68e"
+    },
+    {
+      "path": "audio/word-rano.mp3",
+      "bytes": 7148,
+      "sha256": "5f6bbb1031c0a40d7c553b3832fd5d099a8a0c4d7d4097013b72693103819f7e"
+    },
+    {
+      "path": "audio/word-rdza.mp3",
+      "bytes": 6730,
+      "sha256": "621a024a692c856639f3e00b6e386933799361e3408c92f0c84ab8a83978611f"
+    },
+    {
+      "path": "audio/word-reka.mp3",
+      "bytes": 8611,
+      "sha256": "5787bd2a5becb110f10c8344dc3efbc3339fea53a318c09d63a7c6e2c16cc92f"
+    },
+    {
+      "path": "audio/word-robot.mp3",
+      "bytes": 8820,
+      "sha256": "dfb699eb23a0d1c2a61e8ef547698bd2ac9234354afef0c0bac1b238d157ace4"
+    },
+    {
+      "path": "audio/word-rogal.mp3",
+      "bytes": 8402,
+      "sha256": "44422ea1b51dfca74ebf6273f005d82a87cd74dbf95452065bacb26e39574de3"
+    },
+    {
+      "path": "audio/word-rower.mp3",
+      "bytes": 7566,
+      "sha256": "94c1e4e1af8f1fe9c1754f8c4c139447190aa034f5bc181f44f3f45488d9d351"
+    },
+    {
+      "path": "audio/word-rowerzysta.mp3",
+      "bytes": 10492,
+      "sha256": "dbcbc1fa74d1d8e19fb784fae3d3a9f2362ef3790147efbf23db1c664062060d"
+    },
+    {
+      "path": "audio/word-rowny.mp3",
+      "bytes": 7775,
+      "sha256": "45a33ef909533ec151c6cd0fa4aa04ac9c49dd749dad68428e6bbaf1765ad03c"
+    },
+    {
+      "path": "audio/word-roza.mp3",
+      "bytes": 7148,
+      "sha256": "127fe60f38717e3ff851249fe59d37e7bd7c9518141ed5445cb0edfb2cb9ac98"
+    },
+    {
+      "path": "audio/word-ruda.mp3",
+      "bytes": 7148,
+      "sha256": "c4f5437b0bb2260b974b6fcd297d50c458903df81183fcf7cd64e55602070a17"
+    },
+    {
+      "path": "audio/word-ryz.mp3",
+      "bytes": 6939,
+      "sha256": "b29c5a72781c20c20191ed6e03f702243ad7f5d3364c826fa24844fd83d8bb53"
+    },
+    {
+      "path": "audio/word-rzeka.mp3",
+      "bytes": 8402,
+      "sha256": "6e27da0a650f8eacc87f85c122f9de8f4abcedfca4c5cd096c5326d37e9201da"
+    },
+    {
+      "path": "audio/word-samolot.mp3",
+      "bytes": 10283,
+      "sha256": "baf5e0d86563dd5f8828f15aa53c451fa601425fd37b6580f62718f3ad35a7b3"
+    },
+    {
+      "path": "audio/word-sen.mp3",
+      "bytes": 7148,
+      "sha256": "2e97d2109df6ecd3ce28c8fde8087a6d06d3dbce4d088c1618502e9ac7e8b7fe"
+    },
+    {
+      "path": "audio/word-ser.mp3",
+      "bytes": 6521,
+      "sha256": "02e59492d2c789b393fa81d939803d8acd70e4848bdb1e649e2a6b2ee0669a1d"
+    },
+    {
+      "path": "audio/word-siano.mp3",
+      "bytes": 7775,
+      "sha256": "0f661153a862b4d1e46fae7e5d0cb05de58a9708135fe4a90cbf4d5f49e43f63"
+    },
+    {
+      "path": "audio/word-siedem.mp3",
+      "bytes": 8611,
+      "sha256": "bc10249b983c56e5d947e33da2d3981eeff8fd6169178f8749523417be5a12e2"
+    },
+    {
+      "path": "audio/word-sierpien.mp3",
+      "bytes": 9656,
+      "sha256": "5ddfd29c7ace8b3adb7ba7e189029070977ed289745b324984f15e50ab983c0c"
+    },
+    {
+      "path": "audio/word-skrzydlo.mp3",
+      "bytes": 10492,
+      "sha256": "444810a3ed69f9573ce31a46300a9da8a0ec6ee2f289671817cfd115884a9772"
+    },
+    {
+      "path": "audio/word-slad.mp3",
+      "bytes": 8402,
+      "sha256": "0dfd3ac5b1403439caf0edeec292583ee7e5e379785c767a73eb38951429eb20"
+    },
+    {
+      "path": "audio/word-slon.mp3",
+      "bytes": 8402,
+      "sha256": "e8f315bbcc09adaf8f0eb6f2e410e207bfbca290b3248ba0a2e98a35c9a2d82b"
+    },
+    {
+      "path": "audio/word-smok.mp3",
+      "bytes": 8820,
+      "sha256": "d2e2b9bc0309be7d810ccb7edc8db8a38a095195a638a244288660f4bcb6d2be"
+    },
+    {
+      "path": "audio/word-sok.mp3",
+      "bytes": 7566,
+      "sha256": "6d5c73234cdc2647c798940a15fbaa11fb8bc1ea0b448f3d9cd21e8baf49feba"
+    },
+    {
+      "path": "audio/word-sowa.mp3",
+      "bytes": 7566,
+      "sha256": "d9203b76b5ec101f537bcc3f8380153cd779ab3ff90432f082c04790019ba334"
+    },
+    {
+      "path": "audio/word-spac.mp3",
+      "bytes": 9238,
+      "sha256": "5525e8032eb3ec6029899fc35a1a7c0648fd62f4a915a45f76c27b0e1f62d74c"
+    },
+    {
+      "path": "audio/word-spodek.mp3",
+      "bytes": 10283,
+      "sha256": "9452d5e3733831989ec257b22faa5409619568c115e59dc54e0c8674e789de2d"
+    },
+    {
+      "path": "audio/word-stol.mp3",
+      "bytes": 7984,
+      "sha256": "453fe78c5ec8ee6d7002354c4544c82fc27b00c21a4ed74d36807c37cfc1c3ad"
+    },
+    {
+      "path": "audio/word-sum.mp3",
+      "bytes": 7148,
+      "sha256": "23bae3d4d8424f942566ffd0f88db0804263b87b0e0e1e873a9e2bf4c9ba14a5"
+    },
+    {
+      "path": "audio/word-syn.mp3",
+      "bytes": 7148,
+      "sha256": "4180384d159658d160a9bee4afc860890d7de838f817aef9b47d158fe940e9af"
+    },
+    {
+      "path": "audio/word-szafa.mp3",
+      "bytes": 7775,
+      "sha256": "1af27933e7249cb836e3e818687a6d29cc523e49966e337839b839f704865353"
+    },
+    {
+      "path": "audio/word-szalik.mp3",
+      "bytes": 8820,
+      "sha256": "251ac2c622a2742d6aa4e3e59c0e9f306a4cc6c0dd20359f001467cdf56597d6"
+    },
+    {
+      "path": "audio/word-szczotka.mp3",
+      "bytes": 10074,
+      "sha256": "ca03fe9a4424fa345746d0c14b7b2f148d953e42e0fc22b56ea017d30b804629"
+    },
+    {
+      "path": "audio/word-szczur.mp3",
+      "bytes": 7357,
+      "sha256": "f54d528756c20bbf200d83efb827c6d3b9942ba97cf610399d6396ca762e1ee2"
+    },
+    {
+      "path": "audio/word-szum.mp3",
+      "bytes": 7148,
+      "sha256": "370439cf37796091527623e021eee21e89e93f39d4049cfdaf328d679b9c1528"
+    },
+    {
+      "path": "audio/word-taki.mp3",
+      "bytes": 7566,
+      "sha256": "860a6bdba836c0b7766e7626f1574fe8cd0de5233d37c1ec1f7308fba58d07ea"
+    },
+    {
+      "path": "audio/word-talerz.mp3",
+      "bytes": 7984,
+      "sha256": "42cfa3c4b207187109f46f6633444f39df95b2439ee400fd424e4a58f47693dc"
+    },
+    {
+      "path": "audio/word-tam.mp3",
+      "bytes": 6521,
+      "sha256": "fb7c3e03a25aab7caa91073558bb91512c9c08fd6549e0a64dc65f5d0b257a6c"
+    },
+    {
+      "path": "audio/word-tama.mp3",
+      "bytes": 6730,
+      "sha256": "72ffdce8aad44325313db3b97282eafac77636ca6be86b7c21c0a3b508567dbf"
+    },
+    {
+      "path": "audio/word-tata.mp3",
+      "bytes": 7148,
+      "sha256": "329e44fdcf3f21f3ef4cac0bc35d8adb9fb324b24ba0326aea249cbdbb5450d0"
+    },
+    {
+      "path": "audio/word-tecza.mp3",
+      "bytes": 7984,
+      "sha256": "97d96a0df61f4c383ddf4257ddf904f1f89e66e13996f304b0583831e9130a4c"
+    },
+    {
+      "path": "audio/word-telefon.mp3",
+      "bytes": 8820,
+      "sha256": "3e1eb8377cea7708fb064d62c05c630f3a7e094a11c98c49b51933fa4d9790de"
+    },
+    {
+      "path": "audio/word-teleskop.mp3",
+      "bytes": 10700,
+      "sha256": "bee1c7df6cf6170f47960a567a7ba76d895e0476696d4f9e6ec20700ceeaa65b"
+    },
+    {
+      "path": "audio/word-tesc.mp3",
+      "bytes": 7566,
+      "sha256": "a180973e487134b3c5a736248a7f2a07eae030063da5eb4946dcfde8b477e072"
+    },
+    {
+      "path": "audio/word-to.mp3",
+      "bytes": 4849,
+      "sha256": "08163a846da4dc855de13a3409d46ce26403176eb18c05b5bca96fe85b784ac2"
+    },
+    {
+      "path": "audio/word-tom.mp3",
+      "bytes": 6103,
+      "sha256": "4b64253f29580facc85cf4e4781f748d7c62782f544efb74c0e952d56cb3678c"
+    },
+    {
+      "path": "audio/word-truskawka.mp3",
+      "bytes": 11118,
+      "sha256": "96411912e47bfaa8715c53ef869bde20b6ae355434487440359dd057992974c3"
+    },
+    {
+      "path": "audio/word-ucho.mp3",
+      "bytes": 6939,
+      "sha256": "323d16fdcd47c66e26151f58a35975282153a367dc1925187d5faf34a1275e8c"
+    },
+    {
+      "path": "audio/word-wagon.mp3",
+      "bytes": 8611,
+      "sha256": "350ca8793208e7459f6bb3fe9c839831a4ebb4663254fc8a4df1fe8d195a329e"
+    },
+    {
+      "path": "audio/word-walizka.mp3",
+      "bytes": 9656,
+      "sha256": "6624c7e9bec66b5013bd97bf5ef6c68c37b1c7c660bc9be39a99045da628bdd3"
+    },
+    {
+      "path": "audio/word-warzywa.mp3",
+      "bytes": 8193,
+      "sha256": "373aba6cf2140d3895206ad1f71e3ff57119e7f792013c3d62ed6b91d7887d08"
+    },
+    {
+      "path": "audio/word-wasy.mp3",
+      "bytes": 7775,
+      "sha256": "c78cff59c19fcc8cbe2a398ca3f28f7dd1ec39f7ff5963c0f032483236957029"
+    },
+    {
+      "path": "audio/word-waz.mp3",
+      "bytes": 7357,
+      "sha256": "e988b5b167f1987d204b8f567f2ed5ebdd069d814b439fee536ddd96b532bf68"
+    },
+    {
+      "path": "audio/word-waza.mp3",
+      "bytes": 7566,
+      "sha256": "1e7b05d60126093a437a260f3f1b36837e68b6694013efc219987266ffb01c90"
+    },
+    {
+      "path": "audio/word-wedka.mp3",
+      "bytes": 9447,
+      "sha256": "a8cc070aecb0512e78d8855787fc5da76089a173d0d532a731675af12e37cae0"
+    },
+    {
+      "path": "audio/word-wezel.mp3",
+      "bytes": 8402,
+      "sha256": "3b71e667cd591cd5134768e771888b38498ba9f9fe4f74f696af5e98f2b309eb"
+    },
+    {
+      "path": "audio/word-wiadro.mp3",
+      "bytes": 8820,
+      "sha256": "b34e40ae82bd1514baa2a832d1497229d5bb9731f3272a035a867e16a2fe08e9"
+    },
+    {
+      "path": "audio/word-widze.mp3",
+      "bytes": 7775,
+      "sha256": "7895eb94a831c935404a33cab051029b57ee6ea7ea1cc8f32610e4b295bb58a6"
+    },
+    {
+      "path": "audio/word-wiewiorka.mp3",
+      "bytes": 10492,
+      "sha256": "0e976b05cfa2d63ec1a0a439e914ebe20f27ebfd9e29fd876413e5e7606f7367"
+    },
+    {
+      "path": "audio/word-woda.mp3",
+      "bytes": 7566,
+      "sha256": "e06d81e60167d257afc02de5fe78e080bdab78679f2b7bcf21ca8597861bc419"
+    },
+    {
+      "path": "audio/word-worek.mp3",
+      "bytes": 8402,
+      "sha256": "d7adc2fd7cd5cb38091f6143177b79ea6d846badc83d871e8ac0f666321e8f8d"
+    },
+    {
+      "path": "audio/word-woz.mp3",
+      "bytes": 7566,
+      "sha256": "9b40d5b6fe000321ac3d5eba674ef6c0eb7aefd93ab1555a0aaaa2f665a9479c"
+    },
+    {
+      "path": "audio/word-wozny.mp3",
+      "bytes": 8402,
+      "sha256": "30da9604a51d86e06422bf051206a35d9434c7de76be53b85b354b1eccc7a46b"
+    },
+    {
+      "path": "audio/word-wycieczka.mp3",
+      "bytes": 10700,
+      "sha256": "409a5c5ef1a18a2057e3a098a2c89ed8fce057035abd903837d2342da3138d90"
+    },
+    {
+      "path": "audio/word-wyprawa.mp3",
+      "bytes": 9029,
+      "sha256": "ee409db4fb21d90ae7c9e0040281582efe99d01fa58b627317400fa37ccda104"
+    },
+    {
+      "path": "audio/word-zab.mp3",
+      "bytes": 9029,
+      "sha256": "3ea1f7da49686016353916e9a8aa18fd5fed60a7c4053dec29a6ebc52cbfa1da"
+    },
+    {
+      "path": "audio/word-zaba.mp3",
+      "bytes": 7775,
+      "sha256": "4eb10ad36a560cd4850a97e04b14ce2c547b3e464f173154af6002c20732c000"
+    },
+    {
+      "path": "audio/word-zamek.mp3",
+      "bytes": 9238,
+      "sha256": "eebe169d4de63a588d020c64bc2a4a9aed306422fc0d770efb719ba2e6367c1a"
+    },
+    {
+      "path": "audio/word-zeby.mp3",
+      "bytes": 8611,
+      "sha256": "ea5192773f139fdea2471d0fff247a73154b8e5c7dfa38119c71dc5a0fb03956"
+    },
+    {
+      "path": "audio/word-zero.mp3",
+      "bytes": 7357,
+      "sha256": "ad4fe7f5c05ef0ad049fbbc850c496a4ee9c2c42fd8dbf43f3c76a58c74ac03d"
+    },
+    {
+      "path": "audio/word-ziarno.mp3",
+      "bytes": 8402,
+      "sha256": "cef9585482bac042b36250513e525c4bc6ba549f5f246c717e5047438713c12b"
+    },
+    {
+      "path": "audio/word-zielony.mp3",
+      "bytes": 8193,
+      "sha256": "89f233fca99b9c23d4916b059e10fdae358de72a5238003c89b8cb1163e6487a"
+    },
+    {
+      "path": "audio/word-zlew.mp3",
+      "bytes": 8193,
+      "sha256": "e950a41a68fb188a30b85884569e1426e3f9e5b1bdc70b3ecf61e2ea405c497f"
+    },
+    {
+      "path": "audio/word-zrebak.mp3",
+      "bytes": 9865,
+      "sha256": "f9e399b8f643e03a218b226d433f3fd3789589092259d2804055211ed1623896"
+    },
+    {
+      "path": "audio/word-zrodlo.mp3",
+      "bytes": 8820,
+      "sha256": "543bc537fd8be19dd742e93c2d2117d2c37fea5ac8b57db2894b0633174efc32"
+    },
+    {
+      "path": "audio/word-zuk.mp3",
+      "bytes": 7566,
+      "sha256": "0cc46a31d51c5bcd8f769904cd072f0d420f20579659d5a5e19731a5d4409051"
+    },
+    {
+      "path": "audio/word-zupa.mp3",
+      "bytes": 7984,
+      "sha256": "36d9191c0569d251dac5fe3d10755376784278604406b3a2b61b940ca42e1fbf"
+    },
+    {
+      "path": "data/audio-manifest.js",
+      "bytes": 5125,
+      "sha256": "324977950c9a5729ba48568b0908e02b3af6ef810795881cd2312b82b7ebef8d"
+    },
+    {
+      "path": "data/curriculum.js",
+      "bytes": 13637,
+      "sha256": "f8448a637a1e07701dc3dbea8a05690560ec64b198c1b10aa8d56d36dded9e13"
+    },
+    {
+      "path": "engine.js",
+      "bytes": 11939,
+      "sha256": "46264f698e5bda1a3e7c6c941742017e7b5959bb97d696fe864652f387ea1689"
+    },
+    {
+      "path": "index.html",
+      "bytes": 2359,
+      "sha256": "0b3ea060ab4ee8ade6839cdcbd15b0b0b6f6dcd3d720adffbfdce690a517165a"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 570,
+      "sha256": "59eec0fb96ed7c74985ebfe877b8abe612254e47bbcd504cafe878ee1ec1d45b"
+    },
+    {
+      "path": "store.js",
+      "bytes": 3617,
+      "sha256": "472d4f80b6a9cd75068336a6a7d754ced97e2249451ab068d4d106fd1a130ea9"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 13562,
+      "sha256": "1f875b2ebcbf2a49623a82d80605037f4bf35fa9349617b444aa3442bae5afbf"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 5016,
+      "sha256": "2ad18ce2ee7d6c20afd39bf2b35d102278530d8f6903702c280b86314d26fca1"
+    }
+  ]
+}

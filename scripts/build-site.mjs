@@ -10,8 +10,6 @@ const outputRoot = path.join(projectRoot, 'dist');
 const clientRoot = path.join(outputRoot, 'client');
 const workerPath = path.join(outputRoot, 'server', 'index.js');
 
-await validateCzytaj({ strictAudio: true });
-
 const tracked = execFileSync('git', ['ls-files', '-z', 'public'], { cwd: projectRoot, encoding: 'utf8' }).split('\0').filter(Boolean);
 
 async function walk(directory) {
@@ -50,12 +48,16 @@ packAssets.sort((a, b) => a.path.localeCompare(b.path));
 const packManifest = {
   schemaVersion: 1,
   version: `czytaj-${createHash('sha256').update(JSON.stringify(packAssets)).digest('hex').slice(0, 12)}`,
-  generatedAt: new Date().toISOString(),
   assetCount: packAssets.length,
   totalBytes: packAssets.reduce((total, asset) => total + asset.bytes, 0),
   assets: packAssets
 };
-await writeFile(path.join(clientRoot, 'czytaj', 'offline-pack.json'), `${JSON.stringify(packManifest, null, 2)}\n`);
+const packManifestJson = `${JSON.stringify(packManifest, null, 2)}\n`;
+await Promise.all([
+  writeFile(path.join(clientRoot, 'czytaj', 'offline-pack.json'), packManifestJson),
+  writeFile(path.join(publicRoot, 'czytaj', 'offline-pack.json'), packManifestJson)
+]);
+await validateCzytaj({ strictAudio: true });
 
 const workerSource = `
 export default {
