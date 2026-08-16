@@ -25,7 +25,9 @@ const state = {
   activityStartedAt: 0,
   meaningRevealed: false,
   buildSlots: [],
-  sessionCompleted: false
+  sessionCompleted: false,
+  presentationToken: 0,
+  missionIntroPlayed: false
 };
 
 const html = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
@@ -41,13 +43,14 @@ function showToast(message, duration = 3000) {
   showToast.timer = setTimeout(() => { toast.hidden = true; }, duration);
 }
 
-function setInstruction(id, autoplay = true) {
+async function setInstruction(id, autoplay = true) {
   state.lastInstruction = id;
-  if (autoplay && state.progress?.settings.sound) setTimeout(() => audio.play(id), 80);
+  if (autoplay && state.progress?.settings.sound) return audio.play(id);
+  return false;
 }
 
-function momo() {
-  return '<div class="momo" aria-label="Momo, mały robot przewodnik"><span class="momo-antenna"></span><span class="momo-body"></span><span class="momo-face"></span></div>';
+function momo(variant = '') {
+  return `<div class="momo ${variant}" aria-label="Momo, mały robot przewodnik"><span class="momo-antenna"></span><span class="momo-body"></span><span class="momo-face"></span><span class="momo-glow"></span></div>`;
 }
 
 async function save() {
@@ -78,7 +81,7 @@ async function init() {
   if (state.progress.activeSession) state.view = 'session';
   else state.view = state.progress.onboardingComplete ? 'home' : 'onboarding';
   render();
-  if (state.view === 'home') setInstruction('welcome-home');
+  if (state.view === 'home') setInstruction('welcome-home', false);
 }
 
 function render() {
@@ -88,6 +91,7 @@ function render() {
   else if (state.view === 'home') renderHome();
   else if (state.view === 'session') renderSession();
   else if (state.view === 'parent') renderParent();
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
 }
 
 function renderOnboarding() {
@@ -287,8 +291,8 @@ async function startMission() {
   state.view = 'session';
   state.meaningRevealed = false;
   state.buildSlots = [];
+  state.missionIntroPlayed = false;
   render();
-  setInstruction(state.progress.activeSession.repair ? 'repair-session' : 'mission-start');
 }
 
 function currentActivity() {
@@ -301,6 +305,31 @@ function sessionProgress() {
   return Math.round((session.activityIndex / Math.max(1, session.activities.length - 1)) * 100);
 }
 
+const ACTIVITY_UI = {
+  warmup: ['Rozgrzewka dźwięków', '✦'],
+  'hear-choose': ['Złap dźwięk', '◖'],
+  mapping: ['Nowy znak', '⌁'],
+  blend: ['Połącz promieniem', '↝'],
+  build: ['Zbuduj słowo', '◇'],
+  meaning: ['Odkryj znaczenie', '◎'],
+  nonword: ['Wiadomość kosmity', '☄'],
+  story: ['Czytelnicza kapsuła', '▤'],
+  complete: ['Meta misji', '★']
+};
+
+function activityUi(type) {
+  const [label, icon] = ACTIVITY_UI[type] ?? ['Kosmiczne zadanie', '✦'];
+  return { label, icon };
+}
+
+function graphemeLayout(parts) {
+  const count = Math.max(1, parts.length);
+  const tileFont = Math.max(1.35, Math.min(4.1, 11.5 / count));
+  return `--grapheme-count:${count};--tile-font:${tileFont.toFixed(2)}rem`;
+}
+
+const pause = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
 function renderSession() {
   const session = state.progress.activeSession;
   if (!session) { state.view = 'home'; render(); return; }
@@ -309,18 +338,42 @@ function renderSession() {
   }
   const activity = currentActivity();
   if (!activity) { completeMission(); return; }
+  const ui = activityUi(activity.type);
+  const instructionId = activity.type === 'meaning' && state.meaningRevealed ? 'choose-meaning' : activity.instructionId;
   state.activityStartedAt = performance.now();
-  app.innerHTML = `<section class="screen">
+  app.innerHTML = `<section class="screen session-screen" data-activity-type="${html(activity.type)}">
+    <div class="mission-sky" aria-hidden="true">
+      ${momo('session-momo')}
+      <div class="flight-path"><span class="tiny-planet"></span><span class="tiny-rocket" style="--flight-progress:${sessionProgress()}%">➤</span></div>
+    </div>
     <div class="mission-meta"><span>${session.repair ? 'Misja utrwalająca' : `Misja ${session.number}`}</span><span>Planeta ${session.stage}</span></div>
-    <div class="progress-bar"><span style="width:${sessionProgress()}%"></span></div>
-    <div style="height:14px"></div>
-    <div class="card exercise-card">
-      <div class="instruction"><span>🔊</span><span id="instructionText">${instructionText(activity.instructionId)}</span></div>
-      ${activityMarkup(activity)}
+    <div class="progress-bar mission-progress"><span style="width:${sessionProgress()}%"></span></div>
+    <div class="card exercise-card activity-${html(activity.type)}">
+      <div class="activity-heading"><span class="activity-badge"><b>${ui.icon}</b>${ui.label}</span></div>
+      <div class="instruction"><span class="speaker-orb">🔊</span><span id="instructionText">${instructionText(instructionId)}</span></div>
+      <div class="play-zone">${activityMarkup(activity)}</div>
     </div>
   </section>`;
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
   bindActivity(activity);
-  if (activity.type !== 'complete') setInstruction(activity.instructionId);
+  presentActivity(activity, instructionId);
+}
+
+async function presentActivity(activity, instructionId) {
+  const token = ++state.presentationToken;
+  const session = state.progress.activeSession;
+  if (!session) return;
+  if (session.activityIndex === 0 && !state.missionIntroPlayed) {
+    state.missionIntroPlayed = true;
+    await setInstruction(session.repair ? 'repair-session' : 'mission-start');
+  }
+  if (token !== state.presentationToken) return;
+  await setInstruction(instructionId);
+  if (token !== state.presentationToken) return;
+  await pause(220);
+  if (token !== state.presentationToken) return;
+  if (activity.type === 'warmup') await playSegmented(activity.item.answer, '.sound-orb', token);
+  if (activity.type === 'hear-choose') await audio.play(`sound-${activity.grapheme}`);
 }
 
 function instructionText(id) {
@@ -328,9 +381,10 @@ function instructionText(id) {
     'warmup-blend': 'Posłuchaj dźwięków. Połącz je w słowo.',
     'review-choose': 'Posłuchaj dźwięku. Dotknij pasującej litery.',
     'mapping-new': 'Poznajemy nowy znak. Dotknij go, aby usłyszeć dźwięk.',
-    'blend-swipe': 'Przesuń promień pod literami i połącz dźwięki.',
+    'blend-swipe': 'Przeciągnij promień pod literami i połącz dźwięki.',
     'build-word': 'Ułóż litery w pustych polach.',
     'read-first': 'Przeczytaj słowo sam. Obrazki pojawią się później.',
+    'choose-meaning': 'Wybierz obrazek, który pasuje do słowa.',
     'alien-word': 'To słowo kosmity. Spróbuj je odczytać.',
     'story-attempt': 'Przeczytaj zdania sam. Potem możesz ich posłuchać.',
     'mission-complete': 'Misja zakończona. Czas na przerwę.'
@@ -361,55 +415,102 @@ function activityMarkup(activity) {
   const session = state.progress.activeSession;
   if (activity.type === 'warmup') {
     const target = activity.item;
+    const parts = splitGraphemes(target.answer, session.stage);
     const choices = shuffled([target, ...itemsForStage(session.stage).filter((item) => item.id !== target.id).slice(0, 2)], `${session.seed}:warmup`).slice(0, 3);
     activity.choices = choices;
-    return `<div class="letter-display">${splitGraphemes(target.answer, session.stage).map(() => '●').join(' ')}</div><div class="choices">${choices.map((item) => `<button class="choice" data-answer="${html(item.id)}" style="font-size:1.8rem">${html(item.answer)}</button>`).join('')}</div>`;
+    return `<div class="sound-orbit" style="${graphemeLayout(parts)}" aria-label="${parts.length} dźwięki"><span class="orbit-thread"></span>${parts.map((_, index) => `<span class="sound-orb" style="--i:${index}"><i></i></span>`).join('')}</div><p class="play-prompt">Które słowo zbudowały dźwięki?</p><div class="choices word-choice-grid">${choices.map((item, index) => `<button class="choice word-choice" data-answer="${html(item.id)}" style="--i:${index}"><span class="landing-dot" aria-hidden="true"></span>${html(item.answer)}</button>`).join('')}</div>`;
   }
-  if (activity.type === 'hear-choose') return `<div class="letter-display">?</div><div class="choices">${activity.choices.map((choice) => `<button class="choice" data-grapheme="${html(choice)}">${html(choice)}</button>`).join('')}</div>`;
-  if (activity.type === 'mapping') return `<button id="mappingLetter" class="choice" style="width:100%;min-height:170px;font-size:7rem">${html(activity.grapheme)} <span class="capital-partner">${html(activity.capital)}</span></button><button id="mappingDone" class="button primary large" style="margin-top:16px">Znam ten dźwięk</button>`;
+  if (activity.type === 'hear-choose') return `<div class="sound-console" aria-hidden="true"><span class="sound-core">♪</span><span class="sound-ring ring-one"></span><span class="sound-ring ring-two"></span><span class="sound-ring ring-three"></span></div><p class="play-prompt">Na której literze wyląduje dźwięk?</p><div class="choices letter-choices">${activity.choices.map((choice, index) => `<button class="choice letter-choice" data-grapheme="${html(choice)}" style="--i:${index}">${html(choice)}</button>`).join('')}</div>`;
+  if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Możesz posłuchać kilka razy.</p><button id="mappingDone" class="button primary large">Znam ten dźwięk</button>`;
   if (activity.type === 'blend') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
-    return `<div class="graphemes" id="blendArea">${parts.map((part) => `<span class="grapheme">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"></span></div><button id="blendStart" class="button primary large">Przesuń promień</button><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Połączyłem</button>`;
+    const duration = Math.max(1.7, parts.length * .55).toFixed(2);
+    return `<div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"></span></div></div><p class="play-prompt">Przeciągnij świecący punkt od lewej do prawej.</p><button id="blendStart" class="button primary large action-with-icon"><span aria-hidden="true">↝</span> Przesuń promień</button><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Połączyłem dźwięki</button>`;
   }
   if (activity.type === 'build') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
     activity.parts = parts;
     const tiles = shuffled(parts.map((value, index) => ({ value, index })), `${session.seed}:${activity.item.id}:tiles`);
-    return `<div class="sound-boxes">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}"></span>`).join('')}</div><div class="tile-rack">${tiles.map((tile) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}">${html(tile.value)}</button>`).join('')}</div><button id="buildReset" class="button secondary">Ułóż od nowa</button>`;
+    return `<div class="builder"><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Litery do załadunku</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Dotknij litery albo przeciągnij ją do pola.</p><button id="buildReset" class="button secondary compact">Ułóż od nowa</button>`;
   }
   if (activity.type === 'meaning') {
-    if (!state.meaningRevealed) return `<div class="word-display">${html(activity.item.answer)}</div><button id="revealMeaning" class="button primary large">Przeczytałem — pokaż obrazki</button>`;
+    if (!state.meaningRevealed) return `<div class="meaning-window"><span class="window-star star-one" aria-hidden="true">✦</span><span class="window-star star-two" aria-hidden="true">✦</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Najpierw przeczytaj. Obrazki jeszcze nie podpowiadają.</p><button id="revealMeaning" class="button primary large">Gotowe — odkryj obrazki</button>`;
     const candidates = shuffled(CURRICULUM.items.filter((item) => item.imageId && item.id !== activity.item.id), `${session.seed}:pictures`).slice(0, 3);
     activity.meaningChoices = shuffled([activity.item, ...candidates], `${session.seed}:picture-order`);
-    return `<div class="word-display" style="min-height:80px;font-size:2.7rem">${html(activity.item.answer)}</div><div class="choices">${activity.meaningChoices.map((item) => `<button class="choice picture" data-picture="${html(item.id)}" aria-label="${html(item.answer)}">${pictureMarkup(item.answer)}</button>`).join('')}</div>`;
+    return `<div class="word-chip">${html(activity.item.answer)}</div><p class="play-prompt">Wybierz znaczenie słowa.</p><div class="choices picture-choices">${activity.meaningChoices.map((item, index) => `<button class="choice picture" data-picture="${html(item.id)}" aria-label="${html(item.answer)}" style="--i:${index}">${pictureMarkup(item.answer)}</button>`).join('')}</div>`;
   }
-  if (activity.type === 'nonword') return `<p class="eyebrow">Słowo kosmity</p><div class="word-display">${html(activity.item.answer)}</div><button id="unverifiedDone" class="button primary large">Przeczytałem</button><p class="small">Ta samodzielna deklaracja nie liczy się jako opanowane czytanie.</p>`;
-  if (activity.type === 'story') return `<div class="story">${activity.story.sentences.map((sentence) => `<p>${html(sentence)}</p>`).join('')}</div><div class="button-row" style="margin-top:16px"><button id="storyListen" class="button secondary">🔊 Posłuchaj po próbie</button><button id="storyDone" class="button primary">Przeczytałem</button></div>`;
+  if (activity.type === 'nonword') return `<div class="alien-signal"><span aria-hidden="true">⌁</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Kosmita wymyślił to słowo. Odczytaj jego kod.</p><button id="unverifiedDone" class="button primary large">Odczytałem kod</button><p class="small">To próba bez oceniania — pomaga Momo dobrać kolejne ćwiczenia.</p>`;
+  if (activity.type === 'story') return `<div class="story-capsule"><span class="capsule-light" aria-hidden="true"></span><div class="story">${activity.story.sentences.map((sentence) => `<p>${html(sentence)}</p>`).join('')}</div></div><div class="button-row story-actions"><button id="storyListen" class="button secondary">🔊 Posłuchaj po próbie</button><button id="storyDone" class="button primary">Przeczytałem</button></div>`;
   return completionMarkup();
 }
 
 function bindActivity(activity) {
   if (activity.type === 'warmup') {
-    playSegmented(activity.item.answer);
     document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.answer === activity.item.id, activity)));
   } else if (activity.type === 'hear-choose') {
-    setTimeout(() => audio.play(`sound-${activity.grapheme}`), 500);
     document.querySelectorAll('[data-grapheme]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.grapheme === activity.grapheme, activity, `sound-${activity.grapheme}`)));
   } else if (activity.type === 'mapping') {
     document.querySelector('#mappingLetter').addEventListener('click', () => audio.play(`sound-${activity.grapheme}`));
     document.querySelector('#mappingDone').addEventListener('click', () => finishActivity(activity, true));
   } else if (activity.type === 'blend') {
-    document.querySelector('#blendStart').addEventListener('click', async () => {
-      document.querySelector('#beam').classList.add('moving');
-      await playSegmented(activity.item.answer);
+    const area = document.querySelector('#blendArea');
+    const beam = document.querySelector('#beam');
+    const startButton = document.querySelector('#blendStart');
+    let dragStart = null;
+    let running = false;
+    const runBlend = async () => {
+      if (running) return;
+      running = true;
+      state.presentationToken += 1;
+      const token = state.presentationToken;
+      startButton.disabled = true;
+      document.querySelector('.blend-lab').classList.add('is-running');
+      area.querySelectorAll('.grapheme').forEach((element) => element.classList.remove('is-crossed'));
+      beam.classList.remove('moving');
+      beam.style.transform = '';
+      void beam.offsetWidth;
+      beam.classList.add('moving');
+      await playSegmented(activity.item.answer, '.grapheme', token);
+      if (token !== state.presentationToken) return;
       document.querySelector('#blendDone').classList.remove('hidden');
-    }, { once: true });
+    };
+    startButton.addEventListener('click', runBlend, { once: true });
+    area.addEventListener('pointerdown', (event) => {
+      if (running) return;
+      dragStart = { x: event.clientX, pointerId: event.pointerId };
+      area.setPointerCapture?.(event.pointerId);
+      beam.classList.add('is-dragging');
+    });
+    area.addEventListener('pointermove', (event) => {
+      if (!dragStart || running) return;
+      const bounds = area.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (event.clientX - bounds.left - bounds.width * .05) / (bounds.width * .9 - 20)));
+      beam.style.transform = `translateX(${progress * (bounds.width * .9 - 20)}px)`;
+      area.querySelectorAll('.grapheme').forEach((element, index, elements) => element.classList.toggle('is-crossed', progress >= index / Math.max(1, elements.length - 1)));
+    });
+    area.addEventListener('pointerup', (event) => {
+      if (!dragStart || running) return;
+      const bounds = area.getBoundingClientRect();
+      const progress = (event.clientX - dragStart.x) / Math.max(1, bounds.width * .65);
+      dragStart = null;
+      beam.classList.remove('is-dragging');
+      if (progress >= .82) runBlend();
+      else {
+        beam.style.transform = '';
+        area.querySelectorAll('.grapheme').forEach((element) => element.classList.remove('is-crossed'));
+      }
+    });
+    area.addEventListener('pointercancel', () => {
+      dragStart = null;
+      beam.classList.remove('is-dragging');
+      beam.style.transform = '';
+    });
     document.querySelector('#blendDone').addEventListener('click', () => finishActivity(activity, true));
   } else if (activity.type === 'build') {
-    document.querySelectorAll('[data-tile]').forEach((button) => button.addEventListener('click', () => addBuildTile(button, activity)));
+    document.querySelectorAll('[data-tile]').forEach((button) => bindBuildTile(button, activity));
     document.querySelector('#buildReset').addEventListener('click', () => { state.buildSlots = []; renderSession(); });
   } else if (activity.type === 'meaning') {
-    document.querySelector('#revealMeaning')?.addEventListener('click', () => { state.meaningRevealed = true; renderSession(); setInstruction('choose-meaning'); });
+    document.querySelector('#revealMeaning')?.addEventListener('click', () => { state.meaningRevealed = true; renderSession(); });
     document.querySelectorAll('[data-picture]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.picture === activity.item.id, activity, `word-${activity.item.answer.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l')}`)));
   } else if (activity.type === 'nonword') {
     document.querySelector('#unverifiedDone').addEventListener('click', () => finishActivity(activity, true, false));
@@ -421,14 +522,26 @@ function bindActivity(activity) {
   }
 }
 
-async function playSegmented(word) {
-  for (const part of splitGraphemes(word, state.progress.activeSession.stage)) await audio.play(`sound-${part}`);
+async function playSegmented(word, selector = null, token = state.presentationToken) {
+  const parts = splitGraphemes(word, state.progress.activeSession.stage);
+  const elements = selector ? [...document.querySelectorAll(selector)] : [];
+  for (const [index, part] of parts.entries()) {
+    if (token !== state.presentationToken) return false;
+    elements[index]?.classList.add('is-sounding');
+    await audio.play(`sound-${part}`);
+    elements[index]?.classList.remove('is-sounding');
+    elements[index]?.classList.add('was-sounded');
+    await pause(70);
+  }
+  return true;
 }
 
 async function objectiveAnswer(button, correct, activity, modelAudio = null) {
   if (state.inputLocked) return;
   state.inputLocked = true;
   button.classList.add(correct ? 'correct' : 'retry');
+  document.querySelector('.exercise-card')?.classList.add(correct ? 'is-correct' : 'is-retry');
+  document.querySelector('.session-momo')?.classList.add(correct ? 'momo-happy' : 'momo-thinking');
   recordAttempt(state.progress, state.progress.activeSession, activity, { correct, answer: button.dataset.answer ?? button.dataset.grapheme ?? button.dataset.picture, latencyMs: performance.now() - state.activityStartedAt });
   if (correct) {
     if (state.progress.settings.effects) await audio.play('correct-choice', { required: false });
@@ -437,19 +550,119 @@ async function objectiveAnswer(button, correct, activity, modelAudio = null) {
     if (modelAudio) await audio.play(modelAudio);
   }
   await save();
-  setTimeout(() => { state.inputLocked = false; nextActivity(); }, correct ? 450 : 250);
+  setTimeout(() => { state.inputLocked = false; nextActivity(); }, correct ? 520 : 420);
 }
 
-async function addBuildTile(button, activity) {
+function bindBuildTile(button, activity) {
+  let origin = null;
+  let ghost = null;
+  let dragged = false;
+  const clearDrag = () => {
+    ghost?.remove();
+    ghost = null;
+    button.classList.remove('drag-source');
+  };
+  const move = (event) => {
+    if (!origin) return;
+    if (!dragged && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > 8) {
+      dragged = true;
+      ghost = button.cloneNode(true);
+      ghost.className = 'tile drag-ghost';
+      document.body.append(ghost);
+      button.classList.add('drag-source');
+    }
+    if (ghost) {
+      event.preventDefault();
+      ghost.style.left = `${event.clientX}px`;
+      ghost.style.top = `${event.clientY}px`;
+    }
+  };
+  const end = (event) => {
+    if (!origin) return;
+    const dropTarget = dragged ? document.elementFromPoint(event.clientX, event.clientY)?.closest('.sound-box') : null;
+    origin = null;
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', end);
+    document.removeEventListener('pointercancel', cancel);
+    clearDrag();
+    if (dragged) {
+      event.preventDefault();
+      if (dropTarget) addBuildTile(button, activity, Number(dropTarget.dataset.slot), false);
+      else button.classList.add('soft-wobble');
+    }
+  };
+  const cancel = () => {
+    origin = null;
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', end);
+    document.removeEventListener('pointercancel', cancel);
+    clearDrag();
+  };
+  button.addEventListener('pointerdown', (event) => {
+    if (state.inputLocked || button.classList.contains('used')) return;
+    origin = { x: event.clientX, y: event.clientY };
+    dragged = false;
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', end);
+    document.addEventListener('pointercancel', cancel);
+  });
+  button.addEventListener('click', () => {
+    if (dragged) { dragged = false; return; }
+    addBuildTile(button, activity);
+  });
+  button.draggable = true;
+  button.addEventListener('dragstart', (event) => {
+    event.dataTransfer?.setData('text/plain', button.dataset.tile);
+    event.dataTransfer?.setDragImage(button, button.offsetWidth / 2, button.offsetHeight / 2);
+    button.classList.add('drag-source');
+  });
+  button.addEventListener('dragend', () => button.classList.remove('drag-source'));
+  document.querySelectorAll('.sound-box').forEach((slot) => {
+    slot.addEventListener('dragover', (event) => event.preventDefault());
+    slot.addEventListener('drop', (event) => {
+      event.preventDefault();
+      if (event.dataTransfer?.getData('text/plain') === button.dataset.tile) addBuildTile(button, activity, Number(slot.dataset.slot), false);
+    });
+  });
+}
+
+async function animateTileToSlot(button, slot) {
+  if (!button.animate || !slot) return;
+  const from = button.getBoundingClientRect();
+  const to = slot.getBoundingClientRect();
+  const ghost = button.cloneNode(true);
+  ghost.className = 'tile tile-flight';
+  Object.assign(ghost.style, { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px` });
+  document.body.append(ghost);
+  await ghost.animate([
+    { transform: 'translate(0, 0) scale(1)', offset: 0 },
+    { transform: `translate(${(to.left + to.width / 2) - (from.left + from.width / 2)}px, ${(to.top + to.height / 2) - (from.top + from.height / 2) - 10}px) scale(1.12)`, offset: .7 },
+    { transform: `translate(${(to.left + to.width / 2) - (from.left + from.width / 2)}px, ${(to.top + to.height / 2) - (from.top + from.height / 2)}px) scale(.82)`, offset: 1 }
+  ], { duration: 360, easing: 'cubic-bezier(.22,.8,.3,1)' }).finished.catch(() => undefined);
+  ghost.remove();
+}
+
+async function addBuildTile(button, activity, requestedSlot = null, animate = true) {
   if (state.inputLocked || button.classList.contains('used')) return;
+  const openSlot = requestedSlot ?? Array.from({ length: activity.parts.length }, (_, index) => index).find((index) => !state.buildSlots[index]);
+  if (openSlot == null || state.buildSlots[openSlot]) {
+    document.querySelector(`[data-slot="${openSlot}"]`)?.classList.add('soft-wobble');
+    return;
+  }
+  const slot = document.querySelector(`[data-slot="${openSlot}"]`);
+  state.inputLocked = true;
+  if (animate) await animateTileToSlot(button, slot);
   button.classList.add('used');
-  state.buildSlots.push({ value: button.dataset.value, tile: button.dataset.tile });
-  document.querySelector(`[data-slot="${state.buildSlots.length - 1}"]`).textContent = button.dataset.value;
-  document.querySelector(`[data-slot="${state.buildSlots.length - 1}"]`).classList.add('filled');
-  if (state.buildSlots.length !== activity.parts.length) return;
+  state.buildSlots[openSlot] = { value: button.dataset.value, tile: button.dataset.tile };
+  slot.textContent = button.dataset.value;
+  slot.classList.add('filled');
+  state.inputLocked = false;
+  if (state.buildSlots.filter(Boolean).length !== activity.parts.length) return;
   const answer = state.buildSlots.map((value) => value.value).join('');
   const correct = answer === activity.parts.join('');
   if (correct) {
+    document.querySelector('.builder')?.classList.add('is-complete');
+    await pause(420);
     state.buildSlots = [];
     await finishActivity(activity, true);
   } else {
@@ -472,6 +685,8 @@ async function finishActivity(activity, correct, verified = true) {
 
 async function nextActivity() {
   const session = state.progress.activeSession;
+  state.presentationToken += 1;
+  audio.stop();
   session.activityIndex += 1;
   state.meaningRevealed = false;
   state.buildSlots = [];
@@ -484,13 +699,14 @@ async function nextActivity() {
 
 function completionMarkup() {
   const session = state.progress.activeSession;
-  return `<div style="text-align:center;padding:12px 0 4px"><div class="planet" style="margin:0 auto 18px;transform:scale(1.25)"></div><h2>Misja zakończona</h2><p>Momo przesuwa rakietę o jeden spokojny krok.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}<button id="finishMission" class="button primary large" style="margin-top:16px">Koniec na dziś</button></div>`;
+  return `<div class="completion"><div class="completion-space" aria-hidden="true"><span class="completion-planet"></span><span class="completion-orbit"></span><span class="completion-rocket">➤</span><span class="completion-star one">✦</span><span class="completion-star two">✦</span></div><h2>Planeta odkryta!</h2><p>Momo zapisuje dzisiejsze odkrycia. Rakieta przesuwa się o jeden spokojny krok.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}<button id="finishMission" class="button primary large">Koniec na dziś</button></div>`;
 }
 
 async function completeMission() {
   if (state.sessionCompleted || !state.progress.activeSession) return;
   state.sessionCompleted = true;
-  await audio.play('mission-complete');
+  state.presentationToken += 1;
+  audio.stop();
   finalizeSession(state.progress, state.progress.activeSession);
   await save();
   state.sessionCompleted = false;
@@ -593,6 +809,7 @@ function bindParent() {
 
 replayButton.addEventListener('click', async () => {
   await audio.unlock();
+  state.presentationToken += 1;
   if (state.lastInstruction) audio.play(state.lastInstruction);
 });
 
@@ -630,7 +847,7 @@ audio.addEventListener('requiredmissing', () => {
   render();
 });
 
-document.addEventListener('visibilitychange', () => { if (document.hidden) audio.stop(); });
-window.addEventListener('pagehide', () => audio.stop());
+document.addEventListener('visibilitychange', () => { if (document.hidden) { state.presentationToken += 1; audio.stop(); } });
+window.addEventListener('pagehide', () => { state.presentationToken += 1; audio.stop(); });
 
 init();

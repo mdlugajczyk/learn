@@ -84,7 +84,8 @@ export class AudioQueue extends EventTarget {
       return true;
     }
     this.lastError = result.error ?? new Error(`Audio unavailable: ${id}`);
-    if (required) this.dispatchEvent(new CustomEvent('requiredmissing', { detail: { id } }));
+    const blockedByAutoplay = result.error?.name === 'NotAllowedError';
+    if (required && !blockedByAutoplay) this.dispatchEvent(new CustomEvent('requiredmissing', { detail: { id } }));
     return false;
   }
 

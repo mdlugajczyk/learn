@@ -127,15 +127,15 @@
     },
     {
       "id": "blend-swipe",
-      "text": "Przesuń promień pod literami od lewej do prawej. Łącz dźwięki bez przerw.",
+      "text": "Przeciągnij świecący punkt od lewej do prawej. Potem posłuchaj, jak dźwięki łączą się w słowo.",
       "category": "instruction",
       "filename": "audio/blend-swipe.mp3",
       "source": "temporary-system",
       "model": "macos-say",
       "voice": "Zosia",
       "language": "pl",
-      "generatedAt": "2026-08-16T18:59:09.479Z",
-      "contentHash": "7c3154dd2d499db3b1d423e31c653ba4442949a9f48735ad68ca11d06695e65f",
+      "generatedAt": "2026-08-16T22:09:23.394Z",
+      "contentHash": "52ba1c3a14de07296da1e38363c59f721866fc7f386693d280c216396232babe",
       "critical": true,
       "direction": "Mów naturalną polszczyzną, ciepło, spokojnie i odrobinę wolniej niż w rozmowie. Bez przesadnej kreskówkowej ekspresji.",
       "qaStatus": "temporary-not-approved-for-learning"
