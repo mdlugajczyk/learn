@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#77cef2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ten's Magic">
+  <meta name="description" content="A playful, offline number-making world guided by Ten.">
+  <title>Ten's Number Magic</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <section id="homeScreen" class="screen home-screen" aria-labelledby="homeTitle">
+      <div class="sky-decor" aria-hidden="true">
+        <span class="cloud cloud-one"></span>
+        <span class="cloud cloud-two"></span>
+        <span class="tiny-star star-one">✦</span>
+        <span class="tiny-star star-two">✦</span>
+        <span class="tiny-star star-three">✦</span>
+      </div>
+
+      <header class="app-header">
+        <div class="brand-lockup" aria-label="Ten's Number Magic">
+          <span class="brand-ten">10</span>
+          <span class="brand-copy">NUMBER<br>MAGIC</span>
+        </div>
+        <div class="header-actions">
+          <button class="round-button" data-sound-button type="button" aria-label="Turn sound off">
+            <span class="sound-on" aria-hidden="true">♪</span>
+            <span class="sound-off" aria-hidden="true">×</span>
+          </button>
+          <button id="settingsButton" class="round-button" type="button" aria-label="Open grown-up settings">
+            <span aria-hidden="true">⚙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="home-content">
+        <div class="mentor-home-wrap" aria-hidden="true">
+          <div id="homeMentor" class="character-host mentor-home"></div>
+          <span class="rocket-flame flame-one"></span>
+          <span class="rocket-flame flame-two"></span>
+        </div>
+
+        <div class="home-title-wrap">
+          <p class="eyebrow">TEN HAS A NUMBER MISSION!</p>
+          <h1 id="homeTitle">Who shall we<br><span>make today?</span></h1>
+        </div>
+
+        <div id="numberChoices" class="number-choices" role="group" aria-label="Choose a number"></div>
+
+        <button id="shuffleButton" class="shuffle-button" type="button">
+          <span aria-hidden="true">↻</span>
+          Three different numbers
+        </button>
+
+        <button id="offlinePill" class="offline-pill" type="button" aria-label="Open offline information">
+          <span class="offline-dot" aria-hidden="true"></span>
+          <span id="offlineLabel">Preparing offline play…</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="playScreen" class="screen play-screen" aria-labelledby="playTitle" hidden>
+      <header class="app-header play-header">
+        <button id="backButton" class="round-button back-button" type="button" aria-label="Choose another number">
+          <span aria-hidden="true">←</span>
+        </button>
+        <div class="play-heading">
+          <span>MAKING</span>
+          <strong id="playTitle">FIVE</strong>
+        </div>
+        <button class="round-button" data-sound-button type="button" aria-label="Turn sound off">
+          <span class="sound-on" aria-hidden="true">♪</span>
+          <span class="sound-off" aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div id="playContent" class="play-content">
+        <div class="mentor-strip">
+          <div id="playMentor" class="character-host mentor-mini" aria-hidden="true"></div>
+          <div class="speech-bubble">
+            <p id="mentorText">Tap a number friend to see what is inside!</p>
+            <button id="replayButton" class="replay-button" type="button" aria-label="Hear Ten again">♪</button>
+          </div>
+        </div>
+
+        <div id="partsStage" class="parts-stage" role="group" aria-label="Number parts"></div>
+
+        <div id="equation" class="equation" aria-live="polite"></div>
+
+        <section id="splitDock" class="split-dock" aria-labelledby="splitTitle" hidden>
+          <div class="split-heading">
+            <div>
+              <span class="split-kicker">SLIDE THE STAR</span>
+              <h2 id="splitTitle">Split five</h2>
+            </div>
+            <span class="split-sparkle" aria-hidden="true">✦</span>
+          </div>
+          <div class="split-control">
+            <output id="leftSplitValue" class="split-value split-value-left" for="splitRange">1</output>
+            <div class="range-shell">
+              <input id="splitRange" type="range" min="1" max="4" value="2" step="1" aria-label="Choose where to split">
+              <span class="range-star" aria-hidden="true">★</span>
+            </div>
+            <output id="rightSplitValue" class="split-value split-value-right" for="splitRange">4</output>
+          </div>
+          <button id="splitButton" class="magic-button" type="button">
+            <span>Split it!</span><span aria-hidden="true">✦</span>
+          </button>
+        </section>
+
+        <div class="play-actions" aria-label="Number actions">
+          <button id="undoButton" class="action-button" type="button" disabled>
+            <span aria-hidden="true">↶</span> Undo
+          </button>
+          <button id="joinAllButton" class="action-button" type="button" disabled>
+            <span aria-hidden="true">＋</span> <span id="joinButtonLabel">Join</span>
+          </button>
+          <button id="newWayButton" class="action-button action-button-accent" type="button">
+            <span aria-hidden="true">✦</span> New way
+          </button>
+        </div>
+
+        <div class="discovery-card">
+          <div class="discovery-title">
+            <span class="discovery-star" aria-hidden="true">★</span>
+            <span><strong id="discoveryCount">0 ways found</strong><small>Every way is number magic</small></span>
+          </div>
+          <div id="recentDiscoveries" class="recent-discoveries" aria-label="Recently discovered ways"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="welcomeOverlay" class="modal-layer welcome-layer" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+      <div class="welcome-card">
+        <div class="welcome-sparkles" aria-hidden="true"><span>✦</span><span>★</span><span>✦</span></div>
+        <div id="welcomeMentor" class="character-host welcome-mentor" aria-hidden="true"></div>
+        <p class="eyebrow">HELLO, NUMBER MAKER!</p>
+        <h2 id="welcomeTitle">Ready for<br>number magic?</h2>
+        <button id="startButton" class="magic-button start-button" type="button">
+          <span>Let's play!</span><span aria-hidden="true">★</span>
+        </button>
+        <p class="welcome-note">Sound starts after this tap</p>
+      </div>
+    </div>
+
+    <div id="settingsOverlay" class="modal-layer settings-layer" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+      <div class="settings-card">
+        <header class="settings-header">
+          <div>
+            <p class="eyebrow">GROWN-UP CORNER</p>
+            <h2 id="settingsTitle">Play settings</h2>
+          </div>
+          <button id="closeSettingsButton" class="round-button" type="button" aria-label="Close settings">×</button>
+        </header>
+
+        <section class="setting-section">
+          <h3>Sound</h3>
+          <label class="toggle-row">
+            <span><strong>Ten and sound effects</strong><small>All audio is stored on this iPhone.</small></span>
+            <input id="soundToggle" type="checkbox" checked>
+          </label>
+          <label class="toggle-row">
+            <span><strong>Gentle movement</strong><small>Use smaller, calmer animations.</small></span>
+            <input id="motionToggle" type="checkbox">
+          </label>
+        </section>
+
+        <section class="setting-section offline-section">
+          <div class="offline-heading">
+            <span id="settingsOfflineDot" class="offline-dot" aria-hidden="true"></span>
+            <div><h3 id="settingsOfflineTitle">Preparing offline play</h3><p id="settingsOfflineCopy">Keep this page open for a moment.</p></div>
+          </div>
+          <div id="installInstructions" class="install-instructions">
+            <p><strong>Make it feel like an app</strong></p>
+            <ol>
+              <li>Open this page in Safari.</li>
+              <li>Tap <span class="share-symbol" aria-label="Share">⇧</span> Share.</li>
+              <li>Choose <strong>Add to Home Screen</strong>.</li>
+            </ol>
+          </div>
+          <p id="installedMessage" class="installed-message" hidden>Opened from the Home Screen—perfect.</p>
+        </section>
+
+        <section class="setting-section privacy-section">
+          <h3>Private by design</h3>
+          <p>No account, ads, analytics, camera, or location. Discoveries stay on this device.</p>
+        </section>
+
+        <button id="resetProgressButton" class="reset-button" type="button">Reset discoveries</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="celebration" class="celebration" aria-hidden="true"></div>
+  </main>
+</body>
+</html>

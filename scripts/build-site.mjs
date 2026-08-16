@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { validateCzytaj } from './validate-czytaj.mjs';
+import { validateNumberMagic } from './validate-number-magic.mjs';
 
 const projectRoot = process.cwd();
 const publicRoot = path.join(projectRoot, 'public');
@@ -23,7 +24,8 @@ async function walk(directory) {
 }
 
 const czytajFiles = (await walk(path.join(publicRoot, 'czytaj'))).map((file) => path.relative(projectRoot, file));
-const sourceFiles = [...new Set([...tracked, ...czytajFiles])].filter((file) => !file.endsWith('.DS_Store'));
+const numberMagicFiles = (await walk(path.join(publicRoot, 'numberblocks'))).map((file) => path.relative(projectRoot, file));
+const sourceFiles = [...new Set([...tracked, ...czytajFiles, ...numberMagicFiles])].filter((file) => !file.endsWith('.DS_Store'));
 
 await rm(outputRoot, { recursive: true, force: true });
 await mkdir(clientRoot, { recursive: true });
@@ -59,6 +61,39 @@ await Promise.all([
 ]);
 await validateCzytaj({ strictAudio: true });
 
+const numberMagicPackRoot = path.join(clientRoot, 'numberblocks');
+const numberMagicPackFiles = (await walk(numberMagicPackRoot))
+  .filter((file) => !file.endsWith('offline-pack.json'));
+const numberMagicAssets = [];
+for (const file of numberMagicPackFiles) {
+  const contents = await readFile(file);
+  numberMagicAssets.push({
+    path: path.relative(numberMagicPackRoot, file).split(path.sep).join('/'),
+    bytes: contents.byteLength,
+    sha256: createHash('sha256').update(contents).digest('hex')
+  });
+}
+numberMagicAssets.sort((a, b) => a.path.localeCompare(b.path));
+const numberMagicPack = {
+  schemaVersion: 1,
+  version: `number-magic-${createHash('sha256').update(JSON.stringify(numberMagicAssets)).digest('hex').slice(0, 12)}`,
+  assetCount: numberMagicAssets.length,
+  totalBytes: numberMagicAssets.reduce((total, asset) => total + asset.bytes, 0),
+  assets: numberMagicAssets
+};
+const numberMagicPackJson = `${JSON.stringify(numberMagicPack, null, 2)}\n`;
+await Promise.all([
+  writeFile(path.join(numberMagicPackRoot, 'offline-pack.json'), numberMagicPackJson),
+  writeFile(path.join(publicRoot, 'numberblocks', 'offline-pack.json'), numberMagicPackJson)
+]);
+const productionServiceWorkerPath = path.join(numberMagicPackRoot, 'sw.js');
+const productionServiceWorker = await readFile(productionServiceWorkerPath, 'utf8');
+await writeFile(
+  productionServiceWorkerPath,
+  productionServiceWorker.replace('__PACK_VERSION__', numberMagicPack.version)
+);
+await validateNumberMagic({ strictAudio: true });
+
 const workerSource = `
 export default {
   async fetch(request, env) {
@@ -84,7 +119,9 @@ const workerBytes = (await stat(workerPath)).size;
 if (workerBytes >= 1024 * 1024) throw new Error(`Worker exceeds 1 MB budget: ${workerBytes} bytes`);
 if (packManifest.totalBytes >= 60 * 1024 * 1024) throw new Error(`Offline pack exceeds 60 MB budget: ${packManifest.totalBytes} bytes`);
 if (packManifest.assetCount >= 900) throw new Error(`Offline pack exceeds 900 file budget: ${packManifest.assetCount}`);
-console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(workerBytes)} Worker.`);
+if (numberMagicPack.totalBytes >= 30 * 1024 * 1024) throw new Error(`Number Magic offline pack exceeds 30 MB budget: ${numberMagicPack.totalBytes} bytes`);
+if (numberMagicPack.assetCount >= 300) throw new Error(`Number Magic offline pack exceeds 300 file budget: ${numberMagicPack.assetCount}`);
+console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(numberMagicPack.totalBytes)} Number Magic pack, ${formatBytes(workerBytes)} Worker.`);
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;

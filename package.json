@@ -7,8 +7,11 @@
     "build": "node scripts/build-site.mjs",
     "validate": "node scripts/validate-czytaj.mjs --strict-audio",
     "validate:structure": "node scripts/validate-czytaj.mjs",
+    "validate:number-magic": "node scripts/validate-number-magic.mjs --strict-audio",
     "test": "node --test test/*.test.mjs",
     "audio:generate": "node scripts/generate-reading-audio.mjs",
-    "audio:temporary": "node scripts/generate-temporary-reading-audio.mjs"
+    "audio:temporary": "node scripts/generate-temporary-reading-audio.mjs",
+    "audio:number-magic": "node scripts/generate-number-magic-audio.mjs",
+    "icons:number-magic": "python3 scripts/generate-number-magic-icons.py"
   }
 }
