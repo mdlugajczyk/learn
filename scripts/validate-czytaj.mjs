@@ -120,6 +120,8 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
   const appSource = await readFile(path.join(root, 'public', 'czytaj', 'app.js'), 'utf8');
   assert(!appSource.includes('speechSynthesis'), 'Runtime speechSynthesis is forbidden', errors);
   assert(!appSource.includes('SpeechRecognition'), 'Speech recognition is forbidden in v1', errors);
+  assert(appSource.includes("fetch(new URL('offline-pack.json', APP_ROOT).href"), 'Offline manifest URL must be serialized for Safari compatibility', errors);
+  assert(appSource.includes("serviceWorker.register(new URL('sw.js', APP_ROOT).href"), 'Service-worker URL must be serialized for Safari compatibility', errors);
 
   if (errors.length) throw new Error(`Czytaj validation failed:\n- ${errors.join('\n- ')}`);
   const counts = {

@@ -57,7 +57,7 @@ async function save() {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return null;
   try {
-    state.swRegistration = await navigator.serviceWorker.register(new URL('sw.js', APP_ROOT), { scope: APP_ROOT.pathname });
+    state.swRegistration = await navigator.serviceWorker.register(new URL('sw.js', APP_ROOT).href, { scope: APP_ROOT.pathname });
     return state.swRegistration;
   } catch (error) {
     console.warn('Service worker registration failed', error);
@@ -199,7 +199,7 @@ function bindOnboarding() {
 }
 
 async function packManifest() {
-  const response = await fetch(new URL('offline-pack.json', APP_ROOT), { cache: 'no-store' });
+  const response = await fetch(new URL('offline-pack.json', APP_ROOT).href, { cache: 'no-store' });
   if (!response.ok) throw new Error('Manifest pakietu offline nie jest dostępny. Uruchom produkcyjny build.');
   return response.json();
 }
@@ -209,6 +209,8 @@ async function downloadOrVerifyPack(verifyOnly = false) {
   render();
   try {
     const manifest = await packManifest();
+    state.download = { ...state.download, total: manifest.assetCount };
+    render();
     const registration = state.swRegistration ?? await registerServiceWorker();
     const worker = registration?.active ?? registration?.waiting ?? registration?.installing;
     if (!worker) throw new Error('Przeglądarka nie uruchomiła jeszcze pamięci offline. Odczekaj chwilę i spróbuj ponownie.');
