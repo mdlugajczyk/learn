@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "czytaj-5c0db3e89dd3",
+  "version": "czytaj-a4bc95bbe391",
   "assetCount": 502,
-  "totalBytes": 10145297,
+  "totalBytes": 10144843,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 51346,
-      "sha256": "e00524131357be0493a7f80f7ff1e5d3e3128fcb232b9d5f481acc22eee22299"
+      "bytes": 50991,
+      "sha256": "2f1d48029808e4b1aa301d07cffab756feb037c0e89ba44cdef69214381f5af7"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -2491,8 +2491,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 2359,
-      "sha256": "0b3ea060ab4ee8ade6839cdcbd15b0b0b6f6dcd3d720adffbfdce690a517165a"
+      "bytes": 2363,
+      "sha256": "fb9e1bc0090d7bff3dd32d12a0ade31324eadc544773cdd8f94871b04c66a09e"
     },
     {
       "path": "manifest.webmanifest",
@@ -2506,13 +2506,13 @@
     },
     {
       "path": "styles.css",
-      "bytes": 30607,
-      "sha256": "ce3b28933161b1b0afea5ed70a240d55d50cb9f2222b514223558859584444c2"
+      "bytes": 30504,
+      "sha256": "1d3a1cb7f4c4d77a6722d49b1e872afa2896c72cc15cdd7bd8a70ac2ba6ec57c"
     },
     {
       "path": "sw.js",
       "bytes": 5017,
-      "sha256": "482798428148d16004a7b527956f4e32b7b7532dc130831678cc91d5da7394e0"
+      "sha256": "750808fb62f0908232b7f4508722d8bd34095d1d181fa6e616c34acbde3c7157"
     }
   ]
 }

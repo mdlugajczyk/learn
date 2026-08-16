@@ -805,21 +805,15 @@ replayButton.addEventListener('click', async () => {
   if (state.lastInstruction) audio.play(state.lastInstruction);
 });
 
-let holdTimer = null;
-const beginHold = () => {
-  parentButton.classList.add('holding');
-  holdTimer = setTimeout(() => {
-    parentButton.classList.remove('holding');
-    parentCode.value = '';
-    gate.showModal();
-    setTimeout(() => parentCode.focus(), 50);
-  }, 3000);
+const openParentGate = () => {
+  if (gate.open) return;
+  state.presentationToken += 1;
+  audio.stop();
+  parentCode.value = '';
+  gate.showModal();
+  setTimeout(() => parentCode.focus(), 50);
 };
-const cancelHold = () => { clearTimeout(holdTimer); parentButton.classList.remove('holding'); };
-parentButton.addEventListener('pointerdown', beginHold);
-parentButton.addEventListener('pointerup', cancelHold);
-parentButton.addEventListener('pointercancel', cancelHold);
-parentButton.addEventListener('pointerleave', cancelHold);
+parentButton.addEventListener('click', openParentGate);
 gateForm.addEventListener('submit', (event) => {
   if (event.submitter?.value === 'cancel') return;
   event.preventDefault();

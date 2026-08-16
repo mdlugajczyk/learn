@@ -45,7 +45,6 @@ button { -webkit-tap-highlight-color: transparent; }
 .top-actions { display: flex; gap: 8px; }
 .icon-button, .parent-button { min-width: 48px; min-height: 48px; padding: 0 13px; color: white; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.18); border-radius: 16px; cursor: pointer; }
 .icon-button:active, .parent-button:active { transform: scale(.97); }
-.parent-button.holding { background: rgba(116,214,179,.35); box-shadow: inset 0 0 0 2px var(--mint); }
 
 .app-shell { position: relative; z-index: 1; width: min(100%, 720px); min-height: calc(100dvh - 72px); margin: 0 auto; padding: 8px max(14px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
 .screen { animation: screen-in .38s cubic-bezier(.2,.75,.25,1) both; }
