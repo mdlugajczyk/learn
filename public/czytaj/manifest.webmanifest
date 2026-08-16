@@ -1,10 +1,10 @@
 {
-  "id": "/czytaj/",
+  "id": "./",
   "name": "Czytaj — misje czytelnicze",
   "short_name": "Czytaj",
   "lang": "pl",
-  "start_url": "/czytaj/",
-  "scope": "/czytaj/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#151b46",

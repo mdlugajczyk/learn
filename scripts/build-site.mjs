@@ -36,11 +36,12 @@ for (const relativeFile of sourceFiles) {
 }
 
 const packFiles = (await walk(path.join(clientRoot, 'czytaj'))).filter((file) => !file.endsWith('offline-pack.json'));
+const packRoot = path.join(clientRoot, 'czytaj');
 const packAssets = [];
 for (const file of packFiles) {
   const contents = await readFile(file);
   packAssets.push({
-    path: `/${path.relative(clientRoot, file).split(path.sep).join('/')}`,
+    path: path.relative(packRoot, file).split(path.sep).join('/'),
     bytes: contents.byteLength,
     sha256: createHash('sha256').update(contents).digest('hex')
   });

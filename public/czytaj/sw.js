@@ -1,10 +1,13 @@
-const SHELL_CACHE = 'czytaj-shell-v1';
+const SHELL_CACHE = 'czytaj-shell-v2';
 const PACK_PREFIX = 'czytaj-pack-';
+const SCOPE_URL = self.registration.scope;
+const SCOPE_PATH = new URL(SCOPE_URL).pathname;
+const scoped = (path = '') => new URL(path, SCOPE_URL).href;
 const SHELL = [
-  '/czytaj/', '/czytaj/index.html', '/czytaj/styles.css', '/czytaj/app.js', '/czytaj/engine.js', '/czytaj/store.js', '/czytaj/audio.js',
-  '/czytaj/data/curriculum.js', '/czytaj/data/audio-manifest.js', '/czytaj/manifest.webmanifest',
-  '/czytaj/assets/icon-192.png', '/czytaj/assets/icon-512.png', '/czytaj/assets/AtkinsonHyperlegibleNext.woff2'
-];
+  '', 'index.html', 'styles.css', 'app.js', 'engine.js', 'store.js', 'audio.js',
+  'data/curriculum.js', 'data/audio-manifest.js', 'manifest.webmanifest',
+  'assets/icon-192.png', 'assets/icon-512.png', 'assets/AtkinsonHyperlegibleNext.woff2'
+].map(scoped);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL)).catch(() => undefined));
@@ -23,7 +26,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin || !url.pathname.startsWith('/czytaj/')) return;
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE_PATH)) return;
   event.respondWith((async () => {
     const cached = await caches.match(request, { ignoreSearch: true });
     if (cached) return cached;
@@ -35,7 +38,7 @@ self.addEventListener('fetch', (event) => {
       }
       return response;
     } catch {
-      if (request.mode === 'navigate') return (await caches.match('/czytaj/index.html')) || Response.error();
+      if (request.mode === 'navigate') return (await caches.match(scoped('index.html'))) || Response.error();
       return Response.error();
     }
   })());
@@ -55,12 +58,13 @@ async function downloadPack(manifest, port) {
   let completed = 0;
   try {
     for (const asset of manifest.assets) {
-      const response = await fetch(asset.path, { cache: 'no-store' });
+      const assetUrl = new URL(asset.path, SCOPE_URL).href;
+      const response = await fetch(assetUrl, { cache: 'no-store' });
       if (!response.ok) throw new Error(`${asset.path}: ${response.status}`);
       const buffer = await response.clone().arrayBuffer();
       if (asset.bytes && buffer.byteLength !== asset.bytes) throw new Error(`${asset.path}: nieprawidłowy rozmiar`);
       if (asset.sha256 && await sha256(buffer) !== asset.sha256) throw new Error(`${asset.path}: nieprawidłowa suma kontrolna`);
-      await cache.put(asset.path, response);
+      await cache.put(assetUrl, response);
       completed += 1;
       port?.postMessage({ type: 'progress', completed, total: manifest.assets.length, bytes: manifest.totalBytes });
     }
@@ -78,7 +82,8 @@ async function downloadPack(manifest, port) {
 async function verifyPack(manifest, port) {
   let completed = 0;
   for (const asset of manifest.assets) {
-    const response = await caches.match(asset.path, { ignoreSearch: true });
+    const assetUrl = new URL(asset.path, SCOPE_URL).href;
+    const response = await caches.match(assetUrl, { ignoreSearch: true });
     if (!response) return port?.postMessage({ type: 'error', message: `Brakuje: ${asset.path}` });
     const buffer = await response.clone().arrayBuffer();
     if (asset.bytes && buffer.byteLength !== asset.bytes) return port?.postMessage({ type: 'error', message: `Uszkodzony plik: ${asset.path}` });

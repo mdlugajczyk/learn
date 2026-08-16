@@ -11,6 +11,7 @@ const gateForm = document.querySelector('#parentGateForm');
 const parentCode = document.querySelector('#parentCode');
 const toast = document.querySelector('#toast');
 const audio = new AudioQueue();
+const APP_ROOT = new URL('./', import.meta.url);
 
 const state = {
   progress: null,
@@ -56,7 +57,7 @@ async function save() {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return null;
   try {
-    state.swRegistration = await navigator.serviceWorker.register('/czytaj/sw.js', { scope: '/czytaj/' });
+    state.swRegistration = await navigator.serviceWorker.register(new URL('sw.js', APP_ROOT), { scope: APP_ROOT.pathname });
     return state.swRegistration;
   } catch (error) {
     console.warn('Service worker registration failed', error);
@@ -170,10 +171,9 @@ function bindOnboarding() {
     render();
   });
   document.querySelector('#playSample')?.addEventListener('click', async () => {
-    await audio.unlock();
     const played = await audio.play('narrator-sample');
     if (!played) {
-      showToast('Nie znaleziono próbki MP3. Wygeneruj pakiet audio przed uruchomieniem kursu.', 5500);
+      showToast('Nie udało się odtworzyć próbki. Odśwież aplikację i spróbuj ponownie.', 5500);
       return;
     }
     state.narratorApproved = true;
@@ -199,7 +199,7 @@ function bindOnboarding() {
 }
 
 async function packManifest() {
-  const response = await fetch('/czytaj/offline-pack.json', { cache: 'no-store' });
+  const response = await fetch(new URL('offline-pack.json', APP_ROOT), { cache: 'no-store' });
   if (!response.ok) throw new Error('Manifest pakietu offline nie jest dostępny. Uruchom produkcyjny build.');
   return response.json();
 }
@@ -488,7 +488,7 @@ function renderParent() {
   const dueProbes = progress.parentProbes.filter((probe) => probe.due);
   app.innerHTML = `<section class="screen">
     <div class="screen-head"><p class="eyebrow">Panel dorosłego</p><h1>${html(progress.profile.name || 'Kosmonauta')}</h1><p>Aktywności ukończone nie są tym samym co wykazana umiejętność.</p></div>
-    <div class="card"><div class="button-row"><button id="parentClose" class="button primary">Wróć do dziecka</button><a class="button secondary" href="/" style="text-decoration:none">Menu główne</a></div></div>
+    <div class="card"><div class="button-row"><button id="parentClose" class="button primary">Wróć do dziecka</button><a class="button secondary" href="../" style="text-decoration:none">Menu główne</a></div></div>
     <div class="card"><p class="eyebrow">Podsumowanie</p><div class="stats-grid">
       <div class="stat"><span>Etap</span><strong>${progress.currentStage}/12</strong></div>
       <div class="stat"><span>Misje</span><strong>${sessions.length}</strong></div>
