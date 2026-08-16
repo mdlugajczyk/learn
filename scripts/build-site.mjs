@@ -12,7 +12,7 @@ const workerPath = path.join(outputRoot, 'server', 'index.js');
 
 await validateCzytaj({ strictAudio: true });
 
-const tracked = execFileSync('git', ['ls-files', 'public'], { cwd: projectRoot, encoding: 'utf8' }).split('\n').filter(Boolean);
+const tracked = execFileSync('git', ['ls-files', '-z', 'public'], { cwd: projectRoot, encoding: 'utf8' }).split('\0').filter(Boolean);
 
 async function walk(directory) {
   const files = [];

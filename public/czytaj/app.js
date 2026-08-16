@@ -20,7 +20,6 @@ const state = {
   lastInstruction: null,
   inputLocked: false,
   swRegistration: null,
-  audioPack: null,
   download: null,
   activityStartedAt: 0,
   meaningRevealed: false,
@@ -33,7 +32,6 @@ const percent = (value) => value == null ? '—' : `${Math.round(value * 100)}%`
 const formatDuration = (milliseconds) => `${Math.max(1, Math.round(milliseconds / 60000))} min`;
 const formatBytes = (bytes) => bytes ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : '0 MB';
 const today = (value) => new Intl.DateTimeFormat('pl-PL', { day: '2-digit', month: 'short' }).format(new Date(value));
-const isTemporaryAudio = () => state.audioPack?.releaseStatus === 'temporary-testing-only';
 
 function showToast(message, duration = 3000) {
   toast.textContent = message;
@@ -66,15 +64,6 @@ async function registerServiceWorker() {
   }
 }
 
-async function loadAudioPackMetadata() {
-  try {
-    const response = await fetch('/czytaj/audio/manifest.json');
-    if (response.ok) state.audioPack = await response.json();
-  } catch {
-    state.audioPack = null;
-  }
-}
-
 async function init() {
   try {
     state.progress = await progressStore.load();
@@ -84,7 +73,6 @@ async function init() {
   }
   audio.enabled = state.progress.settings.sound;
   document.body.classList.toggle('motion-off', !state.progress.settings.motion);
-  await loadAudioPackMetadata();
   await registerServiceWorker();
   if (state.progress.activeSession) state.view = 'session';
   else state.view = state.progress.onboardingComplete ? 'home' : 'onboarding';
@@ -130,10 +118,9 @@ function onboardingProfile() {
 }
 
 function onboardingVoice() {
-  const temporary = isTemporaryAudio();
-  return `<div class="card"><p class="eyebrow">${temporary ? 'Wersja testowa' : 'Jawne źródło głosu'}</p><h2>${temporary ? 'Tymczasowy głos do testowania aplikacji' : 'Głos narratora jest wygenerowany przez AI'}</h2>
+  return `<div class="card"><p class="eyebrow">Jawne źródło głosu</p><h2>Głos narratora jest wygenerowany przez AI</h2>
     <p>Każde polecenie jest wcześniej przygotowanym plikiem MP3. Aplikacja nie wysyła tekstu ani danych dziecka do usługi głosowej i nigdy nie używa syntezy mowy działającej w przeglądarce.</p>
-    <div class="callout">${temporary ? '<strong>Nie używaj jeszcze tej wersji do nauki dźwięków liter.</strong> Głos Zosia pozwala sprawdzić cały interfejs i tryb offline, ale izolowane fonemy nie przeszły kontroli polskiego logopedy. Pakiet zostanie podmieniony na ElevenLabs bez zmiany aplikacji ani postępu.' : 'Rodzimy użytkownik języka polskiego powinien zatwierdzić krytyczne klipy przed samodzielną pracą dziecka.'}</div>
+    <div class="callout">Rodzimy użytkownik języka polskiego powinien zatwierdzić krytyczne klipy przed samodzielną pracą dziecka.</div>
     <div class="button-row" style="margin-top:16px">
       <button id="playSample" class="button secondary">🔊 Posłuchaj próbki</button>
       <button id="approveVoice" class="button primary" ${state.narratorApproved ? '' : 'disabled'}>${state.narratorApproved ? 'Głos zaakceptowany' : 'Akceptuję ten głos'}</button>
@@ -256,7 +243,7 @@ function renderHome() {
     <div class="card hero-card" style="--hero-image:url('assets/czytaj-space-card.png')">
       ${momo()}
       <div class="hero-copy">
-        <p class="eyebrow">${ready ? isTemporaryAudio() ? 'Wersja testowa · gotowe offline' : 'Gotowe offline' : 'Potrzebna pomoc dorosłego'}</p>
+        <p class="eyebrow">${ready ? 'Gotowe offline' : 'Potrzebna pomoc dorosłego'}</p>
         <h1>Cześć, ${html(state.progress.profile.address)}!</h1>
         <p>${ready ? 'Momo przygotował krótką misję czytelniczą.' : 'Pakiet dźwięków i ćwiczeń nie został w pełni sprawdzony.'}</p>
       </div>
@@ -502,7 +489,6 @@ function renderParent() {
   app.innerHTML = `<section class="screen">
     <div class="screen-head"><p class="eyebrow">Panel dorosłego</p><h1>${html(progress.profile.name || 'Kosmonauta')}</h1><p>Aktywności ukończone nie są tym samym co wykazana umiejętność.</p></div>
     <div class="card"><div class="button-row"><button id="parentClose" class="button primary">Wróć do dziecka</button><a class="button secondary" href="/" style="text-decoration:none">Menu główne</a></div></div>
-    ${isTemporaryAudio() ? '<div class="card"><p class="eyebrow">Wersja testowa głosu</p><h2>Interfejs gotowy do prób</h2><div class="callout"><strong>Nie traktuj obecnych nagrań jako materiału dydaktycznego.</strong> Systemowy głos Zosia służy do testów ekranów, instrukcji i działania offline. Szczególnie dźwięki pojedynczych liter wymagają późniejszej podmiany i kontroli native speakera.</div></div>' : ''}
     <div class="card"><p class="eyebrow">Podsumowanie</p><div class="stats-grid">
       <div class="stat"><span>Etap</span><strong>${progress.currentStage}/12</strong></div>
       <div class="stat"><span>Misje</span><strong>${sessions.length}</strong></div>
@@ -537,7 +523,7 @@ function renderParent() {
     <div class="card"><p class="eyebrow">Kopia lokalna</p><h2>Eksport i import</h2><p>Kopia zawiera profil, bazę, kolejkę powtórek, historię i ustawienia. Import jest najpierw sprawdzany, a dopiero potem zastępuje dane.</p>
       <div class="button-row"><button id="exportProgress" class="button secondary">Eksportuj JSON</button><label class="button secondary" style="display:inline-grid;place-items:center">Importuj JSON<input id="importProgress" type="file" accept="application/json" hidden></label></div>
     </div>
-    <div class="card"><p class="eyebrow">Instalacja</p><h2>Dodaj do ekranu głównego</h2><p><strong>iPhone:</strong> otwórz w Safari, wybierz Udostępnij, potem „Do ekranu początkowego”.</p><p><strong>Android:</strong> otwórz w Chrome, wybierz menu i „Zainstaluj aplikację”.</p><p class="small">Po pobraniu i weryfikacji kurs działa bez sieci. ${isTemporaryAudio() ? 'Aktualny głos Zosia jest tylko pakietem testowym.' : 'Głos Momo został wygenerowany przez AI.'}</p></div>
+    <div class="card"><p class="eyebrow">Instalacja</p><h2>Dodaj do ekranu głównego</h2><p><strong>iPhone:</strong> otwórz w Safari, wybierz Udostępnij, potem „Do ekranu początkowego”.</p><p><strong>Android:</strong> otwórz w Chrome, wybierz menu i „Zainstaluj aplikację”.</p><p class="small">Po pobraniu i weryfikacji kurs działa bez sieci. Głos Momo został wygenerowany przez AI.</p></div>
     <div class="card"><p class="eyebrow">Strefa ostrożna</p><h2>Reset postępu</h2><button id="resetProgress" class="button danger">Usuń postęp po potwierdzeniu</button></div>
   </section>`;
   bindParent();

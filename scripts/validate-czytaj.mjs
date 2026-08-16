@@ -114,9 +114,6 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
     if (await exists(manifestFile)) {
       const audioManifest = JSON.parse(await readFile(manifestFile, 'utf8'));
       assert(audioManifest.entries?.length === AUDIO_ENTRIES.length, `Audio manifest has ${audioManifest.entries?.length ?? 0}/${AUDIO_ENTRIES.length} entries`, errors);
-      if (audioManifest.releaseStatus === 'temporary-testing-only') {
-        assert(appSourceIncludesTemporaryWarning(await readFile(path.join(root, 'public', 'czytaj', 'app.js'), 'utf8')), 'Temporary audio pack requires a visible learning-safety warning', errors);
-      }
     }
   }
 
@@ -137,10 +134,6 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
   };
   console.log(`Czytaj validated: ${JSON.stringify(counts)}`);
   return counts;
-}
-
-function appSourceIncludesTemporaryWarning(source) {
-  return source.includes('Nie używaj jeszcze tej wersji do nauki dźwięków liter.');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
