@@ -136,6 +136,19 @@
           </label>
         </section>
 
+        <section class="setting-section learning-section">
+          <div class="learning-heading">
+            <div><h3>Learning range</h3><p id="learningSummary">Working with number friends up to five.</p></div>
+            <span id="masteryCount" class="mastery-count">0 strong</span>
+          </div>
+          <div id="settingsRangeChoices" class="range-choices compact" role="radiogroup" aria-label="Choose the learning range"></div>
+          <button id="restartRangeButton" class="restart-range-button" type="button">Restart from the selected range</button>
+          <label class="toggle-row auto-grow-row">
+            <span><strong>Grow automatically</strong><small>Unlock the next total after repeated accurate answers.</small></span>
+            <input id="autoAdvanceToggle" type="checkbox" checked>
+          </label>
+        </section>
+
         <section class="setting-section offline-section">
           <div class="offline-heading">
             <span id="settingsOfflineDot" class="offline-dot" aria-hidden="true"></span>
@@ -158,6 +171,24 @@
         </section>
 
         <button id="resetProgressButton" class="reset-button" type="button">Reset mission progress</button>
+      </div>
+    </div>
+
+    <div id="rangeOverlay" class="modal-layer range-layer" role="dialog" aria-modal="true" aria-labelledby="rangeTitle" hidden>
+      <div class="range-card">
+        <div class="range-stars" aria-hidden="true">★ ✦ ★</div>
+        <p class="eyebrow">GROWN-UP SETUP</p>
+        <h2 id="rangeTitle">Where should Ten begin?</h2>
+        <p class="range-intro">Choose a comfortable starting range. You can change this any time from the gear.</p>
+        <div id="setupRangeChoices" class="range-choices" role="radiogroup" aria-label="Choose the starting number range"></div>
+        <label class="setup-auto-row">
+          <input id="setupAutoAdvance" type="checkbox" checked>
+          <span><strong>Let Ten grow the range</strong><small>New totals unlock after several strong, first-try answers.</small></span>
+        </label>
+        <button id="saveRangeButton" class="magic-button range-save-button" type="button">
+          <span>Save and start</span><span aria-hidden="true">★</span>
+        </button>
+        <p class="range-private-note">Progress stays only on this device.</p>
       </div>
     </div>
 

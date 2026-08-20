@@ -1,8 +1,13 @@
 import {
+  RANGE_PRESETS,
+  advanceLearning,
   answerChoices,
   createMissionPlan,
-  factKey,
   isCorrectSplit,
+  learningStatus,
+  normalizeLearningSettings,
+  rangeForLearning,
+  recordFactResult,
   missionAudioName
 } from './missions.js';
 
@@ -29,12 +34,15 @@ const state = {
   audioUnlocked: false,
   offlineReady: false,
   progress: { sessionsCompleted: 0, factWins: {}, mistakes: 0 },
+  learning: normalizeLearningSettings(),
   session: [],
   missionIndex: 0,
   phase: 'home',
   counts: [0, 0],
   splitParts: [],
   choices: [],
+  missionMistake: false,
+  newLevel: null,
   prompt: { file: 'welcome.m4a', text: '' },
   phaseToken: 0,
   celebrationTimer: null,
@@ -121,10 +129,12 @@ function loadState() {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     state.sound = stored.sound ?? legacy.sound ?? true;
     state.gentleMotion = stored.gentleMotion ?? legacy.gentleMotion ?? false;
+    state.learning = normalizeLearningSettings(stored.learning || {});
     if (stored.progress && typeof stored.progress === 'object') {
       state.progress = {
         sessionsCompleted: Number(stored.progress.sessionsCompleted || 0),
         factWins: stored.progress.factWins || {},
+        factStats: stored.progress.factStats || {},
         mistakes: Number(stored.progress.mistakes || 0)
       };
     }
@@ -138,6 +148,7 @@ function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       sound: state.sound,
       gentleMotion: state.gentleMotion,
+      learning: state.learning,
       progress: state.progress
     }));
   } catch {
@@ -153,7 +164,9 @@ function cacheElements() {
     'equation', 'welcomeOverlay', 'startButton', 'settingsButton', 'settingsOverlay',
     'closeSettingsButton', 'soundToggle', 'motionToggle', 'settingsOfflineDot',
     'settingsOfflineTitle', 'settingsOfflineCopy', 'installInstructions',
-    'installedMessage', 'resetProgressButton', 'toast', 'celebration'
+    'installedMessage', 'learningSummary', 'masteryCount', 'settingsRangeChoices',
+    'autoAdvanceToggle', 'rangeOverlay', 'setupRangeChoices', 'setupAutoAdvance',
+    'saveRangeButton', 'restartRangeButton', 'resetProgressButton', 'toast', 'celebration'
   ].forEach(id => { elements[id] = document.getElementById(id); });
   elements.soundButtons = [...document.querySelectorAll('[data-sound-button]')];
 }
@@ -239,17 +252,63 @@ function updatePreferenceUi() {
   document.documentElement.classList.toggle('gentle', state.gentleMotion);
   elements.soundToggle.checked = state.sound;
   elements.motionToggle.checked = state.gentleMotion;
+  elements.autoAdvanceToggle.checked = state.learning.autoAdvance;
+  elements.setupAutoAdvance.checked = state.learning.autoAdvance;
+  document.querySelectorAll('input[data-range-preset]').forEach(input => {
+    input.checked = input.value === state.learning.preset;
+  });
   elements.soundButtons.forEach(button => {
     button.setAttribute('aria-label', state.sound ? 'Turn sound off' : 'Turn sound on');
   });
+  updateLearningSummary();
+}
+
+function renderRangeChoices(container, name) {
+  container.replaceChildren();
+  RANGE_PRESETS.forEach(preset => {
+    const label = makeElement('label', 'range-choice');
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = name;
+    input.value = preset.id;
+    input.dataset.rangePreset = preset.id;
+    input.checked = preset.id === state.learning.preset;
+    const copy = makeElement('span', 'range-choice-copy');
+    copy.append(makeElement('strong', '', preset.label), makeElement('small', '', preset.description));
+    label.append(input, copy, makeElement('i', '', '✓'));
+    container.appendChild(label);
+  });
+}
+
+function updateLearningSummary() {
+  const status = learningStatus(state.progress, state.learning);
+  const range = rangeForLearning(state.learning);
+  const displayedMin = range.minSum <= 2 ? 1 : range.minSum;
+  const remaining = Math.max(0, status.needed - status.frontierMastered);
+  if (state.learning.autoAdvance && status.maxSum < 10) {
+    elements.learningSummary.textContent = `Working with ${displayedMin}–${status.maxSum}. ${remaining} more strong ${remaining === 1 ? 'fact' : 'facts'} to unlock ${status.maxSum + 1}.`;
+  } else if (state.learning.autoAdvance) {
+    elements.learningSummary.textContent = `Working with ${displayedMin}–10. The full range is unlocked.`;
+  } else {
+    elements.learningSummary.textContent = `Working with ${displayedMin}–${status.maxSum}. The range is fixed here.`;
+  }
+  elements.masteryCount.textContent = `${status.frontierMastered}/${status.frontierTotal} strong`;
+}
+
+function setLearningPreset(preset, autoAdvance = state.learning.autoAdvance) {
+  state.learning = normalizeLearningSettings({ configured: true, preset, autoAdvance });
+  saveState();
+  updatePreferenceUi();
+  renderHomeProgress();
 }
 
 function renderHomeProgress() {
   elements.homeProgress.replaceChildren();
   const completed = state.progress.sessionsCompleted;
+  const range = rangeForLearning(state.learning);
   const label = makeElement('span', 'home-progress-label', completed
-    ? `${completed} ${completed === 1 ? 'mission set' : 'mission sets'} completed`
-    : 'Your first mission is ready');
+    ? `${completed} ${completed === 1 ? 'mission set' : 'mission sets'} · working up to ${range.maxSum}`
+    : `Your first mission is ready · starting up to ${range.maxSum}`);
   const stars = makeElement('span', 'home-progress-stars');
   for (let index = 0; index < 3; index += 1) stars.appendChild(makeElement('i', index < Math.min(3, completed) ? 'earned' : '', '★'));
   elements.homeProgress.append(stars, label);
@@ -279,8 +338,9 @@ function currentMission() {
 function startSession() {
   clearPhaseTimers();
   sounds.unlock();
-  state.session = createMissionPlan(state.progress);
+  state.session = createMissionPlan(state.progress, Math.random, state.learning);
   state.missionIndex = 0;
+  state.newLevel = null;
   elements.homeScreen.hidden = true;
   elements.playScreen.hidden = false;
   startMission();
@@ -292,6 +352,7 @@ function startMission() {
   state.counts = [0, 0];
   state.splitParts = [];
   state.choices = answerChoices(mission.fact.sum);
+  state.missionMistake = false;
   state.phase = mission.mode === 'forward' ? 'build-first' : 'split';
   renderMission();
   if (mission.mode === 'forward') {
@@ -545,6 +606,7 @@ function chooseAnswer(button, value) {
   const mission = currentMission();
   sounds.unlock();
   if (value !== mission.fact.sum) {
+    state.missionMistake = true;
     state.progress.mistakes += 1;
     saveState();
     sounds.effect('wrong');
@@ -691,6 +753,9 @@ function attachSplitGesture(button, fact) {
       button.classList.add('split-success');
       setTimeout(() => completeSplit(parts), state.gentleMotion ? 20 : 260);
     } else {
+      state.missionMistake = true;
+      state.progress.mistakes += 1;
+      saveState();
       sounds.effect('wrong');
       button.classList.add('split-wrong');
       setPrompt('mission-split-retry.m4a', `Almost! Try pulling ${numberName(fact.a)} ${blockNoun(fact.a)} away.`, false);
@@ -783,8 +848,7 @@ function completeMission() {
   clearPhaseTimers();
   const mission = currentMission();
   state.phase = 'success';
-  const key = factKey(mission.fact);
-  state.progress.factWins[key] = Number(state.progress.factWins[key] || 0) + 1;
+  state.progress = recordFactResult(state.progress, mission.fact, { firstTry: !state.missionMistake });
   saveState();
   sounds.effect('join');
   renderMission();
@@ -812,11 +876,18 @@ function nextMission() {
     return;
   }
   state.progress.sessionsCompleted += 1;
+  const advancement = advanceLearning(state.progress, state.learning);
+  state.learning = advancement.learning;
+  state.newLevel = advancement.unlocked;
   saveState();
   state.missionIndex = 2;
   state.phase = 'session-complete';
   renderMission();
-  setPrompt('mission-session-complete.m4a', 'Three missions complete! Ten is very proud of you!', false);
+  if (state.newLevel) {
+    setPrompt(`mission-unlock-${state.newLevel}.m4a`, `Amazing! Number ${numberName(state.newLevel)} is ready to play!`, false);
+  } else {
+    setPrompt('mission-session-complete.m4a', 'Three missions complete! Ten is very proud of you!', false);
+  }
 }
 
 function renderSessionComplete() {
@@ -827,7 +898,9 @@ function renderSessionComplete() {
     makeElement('span', 'session-stars', '★ ✦ ★'),
     characterHost(10, 'mission-character session-ten'),
     makeElement('h2', '', 'Mission complete!'),
-    makeElement('p', '', 'Three number challenges solved')
+    makeElement('p', state.newLevel ? 'level-unlocked-copy' : '', state.newLevel
+      ? `New number unlocked: ${state.newLevel}!`
+      : 'Three number challenges solved')
   );
   const again = makeElement('button', 'mission-again-button');
   again.type = 'button';
@@ -867,6 +940,7 @@ function showToast(message) {
 
 function openSettings() {
   elements.settingsOverlay.hidden = false;
+  updatePreferenceUi();
   updateInstallUi();
 }
 
@@ -893,11 +967,16 @@ function resetProgress() {
     }, 3600);
     return;
   }
-  state.progress = { sessionsCompleted: 0, factWins: {}, mistakes: 0 };
+  state.progress = { sessionsCompleted: 0, factWins: {}, factStats: {}, mistakes: 0 };
+  state.learning = normalizeLearningSettings({
+    ...state.learning,
+    adaptiveMax: RANGE_PRESETS.find(preset => preset.id === state.learning.preset)?.maxSum
+  });
   state.resetArmedUntil = 0;
   elements.resetProgressButton.textContent = 'Reset mission progress';
   saveState();
   renderHomeProgress();
+  updatePreferenceUi();
   showToast('Mission progress reset');
 }
 
@@ -946,6 +1025,10 @@ function wireEvents() {
   elements.startButton.addEventListener('click', () => {
     sounds.unlock();
     elements.welcomeOverlay.hidden = true;
+    if (!state.learning.configured) {
+      elements.rangeOverlay.hidden = false;
+      return;
+    }
     sounds.speak('welcome.m4a', "Hello, number maker! I'm Ten. Ready for some number magic?");
   });
   elements.missionButton.addEventListener('click', startSession);
@@ -974,6 +1057,28 @@ function wireEvents() {
     updatePreferenceUi();
     saveState();
   });
+  elements.settingsRangeChoices.addEventListener('change', event => {
+    if (!event.target.matches('input[data-range-preset]')) return;
+    setLearningPreset(event.target.value);
+    showToast(`Learning range starts at ${RANGE_PRESETS.find(preset => preset.id === event.target.value)?.label}`);
+  });
+  elements.autoAdvanceToggle.addEventListener('change', () => {
+    state.learning = normalizeLearningSettings({ ...state.learning, configured: true, autoAdvance: elements.autoAdvanceToggle.checked });
+    saveState();
+    updatePreferenceUi();
+    showToast(state.learning.autoAdvance ? 'Automatic growth on' : 'Learning range fixed');
+  });
+  elements.restartRangeButton.addEventListener('click', () => {
+    setLearningPreset(state.learning.preset, state.learning.autoAdvance);
+    showToast('Selected learning range restarted');
+  });
+  elements.saveRangeButton.addEventListener('click', () => {
+    const selected = elements.setupRangeChoices.querySelector('input[data-range-preset]:checked')?.value || 'little';
+    setLearningPreset(selected, elements.setupAutoAdvance.checked);
+    elements.rangeOverlay.hidden = true;
+    sounds.speak('welcome.m4a', "Hello, number maker! I'm Ten. Ready for some number magic?");
+    showToast('Starting range saved');
+  });
   elements.resetProgressButton.addEventListener('click', resetProgress);
   document.addEventListener('visibilitychange', () => {
     saveState();
@@ -985,6 +1090,8 @@ function wireEvents() {
 function init() {
   cacheElements();
   loadState();
+  renderRangeChoices(elements.settingsRangeChoices, 'settingsRange');
+  renderRangeChoices(elements.setupRangeChoices, 'setupRange');
   renderMentors();
   renderHomeProgress();
   updatePreferenceUi();

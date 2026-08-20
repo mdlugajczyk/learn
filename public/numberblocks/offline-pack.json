@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-02a2c7765249",
-  "assetCount": 276,
-  "totalBytes": 6479500,
+  "version": "number-magic-5bb9e72e7827",
+  "assetCount": 281,
+  "totalBytes": 6595901,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 38070,
-      "sha256": "c1715fd9ab6a646db8d67e55ad8061fef7463dad8cd16a7c1f4d6171be3c880a"
+      "bytes": 43203,
+      "sha256": "3db3e4aaf44def05009fe2bb154d6e58481226daee77cc0618bcaac621660b22"
     },
     {
       "path": "audio/composition-10-1-1-1-1-1-1-1-1-1-1.m4a",
@@ -1195,6 +1195,31 @@
       "sha256": "b544625b2597a5d379563b8ee9ee1c0716e189fde65aee418c5bca398d8047ba"
     },
     {
+      "path": "audio/mission-unlock-10.m4a",
+      "bytes": 20032,
+      "sha256": "b54f7cee2afb3ea87723c0b6dc5abd81eda4c29d19a67242bb16cbcef1cf9bdd"
+    },
+    {
+      "path": "audio/mission-unlock-6.m4a",
+      "bytes": 20486,
+      "sha256": "91d5e1586e9fdedfbc5c0cd648ad4325173222b43fa78ca4b019175459899c61"
+    },
+    {
+      "path": "audio/mission-unlock-7.m4a",
+      "bytes": 20933,
+      "sha256": "3efcc233f271f8f9f8d08938d25e02ce0d5dda20137b23cf74ad30fec9e972fe"
+    },
+    {
+      "path": "audio/mission-unlock-8.m4a",
+      "bytes": 19666,
+      "sha256": "b709a320fcdd6043138cf3fa2f9020e8589dcababdb10f97677233d74c5048bb"
+    },
+    {
+      "path": "audio/mission-unlock-9.m4a",
+      "bytes": 20202,
+      "sha256": "f3d46470606d47c71db577426710f2551bea96b9d6b660b4b020c41e248acb30"
+    },
+    {
       "path": "audio/new-way-10.m4a",
       "bytes": 14703,
       "sha256": "31f95b08df4f630b3c72904de74938efda6a8fc9d758443a5c7a1d5e5264296d"
@@ -1356,8 +1381,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 7946,
-      "sha256": "8db46ece4278eca98da7f92fa65ec1fac203f3a87283b6fd17e7531db48b7378"
+      "bytes": 9917,
+      "sha256": "c93fa9a78e978c3d8c1f94928ce9d971ea85af4cccb1efd9df4480b22b214e0e"
     },
     {
       "path": "manifest.webmanifest",
@@ -1366,13 +1391,13 @@
     },
     {
       "path": "missions.css",
-      "bytes": 21030,
-      "sha256": "26fc0a5d488f86a901bd5114f1d40dfaad243825104ec9662dad4bfffff9feeb"
+      "bytes": 25067,
+      "sha256": "46358d2c336ba203e50ac6df877bc767c093785517c411cc02122a27b735b315"
     },
     {
       "path": "missions.js",
-      "bytes": 3417,
-      "sha256": "7249333329eaffcba230cbaecaffa38371faa3567b1e0488e3a7148256ad3571"
+      "bytes": 7358,
+      "sha256": "3b62ebf7691f1d98be6f959f904acbe7d7ab7bc6eec18a8122fcad8f5709cd6c"
     },
     {
       "path": "styles.css",

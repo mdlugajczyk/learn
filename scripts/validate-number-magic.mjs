@@ -46,6 +46,12 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   if (!appSource.includes('attachLooseBlockGesture') || !appSource.includes('attachCombineGesture')) {
     errors.push('Forward missions must build and combine through direct gestures');
   }
+  if (!html.includes('setupRangeChoices') || !html.includes('settingsRangeChoices')) {
+    errors.push('Parent setup and settings must expose learning range controls');
+  }
+  if (!appSource.includes('recordFactResult') || !appSource.includes('advanceLearning')) {
+    errors.push('Mission results must drive adaptive learning progression');
+  }
   if (!missionStyles.includes('.drag-coach') || !missionStyles.includes('.reverse-coach')) {
     errors.push('The playground needs animated, visual gesture coaching');
   }
@@ -66,6 +72,7 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
     }
   }
   expectedAudio.push('mission-try-again.m4a', 'mission-split-retry.m4a', 'mission-session-complete.m4a');
+  for (let number = 6; number <= 10; number += 1) expectedAudio.push(`mission-unlock-${number}.m4a`);
   const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))];
   for (const number of missionNumbers) {
     expectedAudio.push(`mission-build-first-${number}.m4a`, `mission-build-next-${number}.m4a`);
