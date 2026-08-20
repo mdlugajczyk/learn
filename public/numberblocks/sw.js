@@ -2,6 +2,7 @@ const BUILD_VERSION = '__PACK_VERSION__';
 const CACHE_PREFIX = 'tens-number-magic-';
 const PACK_URL = './offline-pack.json';
 let activeCacheName = `${CACHE_PREFIX}${BUILD_VERSION}`;
+let cleanupPromise = null;
 
 async function loadPack() {
   const response = await fetch(PACK_URL, { cache: 'no-store' });
@@ -17,6 +18,15 @@ async function notifyReady() {
   windows.forEach(client => client.postMessage({ type: 'OFFLINE_READY', version: activeCacheName }));
 }
 
+async function cleanOldCaches() {
+  if (!cleanupPromise) {
+    cleanupPromise = caches.keys().then(keys => Promise.all(keys
+      .filter(key => key.startsWith(CACHE_PREFIX) && key !== activeCacheName)
+      .map(key => caches.delete(key))));
+  }
+  return cleanupPromise;
+}
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const pack = await loadPack();
@@ -28,14 +38,9 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys
-      .filter(key => key.startsWith(CACHE_PREFIX) && key !== activeCacheName)
-      .map(key => caches.delete(key)));
-    await self.clients.claim();
-    await notifyReady();
-  })());
+  // Let pages that began under the previous worker finish with that same app
+  // version. The new worker takes control atomically on the next navigation.
+  event.waitUntil(notifyReady());
 });
 
 self.addEventListener('message', event => {
@@ -46,20 +51,21 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const requestUrl = new URL(event.request.url);
   if (requestUrl.origin !== self.location.origin) return;
+  if (event.request.mode === 'navigate') event.waitUntil(cleanOldCaches());
 
   event.respondWith((async () => {
-    const cached = await caches.match(event.request, { ignoreSearch: true });
+    const cache = await caches.open(activeCacheName);
+    const cached = await cache.match(event.request, { ignoreSearch: true });
     if (cached) return cached;
     try {
       const response = await fetch(event.request);
       if (response.ok) {
-        const cache = await caches.open(activeCacheName);
         cache.put(event.request, response.clone()).catch(() => {});
       }
       return response;
     } catch {
       if (event.request.mode === 'navigate') {
-        return (await caches.match('./index.html')) || Response.error();
+        return (await cache.match('./index.html')) || Response.error();
       }
       return Response.error();
     }

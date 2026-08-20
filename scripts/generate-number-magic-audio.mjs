@@ -5,12 +5,14 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 
 import { enumeratePartitions } from '../public/numberblocks/engine.js';
+import { MISSION_FACTS } from '../public/numberblocks/missions.js';
 
 const execFileAsync = promisify(execFile);
 const projectRoot = process.cwd();
 const outputRoot = path.join(projectRoot, 'public', 'numberblocks', 'audio');
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), 'number-magic-audio-'));
 const numberNames = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+const blockNoun = number => number === 1 ? 'block' : 'blocks';
 const voice = process.env.NUMBER_MAGIC_VOICE || 'Samantha';
 
 function sentenceName(number) {
@@ -56,10 +58,69 @@ for (let target = 2; target <= 10; target += 1) {
   }
 }
 
+const missionEntries = [
+  {
+    filename: 'mission-try-again.m4a',
+    text: 'Nearly! Count the blocks, then try another number friend.'
+  },
+  {
+    filename: 'mission-split-retry.m4a',
+    text: 'Almost! Let the blocks bounce back, count carefully, and pull again.'
+  },
+  {
+    filename: 'mission-session-complete.m4a',
+    text: 'Three missions complete! Ten is very proud of you!'
+  }
+];
+
+const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))].sort((left, right) => left - right);
+for (const number of missionNumbers) {
+  missionEntries.push(
+    {
+      filename: `mission-build-first-${number}.m4a`,
+      text: `First, build ${numberNames[number]}! Drag ${numberNames[number]} ${blockNoun(number)} into the glowing spot.`
+    },
+    {
+      filename: `mission-build-next-${number}.m4a`,
+      text: `Brilliant! Now build ${numberNames[number]} in the next glowing spot.`
+    }
+  );
+}
+
+for (const fact of MISSION_FACTS) {
+  const pair = `${fact.a}-${fact.b}`;
+  missionEntries.push(
+    {
+      filename: `mission-predict-${pair}.m4a`,
+      text: `What do ${numberNames[fact.a]} and ${numberNames[fact.b]} make? Choose a number friend!`
+    },
+    {
+      filename: `mission-combine-${pair}.m4a`,
+      text: `Yes! Now push ${numberNames[fact.a]} and ${numberNames[fact.b]} together!`
+    },
+    {
+      filename: `mission-split-${pair}.m4a`,
+      text: `Here is ${numberNames[fact.sum]}. Pull away ${numberNames[fact.a]} ${blockNoun(fact.a)} to make ${numberNames[fact.a]} and ${numberNames[fact.b]}!`
+    },
+    {
+      filename: `mission-split-made-${pair}.m4a`,
+      text: `You made ${numberNames[fact.a]} and ${numberNames[fact.b]}! What do they make?`
+    },
+    {
+      filename: `mission-success-${pair}.m4a`,
+      text: `${sentenceName(fact.a)} and ${numberNames[fact.b]} make ${numberNames[fact.sum]}! Number magic!`
+    }
+  );
+}
+
+entries.push(...missionEntries);
+
 await mkdir(outputRoot, { recursive: true });
 const selectedEntries = process.argv.includes('--play-prompts-only')
   ? entries.filter(entry => entry.filename.startsWith('play-'))
-  : entries;
+  : process.argv.includes('--mission-only')
+    ? missionEntries
+    : entries;
 try {
   for (let index = 0; index < selectedEntries.length; index += 1) {
     const entry = selectedEntries[index];

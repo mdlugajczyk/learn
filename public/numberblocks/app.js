@@ -1,10 +1,13 @@
 import {
-  chooseNumberChoices,
-  formatEquation,
-  partitionKey
-} from './engine.js';
+  answerChoices,
+  createMissionPlan,
+  factKey,
+  isCorrectSplit,
+  missionAudioName
+} from './missions.js';
 
-const STORAGE_KEY = 'tens-number-magic-v1';
+const STORAGE_KEY = 'tens-number-missions-v2';
+const LEGACY_STORAGE_KEY = 'tens-number-magic-v1';
 const NUMBER_NAMES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 const CHARACTER_DATA = {
   1: { columns: 1, color: '#ef4e55' },
@@ -21,18 +24,20 @@ const CHARACTER_DATA = {
 
 const elements = {};
 const state = {
-  target: 5,
-  parts: [5],
-  positions: [{ x: .5, y: .46 }],
-  history: [],
-  coachVisible: false,
-  choices: [5, 7, 10],
-  discoveries: {},
-  recent: {},
   sound: true,
   gentleMotion: false,
-  offlineReady: false,
   audioUnlocked: false,
+  offlineReady: false,
+  progress: { sessionsCompleted: 0, factWins: {}, mistakes: 0 },
+  session: [],
+  missionIndex: 0,
+  phase: 'home',
+  counts: [0, 0],
+  splitParts: [],
+  choices: [],
+  prompt: { file: 'welcome.m4a', text: '' },
+  phaseToken: 0,
+  celebrationTimer: null,
   toastTimer: null,
   resetArmedUntil: 0
 };
@@ -42,7 +47,7 @@ class SoundStudio {
     this.context = null;
     this.voice = new Audio();
     this.voice.preload = 'auto';
-    this.voice.volume = 0.92;
+    this.voice.volume = .94;
     this.voiceToken = 0;
   }
 
@@ -59,20 +64,21 @@ class SoundStudio {
     this.voiceToken += 1;
     this.voice.pause();
     this.voice.removeAttribute('src');
+    window.speechSynthesis?.cancel();
   }
 
-  speak(filename) {
+  speak(filename, fallbackText = '') {
     if (!state.sound || !state.audioUnlocked || !filename) return;
     const token = ++this.voiceToken;
     this.voice.pause();
     this.voice.src = `audio/${filename}`;
     this.voice.currentTime = 0;
     this.voice.play().catch(() => {
-      if (token !== this.voiceToken || !('speechSynthesis' in window)) return;
-      const fallback = new SpeechSynthesisUtterance(elements.mentorText?.textContent || '');
+      if (token !== this.voiceToken || !fallbackText || !('speechSynthesis' in window)) return;
+      const fallback = new SpeechSynthesisUtterance(fallbackText);
       fallback.lang = 'en-GB';
-      fallback.rate = 0.88;
-      fallback.pitch = 1.08;
+      fallback.rate = .86;
+      fallback.pitch = 1.06;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(fallback);
     });
@@ -83,12 +89,12 @@ class SoundStudio {
     if (this.context.state === 'suspended') this.context.resume().catch(() => {});
     const now = this.context.currentTime;
     const patterns = {
-      tap: [[420, 610, 0, .065, .055]],
-      slide: [[280, 350, 0, .045, .025]],
-      split: [[330, 520, 0, .16, .06], [520, 760, .08, .19, .055]],
-      join: [[310, 390, 0, .18, .06], [390, 520, .06, .24, .055]],
-      bounce: [[245, 470, 0, .11, .045], [470, 620, .1, .14, .038]],
-      discover: [[523, 620, 0, .2, .055], [659, 740, .09, .25, .05], [784, 880, .18, .3, .045]],
+      tap: [[420, 610, 0, .065, .05]],
+      block: [[310, 470, 0, .11, .055]],
+      snap: [[360, 650, 0, .15, .06], [620, 790, .08, .18, .04]],
+      join: [[280, 390, 0, .18, .06], [390, 620, .07, .26, .055]],
+      wrong: [[330, 260, 0, .13, .04]],
+      discover: [[523, 660, 0, .2, .055], [659, 830, .1, .26, .05], [784, 990, .2, .32, .045]],
       back: [[460, 330, 0, .09, .045]]
     };
     (patterns[kind] || patterns.tap).forEach(([from, to, delay, duration, volume]) => {
@@ -111,40 +117,43 @@ const sounds = new SoundStudio();
 
 function loadState() {
   try {
+    const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || '{}');
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    state.discoveries = stored.discoveries && typeof stored.discoveries === 'object' ? stored.discoveries : {};
-    state.recent = stored.recent && typeof stored.recent === 'object' ? stored.recent : {};
-    state.sound = stored.sound !== false;
-    state.gentleMotion = stored.gentleMotion === true;
+    state.sound = stored.sound ?? legacy.sound ?? true;
+    state.gentleMotion = stored.gentleMotion ?? legacy.gentleMotion ?? false;
+    if (stored.progress && typeof stored.progress === 'object') {
+      state.progress = {
+        sessionsCompleted: Number(stored.progress.sessionsCompleted || 0),
+        factWins: stored.progress.factWins || {},
+        mistakes: Number(stored.progress.mistakes || 0)
+      };
+    }
   } catch {
-    // A fresh, in-memory game still works if storage is unavailable.
+    // A fresh session still works if local storage is unavailable.
   }
 }
 
 function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      discoveries: state.discoveries,
-      recent: state.recent,
       sound: state.sound,
-      gentleMotion: state.gentleMotion
+      gentleMotion: state.gentleMotion,
+      progress: state.progress
     }));
   } catch {
-    // Progress persistence is helpful, but never blocks play.
+    // Device-local persistence is helpful but never blocks play.
   }
 }
 
 function cacheElements() {
   [
     'homeScreen', 'playScreen', 'homeMentor', 'playMentor', 'welcomeMentor',
-    'numberChoices', 'shuffleButton', 'offlinePill', 'offlineLabel', 'playTitle', 'playContent',
-    'backButton', 'mentorText', 'replayButton', 'partsStage', 'equation',
-    'undoButton', 'newWayButton', 'discoveryCount',
-    'recentDiscoveries', 'welcomeOverlay', 'startButton', 'settingsButton',
-    'settingsOverlay', 'closeSettingsButton', 'soundToggle', 'motionToggle',
-    'settingsOfflineDot', 'settingsOfflineTitle', 'settingsOfflineCopy',
-    'installInstructions', 'installedMessage', 'resetProgressButton', 'toast',
-    'celebration'
+    'missionButton', 'homeProgress', 'offlinePill', 'offlineLabel', 'playTitle',
+    'backButton', 'mentorText', 'replayButton', 'missionStage', 'missionProgress',
+    'equation', 'welcomeOverlay', 'startButton', 'settingsButton', 'settingsOverlay',
+    'closeSettingsButton', 'soundToggle', 'motionToggle', 'settingsOfflineDot',
+    'settingsOfflineTitle', 'settingsOfflineCopy', 'installInstructions',
+    'installedMessage', 'resetProgressButton', 'toast', 'celebration'
   ].forEach(id => { elements[id] = document.getElementById(id); });
   elements.soundButtons = [...document.querySelectorAll('[data-sound-button]')];
 }
@@ -152,6 +161,10 @@ function cacheElements() {
 function numberName(number, capitalized = false) {
   const value = NUMBER_NAMES[number] || String(number);
   return capitalized ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+}
+
+function blockNoun(number) {
+  return number === 1 ? 'block' : 'blocks';
 }
 
 function characterColor(number) {
@@ -187,19 +200,16 @@ function createCharacter(number) {
   face.append(makeElement('span', 'eye'), makeElement('span', 'eye'));
   const mouth = makeElement('span', 'mouth');
   body.appendChild(grid);
-
   if (number === 8) body.appendChild(makeElement('span', 'mask'));
-  if (number === 4) {
-    body.append(makeElement('span', 'brow brow-left'), makeElement('span', 'brow brow-right'));
-  }
+  if (number === 4) body.append(makeElement('span', 'brow brow-left'), makeElement('span', 'brow brow-right'));
   if (number === 6) {
     const spots = makeElement('span', 'six-spots');
     for (let index = 0; index < 6; index += 1) spots.appendChild(makeElement('span'));
     body.appendChild(spots);
   }
   if (number === 7) body.appendChild(makeElement('span', 'rainbow-hair'));
-
   body.append(face, mouth);
+
   ['left', 'right'].forEach(side => {
     const arm = makeElement('span', `arm arm-${side}`);
     arm.appendChild(makeElement('span', 'hand'));
@@ -210,6 +220,12 @@ function createCharacter(number) {
   });
   character.append(numberling, body);
   return character;
+}
+
+function characterHost(number, className = 'mission-character') {
+  const host = makeElement('span', `character-host ${className}`);
+  host.appendChild(createCharacter(number));
+  return host;
 }
 
 function renderMentors() {
@@ -228,568 +244,618 @@ function updatePreferenceUi() {
   });
 }
 
-function renderChoices() {
-  elements.numberChoices.replaceChildren();
-  state.choices.forEach((number, index) => {
-    const button = makeElement('button', `number-choice${number === 10 ? ' favorite' : ''}`);
-    button.type = 'button';
-    button.style.setProperty('--number-color', characterColor(number));
-    button.setAttribute('aria-label', `Play with number ${numberName(number)}`);
-    const host = makeElement('span', 'character-host choice-character');
-    host.appendChild(createCharacter(number));
-    const label = makeElement('span', 'choice-label', number);
-    button.append(host, label);
-    button.style.setProperty('--choice-index', index);
-    button.addEventListener('click', () => {
-      sounds.unlock();
-      sounds.effect('tap');
-      startNumber(number);
-    });
-    elements.numberChoices.appendChild(button);
-  });
+function renderHomeProgress() {
+  elements.homeProgress.replaceChildren();
+  const completed = state.progress.sessionsCompleted;
+  const label = makeElement('span', 'home-progress-label', completed
+    ? `${completed} ${completed === 1 ? 'mission set' : 'mission sets'} completed`
+    : 'Your first mission is ready');
+  const stars = makeElement('span', 'home-progress-stars');
+  for (let index = 0; index < 3; index += 1) stars.appendChild(makeElement('i', index < Math.min(3, completed) ? 'earned' : '', '★'));
+  elements.homeProgress.append(stars, label);
 }
 
-function shuffleChoices() {
-  const previous = state.choices.join(',');
-  for (let tries = 0; tries < 5; tries += 1) {
-    state.choices = chooseNumberChoices();
-    if (state.choices.join(',') !== previous) break;
-  }
-  sounds.effect('slide');
-  renderChoices();
+function clearPhaseTimers() {
+  state.phaseToken += 1;
+  clearTimeout(state.celebrationTimer);
+  state.celebrationTimer = null;
 }
 
-function startNumber(number) {
-  state.target = number;
-  state.parts = [number];
-  state.positions = defaultPositions(1);
-  state.history = [];
-  state.coachVisible = true;
+function setPrompt(file, text, repeatAfter = true) {
+  state.prompt = { file, text };
+  elements.mentorText.textContent = text;
+  sounds.speak(file, text);
+  if (!repeatAfter) return;
+  const token = state.phaseToken;
+  setTimeout(() => {
+    if (state.phaseToken === token && !document.hidden && state.phase !== 'success') sounds.speak(file, text);
+  }, 7200);
+}
+
+function currentMission() {
+  return state.session[state.missionIndex];
+}
+
+function startSession() {
+  clearPhaseTimers();
+  sounds.unlock();
+  state.session = createMissionPlan(state.progress);
+  state.missionIndex = 0;
   elements.homeScreen.hidden = true;
   elements.playScreen.hidden = false;
-  elements.playTitle.textContent = numberName(number, true).toUpperCase();
-  setMentorText('Pull some blocks away. Bump friends together. Flick them up!');
-  renderPlay();
-  sounds.speak(`play-${number}.m4a`);
-  requestAnimationFrame(() => { elements.playContent.scrollTop = 0; });
+  startMission();
+}
+
+function startMission() {
+  clearPhaseTimers();
+  const mission = currentMission();
+  state.counts = [0, 0];
+  state.splitParts = [];
+  state.choices = answerChoices(mission.fact.sum);
+  state.phase = mission.mode === 'forward' ? 'build-first' : 'split';
+  renderMission();
+  if (mission.mode === 'forward') {
+    setPrompt(`mission-build-first-${mission.fact.a}.m4a`, `First, build ${numberName(mission.fact.a)}! Drag blocks into the glowing spot.`);
+  } else {
+    setPrompt(missionAudioName('split', mission.fact), `Here is ${numberName(mission.fact.sum)}. Pull away ${numberName(mission.fact.a)} ${blockNoun(mission.fact.a)}!`);
+  }
 }
 
 function goHome() {
+  clearPhaseTimers();
   sounds.stopVoice();
   sounds.effect('back');
+  state.phase = 'home';
   elements.playScreen.hidden = true;
   elements.homeScreen.hidden = false;
-  shuffleChoices();
+  renderHomeProgress();
 }
 
-function setMentorText(text) {
-  elements.mentorText.textContent = text;
-}
-
-function compositionSentence(parts = state.parts) {
-  const words = canonicalParts(parts).map(number => numberName(number));
-  let joined = words[0] || '';
-  if (words.length === 2) joined = `${words[0]} and ${words[1]}`;
-  if (words.length > 2) joined = `${words.slice(0, -1).join(', ')}, and ${words.at(-1)}`;
-  return `${numberName(state.target, true)} is made of ${joined}!`;
-}
-
-function compositionAudioFilename(parts = state.parts) {
-  const key = partitionKey(parts).replaceAll('+', '-');
-  return `composition-${state.target}-${key}.m4a`;
-}
-
-function renderPlay(options = {}) {
-  renderParts(options);
+function renderMission() {
+  const mission = currentMission();
+  if (!mission) return;
+  elements.playTitle.textContent = `MISSION ${state.missionIndex + 1} OF 3`;
+  renderMissionProgress();
   renderEquation();
-  renderActions();
-  renderDiscoveries();
+  elements.missionStage.replaceChildren();
+  elements.missionStage.className = `mission-stage phase-${state.phase} mode-${mission.mode}`;
+
+  if (state.phase === 'build-first' || state.phase === 'build-second') renderBuildStage(mission.fact);
+  else if (state.phase === 'split') renderSplitStage(mission.fact);
+  else if (state.phase === 'choose') renderChoiceStage(mission.fact);
+  else if (state.phase === 'combine') renderCombineStage(mission.fact);
+  else if (state.phase === 'success') renderSuccessStage(mission.fact);
+  else if (state.phase === 'session-complete') renderSessionComplete();
 }
 
-function clamp(value, minimum, maximum) {
-  return Math.min(maximum, Math.max(minimum, value));
-}
-
-function canonicalParts(parts = state.parts) {
-  return [...parts].sort((left, right) => right - left);
-}
-
-function defaultPositions(count) {
-  if (count === 1) return [{ x: .5, y: .46 }];
-  if (count <= 4) {
-    return Array.from({ length: count }, (_, index) => ({
-      x: .17 + (index * .66) / (count - 1),
-      y: .55 + (index % 2 ? .035 : -.015)
-    }));
+function renderMissionProgress() {
+  elements.missionProgress.replaceChildren();
+  const sessionComplete = state.phase === 'session-complete';
+  for (let index = 0; index < 3; index += 1) {
+    const done = sessionComplete || index < state.missionIndex;
+    const active = !sessionComplete && index === state.missionIndex;
+    const pip = makeElement('span', `mission-pip${done ? ' done' : ''}${active ? ' active' : ''}`);
+    pip.appendChild(makeElement('i', '', done ? '★' : index + 1));
+    elements.missionProgress.appendChild(pip);
   }
-  const columns = Math.min(5, count);
-  const rows = Math.ceil(count / columns);
-  return Array.from({ length: count }, (_, index) => {
-    const row = Math.floor(index / columns);
-    const itemsInRow = Math.min(columns, count - row * columns);
-    const column = index % columns;
-    return {
-      x: (column + 1) / (itemsInRow + 1),
-      y: rows === 1 ? .56 : .38 + row * .31
-    };
-  });
 }
 
-function snapshotPlay() {
-  return {
-    parts: [...state.parts],
-    positions: state.positions.map(position => ({ ...position }))
-  };
-}
-
-function pushHistory() {
-  state.history.push(snapshotPlay());
-}
-
-function renderParts(options = {}) {
-  if (state.positions.length !== state.parts.length) state.positions = defaultPositions(state.parts.length);
-  elements.partsStage.replaceChildren();
-  elements.partsStage.className = `parts-stage parts-count-${state.parts.length}`;
-  state.parts.forEach((number, index) => {
-    const button = makeElement('button', `part-card${number > 1 ? ' splittable' : ''}`);
-    button.type = 'button';
-    button.dataset.partIndex = String(index);
-    button.dataset.gesture = number > 1 ? 'split-move-join-juggle' : 'move-join-juggle';
-    button.style.setProperty('--part-color', characterColor(number));
-    button.style.left = `${state.positions[index].x * 100}%`;
-    button.style.top = `${state.positions[index].y * 100}%`;
-    button.setAttribute('aria-label', number > 1
-      ? `Number ${number}. Pull its blocks apart to split. Drag its number badge onto a friend to join. Tap to bounce.`
-      : 'Number one. Drag its number badge onto a friend to join. Tap to bounce.');
-    const host = makeElement('span', 'character-host part-character');
-    host.appendChild(createCharacter(number));
-    const label = makeElement('span', 'part-label', number);
-    button.append(host, label);
-    if (options.arriveIndices?.includes(index)) {
-      button.classList.add('part-arrive');
-      button.style.setProperty('--arrive-rotate', index % 2 ? '7deg' : '-7deg');
-    }
-    if (options.joinedIndex === index) button.classList.add('part-joining');
-    attachPartGestures(button, index);
-    elements.partsStage.appendChild(button);
-  });
-  if (state.coachVisible && state.parts.length === 1) renderGestureCoach();
-}
-
-function attachPartGestures(button, index) {
-  let startX = 0;
-  let startY = 0;
-  let lastX = 0;
-  let lastY = 0;
-  let lastTime = 0;
-  let velocityX = 0;
-  let velocityY = 0;
-  let moved = false;
-  let armed = false;
-  let targetIndex = null;
-  let mode = 'move';
-  let chunk = 0;
-  let startCenterX = 0;
-  let startCenterY = 0;
-  let preview = null;
-  let selectedCubes = [];
-  let activePointerId = null;
-  let splitTimer = null;
-  let joinTimer = null;
-  let settleTimer = null;
-
-  button.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    if (activePointerId !== null) return;
-    event.preventDefault();
-    activePointerId = event.pointerId;
-    sounds.unlock();
-    dismissGestureCoach();
-    startX = event.clientX;
-    startY = event.clientY;
-    lastX = startX;
-    lastY = startY;
-    lastTime = performance.now();
-    velocityX = 0;
-    velocityY = 0;
-    moved = false;
-    armed = false;
-    targetIndex = null;
-    const cube = event.target.closest('.cube');
-    const value = state.parts[index];
-    mode = cube && value > 1 ? 'split' : 'move';
-    const cardRect = button.getBoundingClientRect();
-    startCenterX = cardRect.left + cardRect.width / 2;
-    startCenterY = cardRect.top + cardRect.height / 2;
-    if (mode === 'split') {
-      chunk = Math.min(Number(cube.dataset.cubeIndex) + 1, value - 1);
-      const cubes = [...button.querySelectorAll('.cube')];
-      selectedCubes = cubes.slice(0, chunk);
-      selectedCubes.forEach(item => item.classList.add('peel-cube'));
-      cubes.slice(chunk).forEach(item => item.classList.add('stay-cube'));
-      button.classList.add('peel-active');
-      preview = makeElement('span', 'split-preview', `${chunk} + ${value - chunk}`);
-      elements.partsStage.appendChild(preview);
-      moveSplitPreview(preview, event.clientX, event.clientY);
-    }
-    document.addEventListener('pointermove', move, { passive: false });
-    document.addEventListener('pointerup', finish);
-    document.addEventListener('pointercancel', finish);
-  });
-
-  const move = event => {
-    if (event.pointerId !== activePointerId) return;
-    event.preventDefault();
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    const now = performance.now();
-    const elapsed = Math.max(8, now - lastTime);
-    velocityX = (event.clientX - lastX) / elapsed;
-    velocityY = (event.clientY - lastY) / elapsed;
-    lastX = event.clientX;
-    lastY = event.clientY;
-    lastTime = now;
-    if (!moved && Math.hypot(dx, dy) < 9) return;
-    moved = true;
-    if (mode === 'split') {
-      selectedCubes.forEach(item => {
-        item.style.setProperty('--peel-x', `${dx}px`);
-        item.style.setProperty('--peel-y', `${dy}px`);
-      });
-      armed = Math.hypot(dx, dy) > 38;
-      button.classList.toggle('split-armed', armed);
-      preview?.classList.toggle('armed', armed);
-      moveSplitPreview(preview, event.clientX, event.clientY);
-      if (armed && !splitTimer) {
-        splitTimer = setTimeout(() => {
-          if (activePointerId !== null && armed) {
-            finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
-          }
-        }, 140);
-      } else if (!armed && splitTimer) {
-        clearTimeout(splitTimer);
-        splitTimer = null;
-      }
-      return;
-    }
-    button.classList.add('dragging');
-    moveCard(button, startCenterX + dx, startCenterY + dy);
-    targetIndex = findDropTarget(index, event.clientX, event.clientY);
-    showDropTarget(targetIndex);
-    clearTimeout(settleTimer);
-    settleTimer = null;
-    if (targetIndex !== null && !joinTimer) {
-      joinTimer = setTimeout(() => {
-        if (activePointerId !== null && targetIndex !== null) {
-          finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
-        }
-      }, 170);
-    } else if (targetIndex === null && joinTimer) {
-      clearTimeout(joinTimer);
-      joinTimer = null;
-    }
-    if (targetIndex === null) {
-      settleTimer = setTimeout(() => {
-        if (activePointerId !== null && targetIndex === null) {
-          finish({ pointerId: activePointerId, type: 'pointerup', clientX: lastX, clientY: lastY });
-        }
-      }, 220);
-    }
-  };
-
-  const finish = event => {
-    if (event.pointerId !== activePointerId) return;
-    clearTimeout(splitTimer);
-    clearTimeout(joinTimer);
-    clearTimeout(settleTimer);
-    splitTimer = null;
-    joinTimer = null;
-    settleTimer = null;
-    activePointerId = null;
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', finish);
-    document.removeEventListener('pointercancel', finish);
-    showDropTarget(null);
-    const cancelled = event.type === 'pointercancel';
-    if (mode === 'split') {
-      preview?.remove();
-      if (!cancelled && moved && armed) {
-        performGestureSplit(index, chunk, event.clientX, event.clientY);
-      } else {
-        button.classList.add('peel-return');
-        selectedCubes.forEach(item => {
-          item.style.removeProperty('--peel-x');
-          item.style.removeProperty('--peel-y');
-        });
-        setTimeout(() => button.classList.remove('peel-active', 'peel-return', 'split-armed'), 230);
-        if (!moved) hopPart(button);
-      }
-      return;
-    }
-    button.classList.remove('dragging');
-    if (!cancelled && moved) {
-      const finalRect = button.getBoundingClientRect();
-      state.positions[index] = positionFromCenter(finalRect.left + finalRect.width / 2, finalRect.top + finalRect.height / 2);
-      if (targetIndex !== null) {
-        joinSelectedParts(index, targetIndex);
-      } else if (velocityY < -.38 || Math.hypot(velocityX, velocityY) > .95) {
-        jugglePart(button, velocityX, velocityY);
-      } else {
-        button.classList.add('part-land');
-        setTimeout(() => button.classList.remove('part-land'), 380);
-      }
-    } else if (!cancelled) {
-      hopPart(button);
-    }
-  };
-
-  button.addEventListener('click', event => {
-    if (event.detail === 0) hopPart(button);
-  });
-}
-
-function moveCard(button, centerX, centerY) {
-  const stageRect = elements.partsStage.getBoundingClientRect();
-  const halfWidth = Math.min(button.offsetWidth / 2 + 6, stageRect.width / 2);
-  const halfHeight = Math.min(button.offsetHeight / 2 + 7, stageRect.height / 2);
-  const x = clamp(centerX, stageRect.left + halfWidth, stageRect.right - halfWidth);
-  const y = clamp(centerY, stageRect.top + halfHeight, stageRect.bottom - halfHeight);
-  button.style.left = `${x - stageRect.left}px`;
-  button.style.top = `${y - stageRect.top}px`;
-}
-
-function positionFromCenter(centerX, centerY) {
-  const stageRect = elements.partsStage.getBoundingClientRect();
-  return {
-    x: clamp((centerX - stageRect.left) / stageRect.width, .1, .9),
-    y: clamp((centerY - stageRect.top) / stageRect.height, .16, .84)
-  };
-}
-
-function moveSplitPreview(preview, clientX, clientY) {
-  if (!preview) return;
-  const stageRect = elements.partsStage.getBoundingClientRect();
-  preview.style.left = `${clamp(clientX - stageRect.left + 18, 46, stageRect.width - 46)}px`;
-  preview.style.top = `${clamp(clientY - stageRect.top - 28, 28, stageRect.height - 34)}px`;
-}
-
-function showDropTarget(targetIndex) {
-  elements.partsStage.querySelectorAll('.part-card').forEach(part => {
-    part.classList.toggle('drop-target', Number(part.dataset.partIndex) === targetIndex);
-  });
-}
-
-function findDropTarget(sourceIndex, x, y) {
-  let best = null;
-  let bestDistance = Infinity;
-  document.querySelectorAll('.part-card').forEach(part => {
-    const index = Number(part.dataset.partIndex);
-    if (index === sourceIndex) return;
-    const rect = part.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const distance = Math.hypot(x - centerX, y - centerY);
-    if ((x >= rect.left - 18 && x <= rect.right + 18 && y >= rect.top - 18 && y <= rect.bottom + 18) || distance < 72) {
-      if (distance < bestDistance) {
-        best = index;
-        bestDistance = distance;
-      }
-    }
-  });
-  return best;
+function equationToken(value, status = '') {
+  const numeric = Number.isInteger(value);
+  const token = makeElement('span', `${numeric ? 'equation-token' : 'equation-symbol'}${status ? ` ${status}` : ''}`, value);
+  if (numeric) token.style.setProperty('--token-color', characterColor(value));
+  return token;
 }
 
 function renderEquation() {
   elements.equation.replaceChildren();
-  if (state.parts.length === 1) {
-    elements.equation.appendChild(makeElement('span', 'equation-token', state.target));
-    elements.equation.firstElementChild.style.setProperty('--token-color', characterColor(state.target));
-    elements.equation.setAttribute('aria-label', numberName(state.target));
-    return;
-  }
-
-  const parts = canonicalParts();
-  const sequence = [state.target, '=', ...parts.flatMap((value, index) => index ? ['+', value] : [value])];
-  sequence.forEach((value, index) => {
-    const numeric = Number.isInteger(value);
-    const span = makeElement('span', numeric ? 'equation-token' : 'equation-symbol', value);
-    if (numeric) span.style.setProperty('--token-color', characterColor(value));
-    span.style.animationDelay = `${index * 28}ms`;
-    elements.equation.appendChild(span);
+  const mission = currentMission();
+  if (!mission) return;
+  const { a, b, sum } = mission.fact;
+  let values;
+  if (mission.mode === 'reverse' && state.phase === 'split') values = [sum, '=', '?', '+', '?'];
+  else if (state.phase === 'build-first') values = [a, '+', '?', '=', '?'];
+  else if (state.phase === 'build-second') values = [a, '+', b, '=', '?'];
+  else if (state.phase === 'success') values = [a, '+', b, '=', sum];
+  else values = [a, '+', b, '=', '?'];
+  values.forEach((value, index) => {
+    const pending = value === '?' ? 'pending' : '';
+    const token = equationToken(value, pending);
+    token.style.animationDelay = `${index * 35}ms`;
+    elements.equation.appendChild(token);
   });
-  elements.equation.setAttribute('aria-label', formatEquation(state.target, parts));
+  elements.equation.setAttribute('aria-label', values.join(' '));
 }
 
-function performGestureSplit(index, left, clientX, clientY) {
-  const value = state.parts[index];
-  if (!value || value < 2 || left < 1 || left >= value) return;
-  const oldCard = elements.partsStage.querySelector(`.part-card[data-part-index="${index}"]`);
-  oldCard?.classList.add('part-splitting');
-  sounds.effect('split');
+function buildZone(index, target, count, active) {
+  const zone = makeElement('div', `build-zone${active ? ' active' : ''}${count === target ? ' complete' : ''}`);
+  zone.dataset.zoneIndex = String(index);
+  zone.setAttribute('aria-label', `${numberName(target)} building spot. ${count} blocks placed.`);
+  zone.appendChild(makeElement('span', 'zone-number', target));
+  const content = makeElement('div', 'zone-content');
+  if (count > 0) content.appendChild(characterHost(count, 'mission-character build-character'));
+  else {
+    const ghost = makeElement('span', 'target-ghost');
+    const data = CHARACTER_DATA[target];
+    ghost.style.setProperty('--ghost-cols', data.columns);
+    for (let cube = 0; cube < target; cube += 1) ghost.appendChild(makeElement('i'));
+    content.appendChild(ghost);
+  }
+  zone.appendChild(content);
+  if (active) zone.appendChild(makeElement('span', 'zone-pulse', '✦'));
+  return zone;
+}
+
+function renderBuildStage(fact) {
+  const activeIndex = state.phase === 'build-first' ? 0 : 1;
+  const arena = makeElement('div', 'build-arena');
+  arena.append(
+    buildZone(0, fact.a, state.counts[0], activeIndex === 0),
+    makeElement('span', 'arena-operator', '+'),
+    buildZone(1, fact.b, state.counts[1], activeIndex === 1)
+  );
+  const tray = makeElement('div', 'block-tray');
+  tray.setAttribute('aria-label', 'Loose blocks');
+  const used = state.counts[0] + state.counts[1];
+  for (let index = used; index < fact.sum; index += 1) {
+    const block = makeElement('button', 'loose-block');
+    block.type = 'button';
+    block.setAttribute('aria-label', 'Loose number block. Drag it into the glowing spot.');
+    block.append(makeElement('span', 'loose-eye'), makeElement('span', 'loose-eye'));
+    attachLooseBlockGesture(block, activeIndex);
+    tray.appendChild(block);
+  }
+  const hint = makeElement('div', 'drag-coach');
+  hint.setAttribute('aria-hidden', 'true');
+  hint.append(makeElement('span', 'coach-mini-block'), makeElement('span', 'coach-finger', '☝'));
+  elements.missionStage.append(arena, hint, tray);
+}
+
+function pointInside(element, x, y, padding = 18) {
+  const rect = element.getBoundingClientRect();
+  return x >= rect.left - padding && x <= rect.right + padding && y >= rect.top - padding && y <= rect.bottom + padding;
+}
+
+function attachLooseBlockGesture(block, zoneIndex) {
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let moved = false;
+  let armed = false;
+  let acceptTimer = null;
+  let completed = false;
+
+  const cleanup = () => {
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', finish);
+    document.removeEventListener('pointercancel', finish);
+    clearTimeout(acceptTimer);
+  };
+
+  const accept = () => {
+    if (completed) return;
+    completed = true;
+    cleanup();
+    block.classList.add('block-accepted');
+    setTimeout(() => placeLooseBlock(zoneIndex), state.gentleMotion ? 10 : 110);
+  };
+
+  const move = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    event.preventDefault();
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (!moved && Math.hypot(dx, dy) < 7) return;
+    moved = true;
+    block.classList.add('dragging');
+    block.style.setProperty('--drag-x', `${dx}px`);
+    block.style.setProperty('--drag-y', `${dy}px`);
+    const zone = elements.missionStage.querySelector(`.build-zone[data-zone-index="${zoneIndex}"]`);
+    armed = pointInside(zone, event.clientX, event.clientY, 26);
+    zone?.classList.toggle('drop-ready', armed);
+    if (armed && !acceptTimer) acceptTimer = setTimeout(accept, 150);
+    if (!armed && acceptTimer) {
+      clearTimeout(acceptTimer);
+      acceptTimer = null;
+    }
+  };
+
+  const finish = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    cleanup();
+    if (event.type !== 'pointercancel' && armed) accept();
+    else {
+      block.classList.remove('dragging');
+      block.classList.add('block-return');
+      setTimeout(() => block.classList.remove('block-return'), 260);
+    }
+    pointerId = null;
+  };
+
+  block.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    sounds.unlock();
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', finish);
+    document.addEventListener('pointercancel', finish);
+  });
+  block.addEventListener('click', event => {
+    if (event.detail === 0) accept();
+  });
+}
+
+function placeLooseBlock(zoneIndex) {
+  const mission = currentMission();
+  const target = zoneIndex === 0 ? mission.fact.a : mission.fact.b;
+  if (state.counts[zoneIndex] >= target) return;
+  state.counts[zoneIndex] += 1;
+  sounds.effect(state.counts[zoneIndex] === target ? 'snap' : 'block');
+  renderMission();
+  if (state.counts[zoneIndex] !== target) return;
+  const token = state.phaseToken;
   setTimeout(() => {
-    pushHistory();
-    const originalPosition = state.positions[index];
-    const pulledPosition = positionFromCenter(clientX, clientY);
-    let directionX = pulledPosition.x - originalPosition.x;
-    let directionY = pulledPosition.y - originalPosition.y;
-    const distance = Math.hypot(directionX, directionY) || 1;
-    directionX /= distance;
-    directionY /= distance;
-    const restingPosition = {
-      x: clamp(originalPosition.x - directionX * .11, .1, .9),
-      y: clamp(originalPosition.y - directionY * .08, .16, .84)
-    };
-    state.parts.splice(index, 1, left, value - left);
-    state.positions.splice(index, 1, pulledPosition, restingPosition);
-    const isNew = recordDiscovery();
-    setMentorText(compositionSentence());
-    renderPlay({ arriveIndices: [index, index + 1] });
-    sounds.speak(compositionAudioFilename());
-    if (isNew) celebrateDiscovery();
-  }, state.gentleMotion ? 10 : 180);
+    if (state.phaseToken !== token) return;
+    clearPhaseTimers();
+    if (zoneIndex === 0) {
+      state.phase = 'build-second';
+      renderMission();
+      setPrompt(`mission-build-next-${mission.fact.b}.m4a`, `You built ${numberName(mission.fact.a)}! Now build ${numberName(mission.fact.b)}.`);
+    } else {
+      state.phase = 'choose';
+      renderMission();
+      setPrompt(missionAudioName('predict', mission.fact), `What do ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} make? Choose a number friend!`);
+    }
+  }, state.gentleMotion ? 20 : 520);
 }
 
-function joinSelectedParts(firstIndex, secondIndex) {
-  if (firstIndex === secondIndex) return;
-  const combinedValue = state.parts[firstIndex] + state.parts[secondIndex];
-  pushHistory();
-  const combinedIndex = Math.min(firstIndex, secondIndex);
-  const removedIndex = Math.max(firstIndex, secondIndex);
-  const landingPosition = { ...state.positions[secondIndex] };
-  state.parts[combinedIndex] = combinedValue;
-  state.parts.splice(removedIndex, 1);
-  state.positions[combinedIndex] = landingPosition;
-  state.positions.splice(removedIndex, 1);
-  const isWhole = state.parts.length === 1;
-  const isNew = !isWhole && recordDiscovery();
-  sounds.effect('join');
-  setMentorText(isWhole
-    ? `Back together! ${numberName(state.target, true)} is still ${numberName(state.target)}!`
-    : compositionSentence());
-  renderPlay({ joinedIndex: combinedIndex });
-  sounds.speak(isWhole ? `together-${state.target}.m4a` : compositionAudioFilename());
-  if (isNew) celebrateDiscovery();
+function partsPreview(fact) {
+  const preview = makeElement('div', 'parts-preview');
+  [fact.a, fact.b].forEach((value, index) => {
+    const friend = makeElement('div', `preview-friend preview-friend-${index + 1}`);
+    friend.append(characterHost(value, 'mission-character preview-character'), makeElement('span', 'friend-badge', value));
+    preview.appendChild(friend);
+    if (index === 0) preview.appendChild(makeElement('span', 'preview-plus', '+'));
+  });
+  return preview;
 }
 
-function hopPart(button) {
-  sounds.effect('bounce');
-  button.classList.remove('part-hop');
-  requestAnimationFrame(() => button.classList.add('part-hop'));
-  setTimeout(() => button.classList.remove('part-hop'), 560);
+function renderChoiceStage(fact) {
+  elements.missionStage.appendChild(partsPreview(fact));
+  const question = makeElement('div', 'choice-question', '?');
+  const grid = makeElement('div', 'answer-grid');
+  state.choices.forEach(value => {
+    const button = makeElement('button', 'answer-card');
+    button.type = 'button';
+    button.dataset.answer = String(value);
+    button.style.setProperty('--answer-color', characterColor(value));
+    button.setAttribute('aria-label', numberName(value, true));
+    button.append(characterHost(value, 'mission-character answer-character'), makeElement('span', 'answer-number', value));
+    button.addEventListener('click', () => chooseAnswer(button, value));
+    grid.appendChild(button);
+  });
+  elements.missionStage.append(question, grid);
 }
 
-function jugglePart(button, velocityX, velocityY) {
-  sounds.effect('bounce');
-  button.classList.add('juggling');
-  const host = button.querySelector('.part-character');
-  if (!host || state.gentleMotion) {
-    button.classList.remove('juggling');
+function chooseAnswer(button, value) {
+  if (state.phase !== 'choose') return;
+  const mission = currentMission();
+  sounds.unlock();
+  if (value !== mission.fact.sum) {
+    state.progress.mistakes += 1;
+    saveState();
+    sounds.effect('wrong');
+    button.classList.remove('wrong-answer');
+    requestAnimationFrame(() => button.classList.add('wrong-answer'));
+    setPrompt('mission-try-again.m4a', `Nearly! Count ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}, then try again.`, false);
     return;
   }
-  const sideways = clamp(velocityX * 62, -58, 58);
-  const lift = clamp(velocityY * 145, -122, -68);
-  host.animate([
-    { transform: 'translate3d(0, 0, 0) rotate(0)' },
-    { transform: `translate3d(${sideways * .55}px, ${lift}px, 0) rotate(${sideways * .18}deg)`, offset: .42 },
-    { transform: `translate3d(${sideways}px, 0, 0) rotate(${-sideways * .08}deg)`, offset: .72 },
-    { transform: `translate3d(${sideways * .72}px, -18px, 0) rotate(${sideways * .04}deg)`, offset: .84 },
-    { transform: 'translate3d(0, 0, 0) rotate(0)' }
-  ], { duration: 880, easing: 'cubic-bezier(.2,.72,.3,1)' }).finished.finally(() => {
-    button.classList.remove('juggling');
-  });
+  clearPhaseTimers();
+  sounds.effect('snap');
+  button.classList.add('correct-answer');
+  setTimeout(() => {
+    state.phase = 'combine';
+    renderMission();
+    setPrompt(missionAudioName('combine', mission.fact), `Yes! Now push ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} together!`);
+  }, state.gentleMotion ? 20 : 520);
 }
 
-function renderGestureCoach() {
-  const coach = makeElement('div', 'gesture-coach');
+function renderCombineStage(fact) {
+  const arena = makeElement('div', 'combine-arena');
+  [fact.a, fact.b].forEach((value, index) => {
+    const button = makeElement('button', `built-friend built-friend-${index + 1}`);
+    button.type = 'button';
+    button.dataset.friendIndex = String(index);
+    button.setAttribute('aria-label', `Number ${numberName(value)}. Push it into the other number friend.`);
+    button.append(characterHost(value, 'mission-character combine-character'), makeElement('span', 'friend-badge', value));
+    attachCombineGesture(button, index);
+    arena.appendChild(button);
+  });
+  const coach = makeElement('div', 'combine-coach');
   coach.setAttribute('aria-hidden', 'true');
-  const ghost = makeElement('span', 'coach-ghost');
-  const coachChunk = Math.min(2, state.target - 1);
-  for (let index = 0; index < Math.min(state.target, 5); index += 1) {
-    const cube = makeElement('i');
-    if (index < coachChunk) cube.classList.add('coach-pulled');
-    ghost.appendChild(cube);
-  }
-  const hand = makeElement('span', 'coach-hand', '☝');
-  const result = makeElement('span', 'coach-result', `${coachChunk} + ${state.target - coachChunk}`);
-  coach.append(ghost, hand, result);
-  elements.partsStage.appendChild(coach);
+  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '→'));
+  arena.appendChild(coach);
+  elements.missionStage.appendChild(arena);
 }
 
-function dismissGestureCoach() {
-  if (!state.coachVisible) return;
-  state.coachVisible = false;
-  elements.partsStage.querySelector('.gesture-coach')?.classList.add('coach-leave');
-}
+function attachCombineGesture(button, index) {
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let moved = false;
+  let touching = false;
+  let joinTimer = null;
+  let completed = false;
 
-function undo() {
-  const previous = state.history.pop();
-  if (!previous) return;
-  state.parts = previous.parts;
-  state.positions = previous.positions;
-  sounds.effect('back');
-  setMentorText(state.parts.length === 1 ? `Here is ${numberName(state.target)} again.` : compositionSentence());
-  renderPlay();
-}
-
-function startNewWay() {
-  if (state.parts.length > 1) pushHistory();
-  state.parts = [state.target];
-  state.positions = defaultPositions(1);
-  state.coachVisible = true;
-  sounds.effect('slide');
-  setMentorText('Try a new way: pull a different block group away!');
-  renderPlay({ joinedIndex: 0 });
-  sounds.speak(`new-way-${state.target}.m4a`);
-}
-
-function recordDiscovery() {
-  if (state.parts.length < 2) return false;
-  const targetKey = String(state.target);
-  const key = partitionKey(state.parts);
-  const discoveries = new Set(state.discoveries[targetKey] || []);
-  const isNew = !discoveries.has(key);
-  discoveries.add(key);
-  state.discoveries[targetKey] = [...discoveries];
-  const recent = [key, ...(state.recent[targetKey] || []).filter(item => item !== key)].slice(0, 4);
-  state.recent[targetKey] = recent;
-  saveState();
-  return isNew;
-}
-
-function renderDiscoveries() {
-  const targetKey = String(state.target);
-  const count = (state.discoveries[targetKey] || []).length;
-  elements.discoveryCount.textContent = `${count} ${count === 1 ? 'way' : 'ways'} found`;
-  elements.recentDiscoveries.replaceChildren();
-  (state.recent[targetKey] || []).slice(0, 3).forEach(key => {
-    elements.recentDiscoveries.appendChild(makeElement('span', 'discovery-badge', key));
+  const target = () => elements.missionStage.querySelector(`.built-friend[data-friend-index="${index === 0 ? 1 : 0}"]`);
+  const cleanup = () => {
+    clearTimeout(joinTimer);
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', finish);
+    document.removeEventListener('pointercancel', finish);
+  };
+  const complete = () => {
+    if (completed) return;
+    completed = true;
+    cleanup();
+    button.classList.add('magnet-join');
+    target()?.classList.add('magnet-target');
+    setTimeout(completeMission, state.gentleMotion ? 20 : 260);
+  };
+  const move = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    event.preventDefault();
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (!moved && Math.hypot(dx, dy) < 7) return;
+    moved = true;
+    button.classList.add('dragging');
+    button.style.setProperty('--drag-x', `${dx}px`);
+    button.style.setProperty('--drag-y', `${dy}px`);
+    touching = pointInside(target(), event.clientX, event.clientY, 32);
+    target()?.classList.toggle('drop-ready', touching);
+    if (touching && !joinTimer) joinTimer = setTimeout(complete, 150);
+    if (!touching && joinTimer) {
+      clearTimeout(joinTimer);
+      joinTimer = null;
+    }
+  };
+  const finish = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    cleanup();
+    if (event.type !== 'pointercancel' && touching) complete();
+    else {
+      button.classList.remove('dragging');
+      button.classList.add('friend-hop');
+      setTimeout(() => button.classList.remove('friend-hop'), 520);
+    }
+  };
+  button.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    sounds.unlock();
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', finish);
+    document.addEventListener('pointercancel', finish);
   });
 }
 
-function renderActions() {
-  elements.undoButton.disabled = state.history.length === 0;
+function renderSplitStage(fact) {
+  const splitArena = makeElement('div', 'split-arena');
+  const pads = makeElement('div', 'split-targets');
+  [fact.a, fact.b].forEach(value => pads.appendChild(makeElement('span', 'split-target', value)));
+  const whole = makeElement('button', 'reverse-whole');
+  whole.type = 'button';
+  whole.setAttribute('aria-label', `Number ${numberName(fact.sum)}. Pull some of its blocks away.`);
+  whole.append(characterHost(fact.sum, 'mission-character reverse-character'), makeElement('span', 'friend-badge', fact.sum));
+  attachSplitGesture(whole, fact);
+  const coach = makeElement('div', 'reverse-coach');
+  coach.setAttribute('aria-hidden', 'true');
+  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '↗'));
+  splitArena.append(pads, whole, coach);
+  elements.missionStage.appendChild(splitArena);
 }
 
-function celebrateDiscovery() {
-  sounds.effect('discover');
-  showToast('A brand-new way! ✦');
+function attachSplitGesture(button, fact) {
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let lastX = 0;
+  let lastY = 0;
+  let chunk = 0;
+  let moved = false;
+  let armed = false;
+  let splitTimer = null;
+  let selected = [];
+  let completed = false;
+
+  const cleanup = () => {
+    clearTimeout(splitTimer);
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', finish);
+    document.removeEventListener('pointercancel', finish);
+  };
+  const resolve = () => {
+    if (completed) return;
+    completed = true;
+    cleanup();
+    const parts = [chunk, fact.sum - chunk];
+    if (isCorrectSplit(fact, parts)) {
+      sounds.effect('snap');
+      button.classList.add('split-success');
+      setTimeout(() => completeSplit(parts), state.gentleMotion ? 20 : 260);
+    } else {
+      sounds.effect('wrong');
+      button.classList.add('split-wrong');
+      setPrompt('mission-split-retry.m4a', `Almost! Try pulling ${numberName(fact.a)} ${blockNoun(fact.a)} away.`, false);
+      setTimeout(() => renderMission(), state.gentleMotion ? 20 : 480);
+    }
+  };
+  const move = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    event.preventDefault();
+    lastX = event.clientX;
+    lastY = event.clientY;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (!moved && Math.hypot(dx, dy) < 7) return;
+    moved = true;
+    selected.forEach(cube => {
+      cube.style.setProperty('--peel-x', `${dx}px`);
+      cube.style.setProperty('--peel-y', `${dy}px`);
+    });
+    armed = Math.hypot(dx, dy) > 48;
+    button.classList.toggle('split-armed', armed);
+    const preview = elements.missionStage.querySelector('.mission-split-preview');
+    if (preview) {
+      preview.textContent = `${chunk} + ${fact.sum - chunk}`;
+      preview.classList.toggle('armed', armed);
+      const arena = elements.missionStage.getBoundingClientRect();
+      preview.style.left = `${Math.min(arena.width - 44, Math.max(44, event.clientX - arena.left + 20))}px`;
+      preview.style.top = `${Math.min(arena.height - 30, Math.max(28, event.clientY - arena.top - 24))}px`;
+    }
+    if (armed && !splitTimer) splitTimer = setTimeout(resolve, 170);
+    if (!armed && splitTimer) {
+      clearTimeout(splitTimer);
+      splitTimer = null;
+    }
+  };
+  const finish = event => {
+    if (event.pointerId !== pointerId || completed) return;
+    cleanup();
+    elements.missionStage.querySelector('.mission-split-preview')?.remove();
+    if (event.type !== 'pointercancel' && moved && armed) resolve();
+    else {
+      selected.forEach(cube => {
+        cube.style.removeProperty('--peel-x');
+        cube.style.removeProperty('--peel-y');
+      });
+      button.classList.add('split-return');
+      setTimeout(() => button.classList.remove('split-return', 'split-armed'), 280);
+    }
+  };
+  button.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    const cubes = [...button.querySelectorAll('.cube')];
+    const touchedCube = event.target.closest?.('.cube');
+    const cube = touchedCube || cubes.reduce((nearest, candidate) => {
+      const rect = candidate.getBoundingClientRect();
+      const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
+      return !nearest || distance < nearest.distance ? { candidate, distance } : nearest;
+    }, null)?.candidate;
+    if (!cube) return;
+    event.preventDefault();
+    sounds.unlock();
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    lastX = startX;
+    lastY = startY;
+    chunk = Math.min(Number(cube.dataset.cubeIndex) + 1, fact.sum - 1);
+    selected = cubes.slice(0, chunk);
+    selected.forEach(item => item.classList.add('peel-cube'));
+    cubes.slice(chunk).forEach(item => item.classList.add('stay-cube'));
+    const preview = makeElement('span', 'mission-split-preview', `${chunk} + ${fact.sum - chunk}`);
+    elements.missionStage.appendChild(preview);
+    document.addEventListener('pointermove', move, { passive: false });
+    document.addEventListener('pointerup', finish);
+    document.addEventListener('pointercancel', finish);
+  });
+}
+
+function completeSplit(parts) {
+  clearPhaseTimers();
+  const mission = currentMission();
+  state.splitParts = parts;
+  state.phase = 'choose';
+  renderMission();
+  setPrompt(missionAudioName('split-made', mission.fact), `You made ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}! What do they make?`);
+}
+
+function completeMission() {
+  if (state.phase !== 'combine') return;
+  clearPhaseTimers();
+  const mission = currentMission();
+  state.phase = 'success';
+  const key = factKey(mission.fact);
+  state.progress.factWins[key] = Number(state.progress.factWins[key] || 0) + 1;
+  saveState();
+  sounds.effect('join');
+  renderMission();
+  setPrompt(missionAudioName('success', mission.fact), `${numberName(mission.fact.a, true)} and ${numberName(mission.fact.b)} make ${numberName(mission.fact.sum)}! Number magic!`, false);
+  celebrate();
+  state.celebrationTimer = setTimeout(nextMission, state.gentleMotion ? 900 : 3200);
+}
+
+function renderSuccessStage(fact) {
+  const success = makeElement('div', 'mission-success');
+  success.append(
+    makeElement('span', 'success-spark success-spark-1', '✦'),
+    characterHost(fact.sum, 'mission-character success-character'),
+    makeElement('span', 'success-number', fact.sum),
+    makeElement('span', 'success-spark success-spark-2', '★')
+  );
+  elements.missionStage.appendChild(success);
+}
+
+function nextMission() {
+  clearPhaseTimers();
+  state.missionIndex += 1;
+  if (state.missionIndex < state.session.length) {
+    startMission();
+    return;
+  }
+  state.progress.sessionsCompleted += 1;
+  saveState();
+  state.missionIndex = 2;
+  state.phase = 'session-complete';
+  renderMission();
+  setPrompt('mission-session-complete.m4a', 'Three missions complete! Ten is very proud of you!', false);
+}
+
+function renderSessionComplete() {
+  elements.equation.replaceChildren();
+  elements.equation.setAttribute('aria-label', 'Mission complete');
+  const card = makeElement('div', 'session-complete-card');
+  card.append(
+    makeElement('span', 'session-stars', '★ ✦ ★'),
+    characterHost(10, 'mission-character session-ten'),
+    makeElement('h2', '', 'Mission complete!'),
+    makeElement('p', '', 'Three number challenges solved')
+  );
+  const again = makeElement('button', 'mission-again-button');
+  again.type = 'button';
+  again.append(makeElement('span', '', 'Play again'), makeElement('span', '', '★'));
+  again.addEventListener('click', startSession);
+  card.appendChild(again);
+  elements.missionStage.appendChild(card);
+  renderHomeProgress();
+}
+
+function celebrate() {
   if (state.gentleMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   elements.celebration.replaceChildren();
   const colors = ['#ef4e55', '#ffd84d', '#43b876', '#34a7df', '#aa67c8', '#fff'];
-  for (let index = 0; index < 22; index += 1) {
+  for (let index = 0; index < 24; index += 1) {
     const piece = makeElement('span', 'celebration-piece');
     piece.style.setProperty('--left', `${45 + Math.random() * 10}%`);
     piece.style.setProperty('--top', `${34 + Math.random() * 12}%`);
-    piece.style.setProperty('--x', `${-165 + Math.random() * 330}px`);
-    piece.style.setProperty('--y', `${-150 + Math.random() * 290}px`);
-    piece.style.setProperty('--spin', `${-300 + Math.random() * 600}deg`);
-    piece.style.setProperty('--delay', `${Math.random() * 120}ms`);
-    piece.style.setProperty('--size', `${6 + Math.random() * 8}px`);
+    piece.style.setProperty('--x', `${-170 + Math.random() * 340}px`);
+    piece.style.setProperty('--y', `${-160 + Math.random() * 300}px`);
+    piece.style.setProperty('--spin', `${-320 + Math.random() * 640}deg`);
+    piece.style.setProperty('--delay', `${Math.random() * 130}ms`);
+    piece.style.setProperty('--size', `${7 + Math.random() * 9}px`);
     piece.style.setProperty('--radius', index % 3 === 0 ? '50%' : '3px');
     piece.style.setProperty('--color', colors[index % colors.length]);
     elements.celebration.appendChild(piece);
   }
-  setTimeout(() => elements.celebration.replaceChildren(), 1300);
+  setTimeout(() => elements.celebration.replaceChildren(), 1500);
 }
 
 function showToast(message) {
@@ -823,17 +889,16 @@ function resetProgress() {
     elements.resetProgressButton.textContent = 'Tap again to reset everything';
     showToast('Tap reset once more to confirm');
     setTimeout(() => {
-      if (Date.now() >= state.resetArmedUntil) elements.resetProgressButton.textContent = 'Reset discoveries';
+      if (Date.now() >= state.resetArmedUntil) elements.resetProgressButton.textContent = 'Reset mission progress';
     }, 3600);
     return;
   }
-  state.discoveries = {};
-  state.recent = {};
+  state.progress = { sessionsCompleted: 0, factWins: {}, mistakes: 0 };
   state.resetArmedUntil = 0;
-  elements.resetProgressButton.textContent = 'Reset discoveries';
+  elements.resetProgressButton.textContent = 'Reset mission progress';
   saveState();
-  renderDiscoveries();
-  showToast('Discoveries reset');
+  renderHomeProgress();
+  showToast('Mission progress reset');
 }
 
 function isStandalone() {
@@ -846,7 +911,7 @@ function updateOfflineUi() {
   elements.settingsOfflineDot.classList.toggle('ready', state.offlineReady);
   elements.settingsOfflineTitle.textContent = state.offlineReady ? 'Ready to play offline' : 'Preparing offline play';
   elements.settingsOfflineCopy.textContent = state.offlineReady
-    ? 'Characters, voices, sounds, and progress work without internet.'
+    ? 'Missions, characters, voices, and progress work without internet.'
     : 'Keep this page open for a moment while the app is saved.';
 }
 
@@ -859,27 +924,21 @@ function updateInstallUi() {
 async function registerOfflineApp() {
   if (!('serviceWorker' in navigator) || !window.isSecureContext) {
     elements.offlineLabel.textContent = 'Open securely to enable offline play';
-    elements.settingsOfflineTitle.textContent = 'Offline install unavailable here';
-    elements.settingsOfflineCopy.textContent = 'The hosted app will support offline play.';
     return;
   }
-
   navigator.serviceWorker.addEventListener('message', event => {
     if (event.data?.type === 'OFFLINE_READY') {
       state.offlineReady = true;
       updateOfflineUi();
     }
   });
-
   try {
     const registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
     await navigator.serviceWorker.ready;
     (registration.active || registration.waiting || registration.installing)?.postMessage({ type: 'CHECK_READY' });
-    if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({ type: 'CHECK_READY' });
+    navigator.serviceWorker.controller?.postMessage({ type: 'CHECK_READY' });
   } catch {
     elements.offlineLabel.textContent = 'Offline save will retry next time';
-    elements.settingsOfflineTitle.textContent = 'Offline save paused';
-    elements.settingsOfflineCopy.textContent = 'Play online now; the app will retry automatically.';
   }
 }
 
@@ -887,16 +946,15 @@ function wireEvents() {
   elements.startButton.addEventListener('click', () => {
     sounds.unlock();
     elements.welcomeOverlay.hidden = true;
-    sounds.speak('welcome.m4a');
+    sounds.speak('welcome.m4a', "Hello, number maker! I'm Ten. Ready for some number magic?");
   });
-  elements.shuffleButton.addEventListener('click', shuffleChoices);
+  elements.missionButton.addEventListener('click', startSession);
   elements.backButton.addEventListener('click', goHome);
   elements.replayButton.addEventListener('click', () => {
+    sounds.unlock();
     sounds.effect('tap');
-    sounds.speak(state.parts.length > 1 ? compositionAudioFilename() : `play-${state.target}.m4a`);
+    sounds.speak(state.prompt.file, state.prompt.text);
   });
-  elements.undoButton.addEventListener('click', undo);
-  elements.newWayButton.addEventListener('click', startNewWay);
   elements.soundButtons.forEach(button => button.addEventListener('click', toggleSound));
   elements.settingsButton.addEventListener('click', openSettings);
   elements.offlinePill.addEventListener('click', openSettings);
@@ -928,7 +986,7 @@ function init() {
   cacheElements();
   loadState();
   renderMentors();
-  renderChoices();
+  renderHomeProgress();
   updatePreferenceUi();
   updateOfflineUi();
   updateInstallUi();

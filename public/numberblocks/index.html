@@ -12,6 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="missions.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -50,15 +51,18 @@
 
         <div class="home-title-wrap">
           <p class="eyebrow">TEN HAS A NUMBER MISSION!</p>
-          <h1 id="homeTitle">Who shall we<br><span>make today?</span></h1>
+          <h1 id="homeTitle">Ready to build<br><span>number magic?</span></h1>
         </div>
 
-        <div id="numberChoices" class="number-choices" role="group" aria-label="Choose a number"></div>
-
-        <button id="shuffleButton" class="shuffle-button" type="button">
-          <span aria-hidden="true">↻</span>
-          Three different numbers
+        <button id="missionButton" class="mission-launch" type="button" aria-label="Start Ten's three number missions">
+          <span class="mission-launch-preview" aria-hidden="true">
+            <i>2</i><b>+</b><i>3</i><b>=</b><i class="mission-mystery">?</i>
+          </span>
+          <span class="mission-launch-copy"><strong>Start Ten's Mission</strong><small>Three playful challenges</small></span>
+          <span class="mission-launch-star" aria-hidden="true">★</span>
         </button>
+
+        <div id="homeProgress" class="home-progress" aria-label="Mission progress"></div>
 
         <button id="offlinePill" class="offline-pill" type="button" aria-label="Open offline information">
           <span class="offline-dot" aria-hidden="true"></span>
@@ -69,12 +73,12 @@
 
     <section id="playScreen" class="screen play-screen" aria-labelledby="playTitle" hidden>
       <header class="app-header play-header">
-        <button id="backButton" class="round-button back-button" type="button" aria-label="Choose another number">
+        <button id="backButton" class="round-button back-button" type="button" aria-label="Leave the mission">
           <span aria-hidden="true">←</span>
         </button>
         <div class="play-heading">
-          <span>MAKING</span>
-          <strong id="playTitle">FIVE</strong>
+          <span>TEN'S</span>
+          <strong id="playTitle">MISSION 1 OF 3</strong>
         </div>
         <button class="round-button" data-sound-button type="button" aria-label="Turn sound off">
           <span class="sound-on" aria-hidden="true">♪</span>
@@ -82,36 +86,18 @@
         </button>
       </header>
 
-      <div id="playContent" class="play-content">
-        <div class="mentor-strip">
+      <div id="playContent" class="play-content mission-play-content">
+        <div class="mentor-strip mission-mentor-strip">
           <div id="playMentor" class="character-host mentor-mini" aria-hidden="true"></div>
           <div class="speech-bubble">
-            <p id="mentorText">Pull blocks apart. Bump friends together. Flick them up!</p>
+            <p id="mentorText">Listen to Ten, then touch the blocks!</p>
             <button id="replayButton" class="replay-button" type="button" aria-label="Hear Ten again">♪</button>
           </div>
         </div>
 
-        <div class="playground-shell">
-          <div id="partsStage" class="parts-stage" role="group" aria-label="Touch playground for number friends"></div>
-          <div class="stage-tools" aria-label="Playground recovery controls">
-            <button id="undoButton" class="stage-tool" type="button" disabled aria-label="Undo the last number change">
-              <span aria-hidden="true">↶</span>
-            </button>
-            <button id="newWayButton" class="stage-tool stage-tool-new" type="button" aria-label="Put the number back together and try a new way">
-              <span aria-hidden="true">✦</span>
-            </button>
-          </div>
-        </div>
-
-        <div id="equation" class="equation" aria-live="polite"></div>
-
-        <div class="discovery-card">
-          <div class="discovery-title">
-            <span class="discovery-star" aria-hidden="true">★</span>
-            <span><strong id="discoveryCount">0 ways found</strong><small>Every way is number magic</small></span>
-          </div>
-          <div id="recentDiscoveries" class="recent-discoveries" aria-label="Recently discovered ways"></div>
-        </div>
+        <div id="equation" class="equation mission-equation" aria-live="polite"></div>
+        <div id="missionStage" class="mission-stage" aria-live="polite"></div>
+        <div id="missionProgress" class="mission-progress" aria-label="Session progress"></div>
       </div>
     </section>
 
@@ -168,10 +154,10 @@
 
         <section class="setting-section privacy-section">
           <h3>Private by design</h3>
-          <p>No account, ads, analytics, camera, or location. Discoveries stay on this device.</p>
+          <p>No account, ads, analytics, camera, or location. Mission progress stays on this device.</p>
         </section>
 
-        <button id="resetProgressButton" class="reset-button" type="button">Reset discoveries</button>
+        <button id="resetProgressButton" class="reset-button" type="button">Reset mission progress</button>
       </div>
     </div>
 

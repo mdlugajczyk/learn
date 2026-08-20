@@ -1,6 +1,7 @@
 import { access, readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { enumeratePartitions } from '../public/numberblocks/engine.js';
+import { MISSION_FACTS } from '../public/numberblocks/missions.js';
 
 const projectRoot = process.cwd();
 const appRoot = path.join(projectRoot, 'public', 'numberblocks');
@@ -17,7 +18,7 @@ async function exists(file) {
 export async function validateNumberMagic({ strictAudio = true } = {}) {
   const errors = [];
   const required = [
-    'index.html', 'styles.css', 'app.js', 'engine.js', 'sw.js',
+    'index.html', 'styles.css', 'missions.css', 'app.js', 'engine.js', 'missions.js', 'sw.js',
     'manifest.webmanifest', 'offline-pack.json', 'icons/icon-192.png',
     'icons/icon-512.png', 'icons/icon-maskable-512.png'
   ];
@@ -28,27 +29,33 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   const html = await readFile(path.join(appRoot, 'index.html'), 'utf8');
   const appSource = await readFile(path.join(appRoot, 'app.js'), 'utf8');
   const styles = await readFile(path.join(appRoot, 'styles.css'), 'utf8');
+  const missionStyles = await readFile(path.join(appRoot, 'missions.css'), 'utf8');
   const worker = await readFile(path.join(appRoot, 'sw.js'), 'utf8');
   const manifest = JSON.parse(await readFile(path.join(appRoot, 'manifest.webmanifest'), 'utf8'));
   const offlinePack = JSON.parse(await readFile(path.join(appRoot, 'offline-pack.json'), 'utf8'));
 
-  if (/https?:\/\//i.test(html + appSource + styles)) errors.push('Runtime source contains a remote URL');
+  if (/https?:\/\//i.test(html + appSource + styles + missionStyles)) errors.push('Runtime source contains a remote URL');
   if (manifest.display !== 'standalone') errors.push('Manifest must use standalone display mode');
   if (manifest.orientation !== 'portrait-primary') errors.push('Manifest must prefer portrait orientation');
   if (!html.includes('viewport-fit=cover')) errors.push('Missing iPhone safe-area viewport support');
-  if (!styles.includes('safe-area-inset-bottom')) errors.push('Missing safe-area CSS');
+  if (!(styles + missionStyles).includes('safe-area-inset-bottom')) errors.push('Missing safe-area CSS');
   if (html.includes('splitButton') || html.includes('Split it!')) errors.push('The playground must not use a split button');
-  if (!appSource.includes("addEventListener('pointerdown'") || !appSource.includes('performGestureSplit')) {
-    errors.push('The playground must split through direct pointer gestures');
+  if (!appSource.includes("addEventListener('pointerdown'") || !appSource.includes('attachSplitGesture')) {
+    errors.push('Reverse missions must split through direct pointer gestures');
   }
-  if (!appSource.includes('findDropTarget') || !appSource.includes('jugglePart')) {
-    errors.push('The playground must support animated joining and juggling');
+  if (!appSource.includes('attachLooseBlockGesture') || !appSource.includes('attachCombineGesture')) {
+    errors.push('Forward missions must build and combine through direct gestures');
   }
-  if (!styles.includes('.gesture-coach') || !styles.includes('.peel-cube')) {
+  if (!missionStyles.includes('.drag-coach') || !missionStyles.includes('.reverse-coach')) {
     errors.push('The playground needs animated, visual gesture coaching');
+  }
+  if (!missionStyles.includes('--loose-unit: clamp(56px') || !missionStyles.includes('@media (min-width: 700px)')) {
+    errors.push('Mission blocks must have large phone and iPad sizing rules');
   }
   if (!worker.includes("cache.addAll")) errors.push('Service worker must atomically cache the app pack');
   if (!worker.includes("mode === 'navigate'")) errors.push('Service worker needs an offline navigation fallback');
+  if (worker.includes('clients.claim()')) errors.push('Service worker must not take over a page midway through loading');
+  if (!worker.includes('cache.match(event.request')) errors.push('Service worker must read only from its active version cache');
   if (!Array.isArray(offlinePack.assets)) errors.push('Offline pack assets must be an array');
 
   const expectedAudio = ['welcome.m4a'];
@@ -57,6 +64,21 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
     for (const parts of enumeratePartitions(target, { includeWhole: false })) {
       expectedAudio.push(`composition-${target}-${parts.join('-')}.m4a`);
     }
+  }
+  expectedAudio.push('mission-try-again.m4a', 'mission-split-retry.m4a', 'mission-session-complete.m4a');
+  const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))];
+  for (const number of missionNumbers) {
+    expectedAudio.push(`mission-build-first-${number}.m4a`, `mission-build-next-${number}.m4a`);
+  }
+  for (const fact of MISSION_FACTS) {
+    const pair = `${fact.a}-${fact.b}`;
+    expectedAudio.push(
+      `mission-predict-${pair}.m4a`,
+      `mission-combine-${pair}.m4a`,
+      `mission-split-${pair}.m4a`,
+      `mission-split-made-${pair}.m4a`,
+      `mission-success-${pair}.m4a`
+    );
   }
   if (strictAudio) {
     for (const filename of expectedAudio) {
