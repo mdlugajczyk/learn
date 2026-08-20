@@ -1,4 +1,5 @@
-import { CURRICULUM, cumulativeGraphemes, itemById, itemsForStage } from './data/curriculum.js';
+import { CURRICULUM, itemById, itemsForStage } from './data/curriculum.js';
+import { advanceLesson, ensureLessonPath, isSafeAuditoryChoice, itemCanBeRead, knownGraphemesForLesson, lessonFor, lessonsForStage } from './learning-path.js';
 
 export const PROGRESS_SCHEMA_VERSION = 1;
 export const REVIEW_INTERVALS = [1, 2, 4, 7, 14];
@@ -19,7 +20,8 @@ export function createProgress(profile = {}) {
     errors: {},
     parentProbes: [],
     exploration: { discoveriesByStage: {}, lastLanding: null },
-    settings: { sound: true, effects: true, motion: true },
+    lessonPath: {},
+    settings: { sound: true, effects: true, motion: true, controlsTaught: false },
     offline: { version: null, verifiedAt: null, assetCount: 0, totalBytes: 0 },
     updatedAt: new Date().toISOString()
   };
@@ -71,53 +73,84 @@ function uniqueItems(values) {
   return [...new Map(values.filter(Boolean).map((value) => [value.id, value])).values()];
 }
 
-function distractorGraphemes(answer, stage, seed) {
-  const graphemes = cumulativeGraphemes(stage).filter((value) => value !== answer);
+function distractorGraphemes(answer, knownGraphemes, seed) {
+  const graphemes = knownGraphemes.filter((value) => value !== answer && isSafeAuditoryChoice(value));
   return shuffled(graphemes, seed).slice(0, 3);
 }
 
-function firstGrapheme(answer, stage) {
-  return cumulativeGraphemes(stage).sort((a, b) => b.length - a.length).find((value) => answer.toLocaleLowerCase('pl-PL').startsWith(value)) ?? answer[0].toLocaleLowerCase('pl-PL');
+function itemForAnswer(stageItems, answer) {
+  return stageItems.find((item) => item.answer === answer);
+}
+
+function sessionStory(stage, lessonIndex, number) {
+  const lessons = lessonsForStage(stage);
+  const storyReady = stage === 1 ? lessonIndex >= 3 : lessonIndex === lessons.length - 1;
+  if (!storyReady) return null;
+  const stories = CURRICULUM.stories.filter((value) => value.stage === stage);
+  return stories[number % Math.max(1, stories.length)] ?? null;
 }
 
 export function selectSession(progress, now = new Date()) {
   const stage = Math.max(1, Math.min(12, progress.currentStage || 1));
+  ensureLessonPath(progress);
   const repair = isRepairSession(progress);
   const number = progress.sessions.length + 1;
   const seed = `${progress.profile.createdAt}:${number}:${stage}`;
-  const current = itemsForStage(stage);
+  const lesson = lessonFor(progress, stage);
+  const focusGrapheme = repair ? null : lesson.focusGrapheme;
+  const focusAlreadyIntroduced = focusGrapheme ? Boolean(progress.mastery[`grapheme:${focusGrapheme}`]?.introduced) : false;
+  const knownGraphemes = knownGraphemesForLesson(stage, lesson.index, { includeFocus: !repair || focusAlreadyIntroduced });
+  const knownSet = new Set(knownGraphemes);
+  const current = itemsForStage(stage).filter((item) => itemCanBeRead(item, knownSet));
+  const targets = lesson.targetAnswers.map((answer) => itemForAnswer(current, answer)).filter(Boolean);
+  const priorTargetAnswers = new Set(lessonsForStage(stage).slice(0, lesson.index).flatMap((value) => value.targetAnswers));
   const secure = CURRICULUM.items.filter((item) => item.stage < stage && !item.assessOnly);
-  const due = uniqueItems([...dueReview(progress, now), ...shuffled(secure, `${seed}:secure`)]);
-  const currentShuffled = shuffled(current, `${seed}:current`);
-  const transfer = shuffled(CURRICULUM.items.filter((item) => item.stage === stage && item.assessOnly), `${seed}:transfer`);
-  const newGraphemes = CURRICULUM.stages[stage].introducedGraphemes.filter((value) => !['cluster', 'morpheme'].includes(value));
-  const unseenGrapheme = newGraphemes.find((value) => !progress.mastery[`grapheme:${value}`]?.introduced) ?? null;
-  const focusGrapheme = unseenGrapheme ?? [...newGraphemes].sort((a, b) => (progress.mastery[`grapheme:${a}`]?.trials ?? 0) - (progress.mastery[`grapheme:${b}`]?.trials ?? 0))[0] ?? null;
+  const due = uniqueItems([...dueReview(progress, now), ...shuffled(secure, `${seed}:secure`)]).filter((item) => item.stage < stage || priorTargetAnswers.has(item.answer));
+  const reviewCurrent = current.filter((item) => priorTargetAnswers.has(item.answer));
+  const reviewItems = uniqueItems([...due, ...shuffled(reviewCurrent, `${seed}:current-review`)]);
+  const transfer = shuffled(CURRICULUM.items.filter((item) => item.stage === stage && item.assessOnly && itemCanBeRead(item, knownSet)), `${seed}:transfer`);
+  const unseenGrapheme = focusGrapheme && !focusAlreadyIntroduced ? focusGrapheme : null;
 
   const activities = [];
-  activities.push({ type: 'warmup', instructionId: 'warmup-blend', item: currentShuffled[0], expectedSeconds: 75 });
-  for (const item of uniqueItems([...due.slice(0, repair ? 6 : 4), ...currentShuffled]).slice(0, repair ? 6 : 5)) {
-    const grapheme = firstGrapheme(item.answer, stage);
-    activities.push({ type: 'hear-choose', instructionId: 'review-choose', item, grapheme, choices: shuffled([grapheme, ...distractorGraphemes(grapheme, stage, `${seed}:${item.id}`)], `${seed}:choices:${item.id}`).slice(0, 4), expectedSeconds: 22 });
+  if (!progress.settings?.controlsTaught) activities.push({ type: 'controls', instructionId: 'controls-speaker', expectedSeconds: 55 });
+
+  const warmupPool = repair ? reviewItems : reviewItems.slice(0, 5);
+  if (warmupPool.length >= 2) {
+    const warmupItem = warmupPool[0];
+    activities.push({ type: 'warmup', instructionId: 'warmup-blend', item: warmupItem, choices: warmupPool.slice(0, 3), expectedSeconds: 65 });
   }
-  if (!repair && focusGrapheme) {
+
+  // Nowy znak zawsze pojawia się przed zadaniem, które używa go w sylabie lub słowie.
+  if (focusGrapheme) {
     activities.push({ type: 'mapping', instructionId: 'mapping-new', grapheme: focusGrapheme, capital: focusGrapheme.toLocaleUpperCase('pl-PL'), expectedSeconds: 45, isNew: Boolean(unseenGrapheme) });
   }
-  const blendItems = repair ? due.slice(0, 4) : currentShuffled.slice(1, 5);
-  for (const item of blendItems) activities.push({ type: 'blend', instructionId: 'blend-swipe', item, expectedSeconds: 35 });
-  const buildItem = currentShuffled[5] ?? currentShuffled[1];
+
+  const reviewGraphemes = shuffled(knownGraphemes.filter(isSafeAuditoryChoice), `${seed}:grapheme-review`);
+  const orderedGraphemes = uniqueItems([
+    ...(focusGrapheme && isSafeAuditoryChoice(focusGrapheme) ? [{ id: focusGrapheme, value: focusGrapheme }] : []),
+    ...reviewGraphemes.map((value) => ({ id: value, value }))
+  ]).map((entry) => entry.value).slice(0, repair ? 6 : 4);
+  for (const grapheme of orderedGraphemes) {
+    const choices = shuffled([grapheme, ...distractorGraphemes(grapheme, knownGraphemes, `${seed}:${grapheme}`)], `${seed}:choices:${grapheme}`).slice(0, 4);
+    if (choices.length >= 2) activities.push({ type: 'hear-choose', instructionId: 'review-choose', grapheme, choices, expectedSeconds: 22 });
+  }
+
+  const blendItems = repair ? reviewItems.slice(0, 4) : targets.slice(0, 4);
+  for (const item of blendItems) activities.push({ type: 'blend', instructionId: 'blend-swipe', item, expectedSeconds: 38 });
+  const buildPool = repair ? reviewItems : targets;
+  const buildItem = buildPool.find((item) => item.graphemes.length >= 3) ?? buildPool.find((item) => item.graphemes.length >= 2) ?? null;
   if (buildItem) activities.push({ type: 'build', instructionId: 'build-word', item: buildItem, expectedSeconds: 70 });
-  const meaningItem = currentShuffled.find((item) => item.imageId) ?? currentShuffled[6] ?? currentShuffled[0];
+  const meaningItem = (repair ? reviewItems : targets).find((item) => item.imageId) ?? null;
   if (meaningItem) activities.push({ type: 'meaning', instructionId: 'read-first', item: meaningItem, expectedSeconds: 70 });
-  if (!repair && number % 3 === 0 && transfer[0]) activities.push({ type: 'nonword', instructionId: 'alien-word', item: transfer[0], expectedSeconds: 35 });
-  const story = CURRICULUM.stories.find((value) => value.stage === stage && value.id.endsWith(number % 2 ? '1' : '2'))
-    ?? CURRICULUM.stories.filter((value) => value.stage === stage)[number % 2];
+  if (!repair && lesson.focusGrapheme == null && number % 3 === 0 && transfer[0]) activities.push({ type: 'nonword', instructionId: 'alien-word', item: transfer[0], expectedSeconds: 35 });
+  const story = repair ? null : sessionStory(stage, lesson.index, number);
   if (story) activities.push({ type: 'story', instructionId: 'story-attempt', story, expectedSeconds: 85 });
   activities.push({ type: 'complete', instructionId: 'mission-complete', expectedSeconds: 25 });
 
   return {
     id: `session-${Date.now()}-${number}`,
-    number, stage, seed, repair, focusGrapheme: repair ? null : focusGrapheme, newGrapheme: repair ? null : unseenGrapheme,
+    number, stage, seed, repair, lessonId: lesson.id, lessonIndex: lesson.index, lessonPurpose: lesson.purpose,
+    knownGraphemes, focusGrapheme, newGrapheme: repair ? null : unseenGrapheme,
     startedAt: now.toISOString(), activityIndex: 0, activities, attempts: [], elapsedMs: 0
   };
 }
@@ -166,7 +199,7 @@ export function finalizeSession(progress, session, now = new Date()) {
     attempts: scored.length, correct, accuracy: scored.length ? correct / scored.length : 1,
     trainedAccuracy: trained.length ? trained.filter((value) => value.correct).length / trained.length : null,
     unseenAccuracy: unseen.length ? unseen.filter((value) => value.correct).length / unseen.length : null,
-    newGrapheme: session.newGrapheme
+    newGrapheme: session.newGrapheme, lessonId: session.lessonId, lessonIndex: session.lessonIndex
   };
   for (const attempt of scored) {
     if (!attempt.itemId.startsWith('grapheme:')) addReview(progress, attempt.itemId, attempt.correct, now);
@@ -204,6 +237,7 @@ export function finalizeSession(progress, session, now = new Date()) {
   const stageGraphemes = CURRICULUM.stages[session.stage].introducedGraphemes.filter((value) => !['cluster', 'morpheme'].includes(value));
   const graphemesReady = stageGraphemes.length === 0 || stageGraphemes.every((value) => progress.mastery[`grapheme:${value}`]?.provisional);
   if (session.stage < 12 && graphemesReady && blending.mastered) progress.currentStage = session.stage + 1;
+  if (!session.repair && summary.accuracy >= 0.7) advanceLesson(progress, session.stage);
   progress.sessions.push(summary);
   if (summary.number % 5 === 0) progress.parentProbes.push({ id: `probe-${summary.number}`, due: true, stage: summary.stage, itemIds: shuffled(CURRICULUM.items.filter((item) => item.stage === summary.stage), `${session.seed}:probe`).slice(0, 5).map((item) => item.id) });
   progress.activeSession = null;

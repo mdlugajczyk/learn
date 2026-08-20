@@ -9,13 +9,13 @@ const stageSource = [
   },
   {
     id: 'stage-1', order: 1, name: 'Planeta Ametyst', planet: 'Ametyst',
-    introducedGraphemes: ['a', 'm', 'o', 't'], prerequisites: ['stage-0'],
-    words: ['mama', 'tata', 'mata', 'tama', 'tam', 'to', 'ma', 'oto', 'atom', 'tom'],
+    introducedGraphemes: ['a', 'm', 't', 'o'], prerequisites: ['stage-0'],
+    words: ['ma', 'mama', 'ta', 'tata', 'mata', 'tama', 'to', 'oto', 'tam', 'tom', 'atom'],
     nonwords: ['ama', 'mato', 'toma', 'omam', 'atam', 'mota']
   },
   {
     id: 'stage-2', order: 2, name: 'Planeta Limonka', planet: 'Limonka',
-    introducedGraphemes: ['i', 'l', 'k', 'e'], prerequisites: ['stage-1'],
+    introducedGraphemes: ['k', 'i', 'l', 'e'], prerequisites: ['stage-1'],
     words: ['kot', 'kotek', 'motek', 'molo', 'lok', 'lato', 'lata', 'lot', 'lotka', 'meta', 'mak', 'mleko', 'Ela', 'Ala', 'kalka', 'kilka', 'kometa', 'taki'],
     nonwords: ['lamek', 'kimo', 'teli', 'malko', 'ekat', 'oltek']
   },
@@ -27,7 +27,7 @@ const stageSource = [
   },
   {
     id: 'stage-4', order: 4, name: 'Planeta Woda', planet: 'Woda',
-    introducedGraphemes: ['p', 'r', 'd', 'w'], prerequisites: ['stage-3'],
+    introducedGraphemes: ['d', 'p', 'r', 'w'], prerequisites: ['stage-3'],
     words: ['dom', 'woda', 'rower', 'worek', 'park', 'para', 'pora', 'pole', 'drut', 'drewno', 'deska', 'sowa', 'kura', 'rama', 'rano', 'pralka', 'spodek', 'puder', 'dywan', 'drwal', 'ruda', 'nora', 'ser', 'peron'],
     nonwords: ['wurem', 'pados', 'dranek', 'soper', 'rymak', 'wostu']
   },
@@ -140,12 +140,37 @@ function slug(value) {
   return value.toLocaleLowerCase('pl-PL').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+function graphemesAvailableAt(stageOrder) {
+  return stageSource
+    .filter((stage) => stage.order <= stageOrder)
+    .flatMap((stage) => stage.introducedGraphemes)
+    .filter((value) => !['cluster', 'morpheme'].includes(value));
+}
+
+function splitIntoGraphemes(word, stageOrder) {
+  if (stageOrder === 12) return [...word.toLocaleLowerCase('pl-PL')];
+  const available = graphemesAvailableAt(stageOrder).sort((a, b) => b.length - a.length);
+  const result = [];
+  let remaining = word.toLocaleLowerCase('pl-PL');
+  while (remaining) {
+    const match = available.find((value) => remaining.startsWith(value)) ?? remaining[0];
+    result.push(match);
+    remaining = remaining.slice(match.length);
+  }
+  return result;
+}
+
+const earlySyllables = {
+  ma: ['ma'], mama: ['ma', 'ma'], ta: ['ta'], tata: ['ta', 'ta'], mata: ['ma', 'ta'], tama: ['ta', 'ma'],
+  to: ['to'], oto: ['o', 'to'], tam: ['tam'], tom: ['tom'], atom: ['a', 'tom']
+};
+
 const items = [];
 const stages = stageSource.map((stage) => {
   const wordItems = stage.words.map((answer, index) => {
     const id = `s${stage.order}-word-${String(index + 1).padStart(2, '0')}-${slug(answer)}`;
     items.push({
-      id, type: 'word', answer: answer.toLocaleLowerCase('pl-PL'), graphemes: [], syllables: [],
+      id, type: 'word', answer: answer.toLocaleLowerCase('pl-PL'), graphemes: splitIntoGraphemes(answer, stage.order), syllables: earlySyllables[answer.toLocaleLowerCase('pl-PL')] ?? [],
       difficulty: Math.min(5, 1 + Math.floor(answer.length / 3)), skillTags: [`stage:${stage.order}`, 'decoding', 'real-word'],
       audioIds: [`word-${slug(answer)}`], imageId: pictureEmoji[answer.toLocaleLowerCase('pl-PL')] ? `picture-${slug(answer)}` : undefined,
       distractors: [], assessOnly: false, stage: stage.order, trained: index < Math.ceil(stage.words.length * 0.7)
@@ -155,7 +180,7 @@ const stages = stageSource.map((stage) => {
   const nonwordItems = stage.nonwords.map((answer, index) => {
     const id = `s${stage.order}-nonword-${String(index + 1).padStart(2, '0')}-${slug(answer)}`;
     items.push({
-      id, type: 'nonword', answer, graphemes: [], syllables: [], difficulty: Math.min(5, 1 + Math.floor(answer.length / 3)),
+      id, type: 'nonword', answer, graphemes: splitIntoGraphemes(answer, stage.order), syllables: [], difficulty: Math.min(5, 1 + Math.floor(answer.length / 3)),
       skillTags: [`stage:${stage.order}`, 'decoding', 'transfer'], audioIds: [`nonword-${slug(answer)}`],
       distractors: [], assessOnly: true, stage: stage.order, trained: false
     });

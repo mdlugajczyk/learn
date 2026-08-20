@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "czytaj-e537d7d4ef1e",
-  "assetCount": 504,
-  "totalBytes": 11870704,
+  "version": "czytaj-19acb66b2532",
+  "assetCount": 509,
+  "totalBytes": 12039969,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 59316,
-      "sha256": "16ed1308bc8dfae1311b52ea9c09f2c7470c6ed5c910c1a6e28eed146078e57a"
+      "bytes": 62633,
+      "sha256": "c8d318d79faab42eba09729a1d8b774d7896cb5cb757ef8e73259c5264ab5454"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -105,14 +105,29 @@
       "sha256": "1a096e05ae05f7a373043f8502acc390f81f4ce10eb024d11c22a566561e7db2"
     },
     {
+      "path": "audio/controls-go.mp3",
+      "bytes": 46645,
+      "sha256": "d8cc2351e2c9783930e080375d1970ddabaf3013747e90cd11085be6fc42b615"
+    },
+    {
+      "path": "audio/controls-retry.mp3",
+      "bytes": 61483,
+      "sha256": "3337cf24350310f52ac5d42faefb39a3e5fa87aac7e7fe5396c0443975bd0cd5"
+    },
+    {
+      "path": "audio/controls-speaker.mp3",
+      "bytes": 51243,
+      "sha256": "c95ed4f10482f794fa52702e0ac6d59bf92fcc7c5e3a46a21f30c74427b5cb0d"
+    },
+    {
       "path": "audio/correct-choice.mp3",
-      "bytes": 15507,
-      "sha256": "fdab0fee986948538fff7cb236ab7454b052ba3dcd645e7fa9b365e6c05982bb"
+      "bytes": 11327,
+      "sha256": "f845a9ffce93641b90e68cad331a3ceacb87f694694e77c5b3a15ed2d33f7967"
     },
     {
       "path": "audio/correct-short.mp3",
-      "bytes": 25329,
-      "sha256": "14194fdc4696a22075795881f37a55dab3b764dd39e9acc2e7a6a7f177e45c27"
+      "bytes": 16970,
+      "sha256": "732ab2ea87684bd5a02c2e8aa57f24adef29da2125f3ce194612a250d300fc06"
     },
     {
       "path": "audio/listening-01.mp3",
@@ -181,8 +196,8 @@
     },
     {
       "path": "audio/manifest.json",
-      "bytes": 287289,
-      "sha256": "72cdcb49e9f8c0e94a8e8b4ce3f6365206e04fb86907d667696b53ce9b68eb44"
+      "bytes": 289926,
+      "sha256": "fcd5b3c6679410523e75c822662e502c539877ead4c2e386110363e8ce6a736f"
     },
     {
       "path": "audio/mapping-new.mp3",
@@ -2270,6 +2285,11 @@
       "sha256": "370439cf37796091527623e021eee21e89e93f39d4049cfdaf328d679b9c1528"
     },
     {
+      "path": "audio/word-ta.mp3",
+      "bytes": 5058,
+      "sha256": "3efeb5f663b8a51279129f0a82404ab9ede02b8c7e349839436db6a9b84f4eeb"
+    },
+    {
       "path": "audio/word-taki.mp3",
       "bytes": 7566,
       "sha256": "860a6bdba836c0b7766e7626f1574fe8cd0de5233d37c1ec1f7308fba58d07ea"
@@ -2481,18 +2501,18 @@
     },
     {
       "path": "data/audio-manifest.js",
-      "bytes": 5106,
-      "sha256": "b68af6a99ad0c1cc4841d6a794c305c42f65623087ba6a94d72cbb49d55a6fbc"
+      "bytes": 5391,
+      "sha256": "c281a15bcf85c0f817bbd043c48de71ea43eb831b732e5388285546ceacc5748"
     },
     {
       "path": "data/curriculum.js",
-      "bytes": 13637,
-      "sha256": "f8448a637a1e07701dc3dbea8a05690560ec64b198c1b10aa8d56d36dded9e13"
+      "bytes": 14706,
+      "sha256": "696263df5f3d7f4f793b226c0785a0f235e2d52fe1575549096859036ca37ea4"
     },
     {
       "path": "engine.js",
-      "bytes": 12003,
-      "sha256": "fbf158e4197fb6a5ec8c752006fb21766f69fa17666fd6ed337a9e4b4781ae77"
+      "bytes": 13991,
+      "sha256": "b221a6369ec97295ad888d2d91081b7143df540c23e961f6feb5cec0db8f4488"
     },
     {
       "path": "experience.js",
@@ -2503,6 +2523,11 @@
       "path": "index.html",
       "bytes": 2363,
       "sha256": "fb9e1bc0090d7bff3dd32d12a0ade31324eadc544773cdd8f94871b04c66a09e"
+    },
+    {
+      "path": "learning-path.js",
+      "bytes": 5447,
+      "sha256": "1826092541fac7f24bbcd9095cd8f3eeef990ffa713db0cfbe7436f91aa7113e"
     },
     {
       "path": "manifest.webmanifest",
@@ -2516,13 +2541,13 @@
     },
     {
       "path": "styles.css",
-      "bytes": 50675,
-      "sha256": "a24e2b096c2aad8f4287ce9311981df40ee80886ddfb4d48d3eb9f9ac69b65cd"
+      "bytes": 53287,
+      "sha256": "9670af2c8ad468d20f28098585275bcfc87271c3517d724a1ab553f0541831a6"
     },
     {
       "path": "sw.js",
-      "bytes": 5034,
-      "sha256": "5a8ce7d81865e7cbcfbb483268f033422280d0507b699d9e7e122bede4faadc5"
+      "bytes": 5054,
+      "sha256": "ec0bdc3d8399a606303c4af2aba1ee8a6cad8c202eb4b73e3cf4f7115bf34383"
     }
   ]
 }

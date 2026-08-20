@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AUDIO_ENTRIES } from '../public/czytaj/data/audio-manifest.js';
 import { CURRICULUM, PICTURE_EMOJI, PICTURE_SPRITE_INDEX, cumulativeGraphemes } from '../public/czytaj/data/curriculum.js';
+import { itemCanBeRead, knownGraphemesForLesson, lessonsForStage } from '../public/czytaj/learning-path.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -68,12 +69,29 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
     assert(Boolean(stage), `Invalid item stage: ${item.id}`, errors);
     for (const audioId of item.audioIds) assert(audioIds.has(audioId), `Missing audio reference ${audioId} in ${item.id}`, errors);
     if (item.imageId) assert(Boolean(PICTURE_EMOJI[item.answer]), `Missing picture reference ${item.imageId} in ${item.id}`, errors);
+    assert(Array.isArray(item.graphemes) && item.graphemes.length > 0, `Missing grapheme analysis in ${item.id}`, errors);
+    if (item.stage < 12) assert(item.graphemes.join('') === item.answer.toLocaleLowerCase('pl-PL'), `Grapheme analysis does not rebuild ${item.id}`, errors);
     if (item.stage < 12) {
       const allowed = new Set(cumulativeGraphemes(item.stage).flatMap((grapheme) => [...grapheme]));
       for (const character of contentCharacters(item.answer)) assert(allowed.has(character), `Untaught grapheme character “${character}” in ${item.id} (${item.answer})`, errors);
     }
   }
   for (const stage of CURRICULUM.stages) for (const id of stage.itemIds) assert(itemIds.has(id), `Missing item ${id} in ${stage.id}`, errors);
+
+  for (const stage of CURRICULUM.stages.slice(1)) {
+    const lessons = lessonsForStage(stage.order);
+    const focusOrder = lessons.map((lesson) => lesson.focusGrapheme).filter(Boolean);
+    const expectedOrder = stage.introducedGraphemes.filter((value) => !['cluster', 'morpheme'].includes(value));
+    assert(JSON.stringify(focusOrder) === JSON.stringify(expectedOrder), `Lesson order does not match introduced graphemes in ${stage.id}`, errors);
+    for (const [lessonIndex, lesson] of lessons.entries()) {
+      const known = knownGraphemesForLesson(stage.order, lessonIndex);
+      for (const answer of lesson.targetAnswers) {
+        const item = CURRICULUM.items.find((value) => value.stage === stage.order && !value.assessOnly && value.answer === answer);
+        assert(Boolean(item), `Unknown lesson target “${answer}” in ${lesson.id}`, errors);
+        if (item) assert(itemCanBeRead(item, known), `Lesson ${lesson.id} uses “${answer}” before all graphemes are introduced`, errors);
+      }
+    }
+  }
 
   for (const story of CURRICULUM.stories) {
     assert(!storyIds.has(story.id), `Duplicate story id: ${story.id}`, errors);

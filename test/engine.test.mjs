@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { CURRICULUM } from '../public/czytaj/data/curriculum.js';
 import { HARD_CAP_MS, REVIEW_INTERVALS, SOFT_CAP_MS, canBeginNextActivity, createProgress, finalizeSession, isRepairSession, recordAttempt, selectSession, seededRandom } from '../public/czytaj/engine.js';
+import { isSafeAuditoryChoice, lessonsForStage } from '../public/czytaj/learning-path.js';
 import { exportBackup, validateBackup } from '../public/czytaj/store.js';
 
 test('curriculum has the requested coverage', () => {
@@ -43,6 +44,8 @@ test('soft cap allows the current activity to finish but prevents a new one', ()
 
 test('review scheduling starts at one day and advances through fixed intervals', () => {
   const progress = createProgress({ createdAt: '2026-01-01T00:00:00.000Z' });
+  progress.settings.controlsTaught = true;
+  progress.lessonPath[1] = 1;
   const session = selectSession(progress, new Date('2026-03-01T09:00:00.000Z'));
   const activity = session.activities.find((value) => value.item);
   recordAttempt(progress, session, activity, { correct: true });
@@ -51,6 +54,46 @@ test('review scheduling starts at one day and advances through fixed intervals',
   const due = new Date(progress.reviewQueue[0].dueAt);
   assert.equal(due.getDate(), 2);
   assert.deepEqual(REVIEW_INTERVALS, [1, 2, 4, 7, 14]);
+});
+
+test('Ametyst follows a fixed child-sized decoding progression', () => {
+  const expected = [
+    ['a', []],
+    ['m', ['ma', 'mama']],
+    ['t', ['ta', 'tata', 'mata', 'tama']],
+    ['o', ['to', 'oto']],
+    [null, ['tam', 'tom', 'atom']]
+  ];
+  for (const [lessonIndex, [focus, words]] of expected.entries()) {
+    const progress = createProgress({ createdAt: '2026-01-01T00:00:00.000Z' });
+    progress.settings.controlsTaught = true;
+    progress.lessonPath[1] = lessonIndex;
+    const session = selectSession(progress, new Date('2026-03-01T09:00:00.000Z'));
+    assert.equal(session.focusGrapheme, focus);
+    assert.deepEqual(session.activities.filter((activity) => activity.type === 'blend').map((activity) => activity.item.answer), words.slice(0, 4));
+    if (focus && words.length) {
+      const mappingIndex = session.activities.findIndex((activity) => activity.type === 'mapping');
+      const firstWordIndex = session.activities.findIndex((activity) => activity.item?.answer === words[0]);
+      assert.ok(mappingIndex >= 0 && mappingIndex < firstWordIndex);
+      assert.equal(session.activities.slice(0, mappingIndex).some((activity) => activity.item?.graphemes.includes(focus)), false);
+    }
+    for (const activity of session.activities.filter((value) => value.item)) {
+      assert.ok(activity.item.graphemes.every((grapheme) => session.knownGraphemes.includes(grapheme)), `${activity.item.answer} uses an untaught grapheme`);
+    }
+  }
+});
+
+test('every planet has ordered internal lessons and avoids impossible sound-to-spelling questions', () => {
+  for (let stage = 1; stage <= 12; stage += 1) assert.ok(lessonsForStage(stage).length >= 1);
+  for (const stage of [7, 8, 9, 11]) {
+    const progress = createProgress({ createdAt: '2026-01-01T00:00:00.000Z' });
+    progress.settings.controlsTaught = true;
+    progress.currentStage = stage;
+    const session = selectSession(progress, new Date('2026-03-01T09:00:00.000Z'));
+    if (!isSafeAuditoryChoice(session.focusGrapheme)) {
+      assert.equal(session.activities.some((activity) => activity.type === 'hear-choose' && activity.grapheme === session.focusGrapheme), false);
+    }
+  }
 });
 
 test('trained and unseen accuracy remain separate', () => {

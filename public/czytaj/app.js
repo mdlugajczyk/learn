@@ -1,7 +1,8 @@
 import { AudioQueue } from './audio.js';
-import { CURRICULUM, PICTURE_EMOJI, PICTURE_SPRITE_INDEX, cumulativeGraphemes, itemById, itemsForStage } from './data/curriculum.js';
+import { CURRICULUM, PICTURE_EMOJI, PICTURE_SPRITE_INDEX, cumulativeGraphemes, itemById } from './data/curriculum.js';
 import { assignBaselineStage, canBeginNextActivity, finalizeSession, mustStop, recordAttempt, selectSession, shuffled } from './engine.js';
 import { addDiscovery, chapterFor, chapterState, discoveriesFor, ensureExploration, missionChapters, planetTheme } from './experience.js';
+import { lessonIndexFor, teachingNotesForStage } from './learning-path.js';
 import { exportBackup, importBackupAtomically, progressStore, requestPersistentStorage } from './store.js';
 
 const app = document.querySelector('#app');
@@ -56,6 +57,11 @@ function momo(variant = '') {
   return `<div class="momo ${variant}" aria-label="Momo, mały robot przewodnik"><span class="momo-antenna"></span><span class="momo-arm arm-left"></span><span class="momo-arm arm-right"></span><span class="momo-body"></span><span class="momo-face"></span><span class="momo-glow"></span></div>`;
 }
 
+function iconAction(id, icon, label, classes = 'button primary large mission-action') {
+  const disabled = classes.includes('is-disabled') ? ' disabled' : '';
+  return `<button id="${id}" class="${classes} icon-action" type="button" aria-label="${html(label)}" title="${html(label)}"${disabled}><span aria-hidden="true">${icon}</span><span class="visually-hidden">${html(label)}</span></button>`;
+}
+
 async function save() {
   state.progress = await progressStore.save(state.progress);
 }
@@ -75,6 +81,12 @@ async function init() {
   try {
     state.progress = await progressStore.load();
     ensureExploration(state.progress);
+    // Sesje sprzed uporządkowanej ścieżki dobierały słowa losowo. Nie wznawiamy
+    // ich w połowie po aktualizacji, bo mogłyby pokazać dziecku niepoznany znak.
+    if (state.progress.activeSession && !state.progress.activeSession.lessonId) {
+      state.progress.activeSession = null;
+      await save();
+    }
   } catch (error) {
     app.innerHTML = `<section class="screen"><div class="card"><p class="eyebrow">Błąd danych</p><h1>Potrzebna jest pomoc dorosłego</h1><p>${html(error.message)}</p></div></section>`;
     return;
@@ -129,7 +141,6 @@ function onboardingProfile() {
 function onboardingVoice() {
   return `<div class="card"><p class="eyebrow">Jawne źródło głosu</p><h2>Głos narratora jest wygenerowany przez AI</h2>
     <p>Każde polecenie jest wcześniej przygotowanym plikiem MP3. Aplikacja nie wysyła tekstu ani danych dziecka do usługi głosowej i nigdy nie używa syntezy mowy działającej w przeglądarce.</p>
-    <div class="callout">Obecny głos jest tymczasowy i służy do testowania aplikacji. Zostanie zastąpiony nagraniami ElevenLabs po przeglądzie polskiej wymowy.</div>
     <button id="voiceNext" class="button primary large" style="margin-top:16px">Dalej</button>
   </div>`;
 }
@@ -325,6 +336,7 @@ function sessionProgress() {
 }
 
 const ACTIVITY_UI = {
+  controls: ['Sterowanie statkiem', '✦'],
   warmup: ['Uruchom sygnał', '✦'],
   'hear-choose': ['Podłącz antenę', '◖'],
   mapping: ['Laboratorium znaku', '⌁'],
@@ -397,6 +409,9 @@ async function presentActivity(activity, instructionId) {
 
 function instructionText(id) {
   return ({
+    'controls-speaker': 'Dotknij głośnika, gdy chcesz usłyszeć polecenie jeszcze raz.',
+    'controls-retry': 'Dotknij okrągłej strzałki, gdy chcesz spróbować albo zobaczyć jeszcze raz.',
+    'controls-go': 'Dotknij strzałki, gdy zadanie jest gotowe.',
     'warmup-blend': 'Posłuchaj dźwięków. Połącz je w słowo.',
     'review-choose': 'Posłuchaj dźwięku. Dotknij pasującej litery.',
     'mapping-new': 'Poznajemy nowy znak. Dotknij go, aby usłyszeć dźwięk.',
@@ -432,39 +447,52 @@ function pictureMarkup(word) {
 
 function activityMarkup(activity) {
   const session = state.progress.activeSession;
+  if (activity.type === 'controls') return `<div class="control-tutorial" aria-label="Poznaj trzy przyciski sterowania">
+    <button class="control-orb current" data-control-step="0" type="button" aria-label="Powtórz dźwięk"><span aria-hidden="true">🔊</span></button>
+    <button class="control-orb" data-control-step="1" type="button" aria-label="Spróbuj ponownie" disabled><span aria-hidden="true">↻</span></button>
+    <button class="control-orb go" data-control-step="2" type="button" aria-label="Dalej" disabled><span aria-hidden="true">➜</span></button>
+  </div><p class="play-prompt">Momo pokaże po kolei trzy przyciski.</p>`;
   if (activity.type === 'warmup') {
     const target = activity.item;
     const parts = splitGraphemes(target.answer, session.stage);
-    const choices = shuffled([target, ...itemsForStage(session.stage).filter((item) => item.id !== target.id).slice(0, 2)], `${session.seed}:warmup`).slice(0, 3);
+    const choices = activity.choices ?? [target];
     activity.choices = choices;
     return `<div class="signal-field"><span class="signal-dish" aria-hidden="true"></span><div class="sound-orbit" style="${graphemeLayout(parts)}" aria-label="${parts.length} dźwięki"><span class="orbit-thread"></span>${parts.map((_, index) => `<span class="sound-orb" style="--i:${index}"><i></i></span>`).join('')}</div></div><p class="play-prompt">Który kod przysłała planeta?</p><div class="choices word-choice-grid">${choices.map((item, index) => `<button class="choice word-choice" data-answer="${html(item.id)}" style="--i:${index}"><span class="landing-dot" aria-hidden="true"></span>${html(item.answer)}</button>`).join('')}</div>`;
   }
   if (activity.type === 'hear-choose') return `<div class="antenna-console"><div class="sound-console" aria-hidden="true"><span class="sound-core">♪</span><span class="sound-ring ring-one"></span><span class="sound-ring ring-two"></span><span class="sound-ring ring-three"></span></div><span class="signal-wire" aria-hidden="true"></span></div><p class="play-prompt">Dotknij anteny z pasującą literą.</p><div class="choices letter-choices">${activity.choices.map((choice, index) => `<button class="choice letter-choice antenna-pad" data-grapheme="${html(choice)}" style="--i:${index}"><i aria-hidden="true"></i><span>${html(choice)}</span></button>`).join('')}</div>`;
-  if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><span class="scanner-beam" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Każde dotknięcie uruchamia skaner.</p><button id="mappingDone" class="button primary large mission-action">Znak rozpoznany</button>`;
+  if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><span class="scanner-beam" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Każde dotknięcie uruchamia skaner.</p>${iconAction('mappingDone', '➜', 'Dalej')}`;
   if (activity.type === 'blend') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
     const duration = Math.max(1.1, 1 + parts.length * .14).toFixed(2);
-    return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p><button id="blendStart" class="button primary large action-with-icon mission-action"><span aria-hidden="true">↝</span> Momo może pokazać</button><div id="blendResult" class="blend-result hidden"><span>Całe słowo</span><strong>${html(activity.item.answer)}</strong><button id="blendReplay" class="blend-replay" type="button" aria-label="Posłuchaj całego słowa jeszcze raz">🔊 Jeszcze raz</button></div><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Most gotowy</button>`;
+    return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p>${iconAction('blendStart', '↻', 'Momo pokazuje jeszcze raz')}<div id="blendResult" class="blend-result hidden"><span class="visually-hidden">Całe słowo</span><strong>${html(activity.item.answer)}</strong>${iconAction('blendReplay', '🔊', 'Posłuchaj całego słowa jeszcze raz', 'blend-replay')}</div>${iconAction('blendDone', '➜', 'Dalej', 'button secondary large hidden')}`;
   }
   if (activity.type === 'build') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
     activity.parts = parts;
     const tiles = shuffled(parts.map((value, index) => ({ value, index })), `${session.seed}:${activity.item.id}:tiles`);
-    return `<div class="builder"><div class="cargo-machine" aria-hidden="true"><span></span><i></i></div><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Moduły literowe</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Najłatwiej: dotknij litery. Możesz też ją przeciągnąć.</p><button id="buildReset" class="button secondary compact">Zacznij układanie od nowa</button>`;
+    return `<div class="builder"><div class="cargo-machine" aria-hidden="true"><span></span><i></i></div><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Moduły literowe</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Najłatwiej: dotknij litery. Możesz też ją przeciągnąć.</p>${iconAction('buildReset', '↻', 'Ułóż od początku', 'button secondary compact')}`;
   }
   if (activity.type === 'meaning') {
-    if (!state.meaningRevealed) return `<div class="meaning-window shutters-closed"><span class="window-shutter shutter-left" aria-hidden="true"></span><span class="window-shutter shutter-right" aria-hidden="true"></span><span class="window-star star-one" aria-hidden="true">✦</span><span class="window-star star-two" aria-hidden="true">✦</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Najpierw przeczytaj. Okno otworzy się po próbie.</p><button id="revealMeaning" class="button primary large mission-action">Otwórz obserwatorium</button>`;
+    if (!state.meaningRevealed) return `<div class="meaning-window shutters-closed"><span class="window-shutter shutter-left" aria-hidden="true"></span><span class="window-shutter shutter-right" aria-hidden="true"></span><span class="window-star star-one" aria-hidden="true">✦</span><span class="window-star star-two" aria-hidden="true">✦</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Najpierw przeczytaj. Okno otworzy się po próbie.</p>${iconAction('revealMeaning', '➜', 'Pokaż obrazki')}`;
     const candidates = shuffled(CURRICULUM.items.filter((item) => item.imageId && item.id !== activity.item.id), `${session.seed}:pictures`).slice(0, 3);
     activity.meaningChoices = shuffled([activity.item, ...candidates], `${session.seed}:picture-order`);
     return `<div class="word-chip">${html(activity.item.answer)}</div><p class="play-prompt">Wybierz właściwe okno.</p><div class="choices picture-choices observatory-choices">${activity.meaningChoices.map((item, index) => `<button class="choice picture porthole-choice" data-picture="${html(item.id)}" aria-label="${html(item.answer)}" style="--i:${index}">${pictureMarkup(item.answer)}</button>`).join('')}</div>`;
   }
-  if (activity.type === 'nonword') return `<div class="alien-signal"><span class="alien-rings" aria-hidden="true">⌁</span><span class="alien-eye" aria-hidden="true"></span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Kosmita wymyślił ten kod. Spróbuj go odczytać.</p><button id="unverifiedDone" class="button primary large mission-action">Ustabilizuj sygnał</button><p class="small">To spokojna próba bez oceniania.</p>`;
-  if (activity.type === 'story') return `<div class="story-capsule"><span class="capsule-light" aria-hidden="true"></span><div class="story-progress" aria-label="Zdanie ${state.storyStep + 1} z ${activity.story.sentences.length}">${activity.story.sentences.map((_, index) => `<span class="${index < state.storyStep ? 'done' : index === state.storyStep ? 'current' : ''}"></span>`).join('')}</div><div class="story">${activity.story.sentences.map((sentence, index) => `<p class="story-line ${index === state.storyStep ? 'active' : ''}" data-story-line="${index}" ${index === state.storyStep ? '' : 'hidden'}>${html(sentence)}</p>`).join('')}</div></div><div class="button-row story-actions"><button id="storyListen" class="button secondary" ${state.storyAttempted ? '' : 'disabled'}>🔊 Posłuchaj po próbie</button><button id="storyAdvance" class="button primary">${state.storyAttempted ? 'Archiwum gotowe' : state.storyStep < activity.story.sentences.length - 1 ? 'Następne zdanie' : 'Skończyłem czytać'}</button></div>`;
+  if (activity.type === 'nonword') return `<div class="alien-signal"><span class="alien-rings" aria-hidden="true">⌁</span><span class="alien-eye" aria-hidden="true"></span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Kosmita wymyślił ten kod. Spróbuj go odczytać.</p>${iconAction('unverifiedDone', '➜', 'Dalej')}<p class="small">To spokojna próba bez oceniania.</p>`;
+  if (activity.type === 'story') return `<div class="story-capsule"><span class="capsule-light" aria-hidden="true"></span><div class="story-progress" aria-label="Zdanie ${state.storyStep + 1} z ${activity.story.sentences.length}">${activity.story.sentences.map((_, index) => `<span class="${index < state.storyStep ? 'done' : index === state.storyStep ? 'current' : ''}"></span>`).join('')}</div><div class="story">${activity.story.sentences.map((sentence, index) => `<p class="story-line ${index === state.storyStep ? 'active' : ''}" data-story-line="${index}" ${index === state.storyStep ? '' : 'hidden'}>${html(sentence)}</p>`).join('')}</div></div><div class="button-row story-actions">${iconAction('storyListen', '🔊', 'Posłuchaj po próbie', `button secondary ${state.storyAttempted ? '' : 'is-disabled'}`)}${iconAction('storyAdvance', '➜', 'Dalej', 'button primary')}</div>`;
   return completionMarkup();
 }
 
 function bindActivity(activity) {
-  if (activity.type === 'warmup') {
+  if (activity.type === 'controls') {
+    document.querySelector('[data-control-step="0"]').addEventListener('click', () => advanceControlTutorial(0, 'controls-retry'));
+    document.querySelector('[data-control-step="1"]').addEventListener('click', () => advanceControlTutorial(1, 'controls-go'));
+    document.querySelector('[data-control-step="2"]').addEventListener('click', async () => {
+      state.progress.settings.controlsTaught = true;
+      await save();
+      finishActivity(activity, true, false);
+    });
+  } else if (activity.type === 'warmup') {
     document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.answer === activity.item.id, activity)));
   } else if (activity.type === 'hear-choose') {
     document.querySelectorAll('[data-grapheme]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.grapheme === activity.grapheme, activity, `sound-${activity.grapheme}`)));
@@ -498,6 +526,9 @@ function bindActivity(activity) {
       area.classList.add('is-joining');
       beam.style.transform = '';
       beam.classList.add('at-end');
+      await playSegmented(activity.item.answer, '.grapheme', token);
+      if (token !== state.presentationToken) return;
+      await pause(120);
       const played = await audio.play(activity.item.audioIds[0]);
       area.classList.remove('is-joining');
       if (!played || token !== state.presentationToken) return;
@@ -561,17 +592,30 @@ function bindActivity(activity) {
           dot.classList.toggle('done', index < state.storyStep);
           dot.classList.toggle('current', index === state.storyStep);
         });
-        document.querySelector('#storyAdvance').textContent = state.storyStep < activity.story.sentences.length - 1 ? 'Następne zdanie' : 'Skończyłem czytać';
         return;
       }
       state.storyAttempted = true;
       document.querySelector('#storyListen').disabled = false;
-      document.querySelector('#storyAdvance').textContent = 'Archiwum gotowe';
+      document.querySelector('#storyListen').classList.remove('is-disabled');
       document.querySelector('.story-capsule')?.classList.add('story-complete');
     });
   } else if (activity.type === 'complete') {
     document.querySelector('#finishMission').addEventListener('click', completeMission);
   }
+}
+
+async function advanceControlTutorial(completedStep, nextInstructionId) {
+  const current = document.querySelector(`[data-control-step="${completedStep}"]`);
+  const next = document.querySelector(`[data-control-step="${completedStep + 1}"]`);
+  current?.classList.remove('current');
+  current?.classList.add('learned');
+  if (next) {
+    next.disabled = false;
+    next.classList.add('current');
+  }
+  const text = document.querySelector('#instructionText');
+  if (text) text.textContent = instructionText(nextInstructionId);
+  await setInstruction(nextInstructionId);
 }
 
 async function playSegmented(word, selector = null, token = state.presentationToken) {
@@ -596,7 +640,7 @@ async function objectiveAnswer(button, correct, activity, modelAudio = null) {
   document.querySelector('.session-momo')?.classList.add(correct ? 'momo-happy' : 'momo-thinking');
   recordAttempt(state.progress, state.progress.activeSession, activity, { correct, answer: button.dataset.answer ?? button.dataset.grapheme ?? button.dataset.picture, latencyMs: performance.now() - state.activityStartedAt });
   if (correct) {
-    if (state.progress.settings.effects) await audio.play('correct-choice', { required: false });
+    await playSuccessFeedback();
   } else {
     await audio.play('retry-gentle');
     if (modelAudio) await audio.play(modelAudio);
@@ -619,6 +663,14 @@ async function objectiveAnswer(button, correct, activity, modelAudio = null) {
     document.querySelector('.session-momo')?.classList.remove('momo-thinking');
     state.inputLocked = false;
   }, 520);
+}
+
+async function playSuccessFeedback() {
+  const session = state.progress.activeSession;
+  if (!session) return false;
+  const count = session.successFeedbackCount ?? 0;
+  session.successFeedbackCount = count + 1;
+  return audio.play(count % 2 === 0 ? 'correct-short' : 'correct-choice', { required: false });
 }
 
 function bindBuildTile(button, activity) {
@@ -767,6 +819,7 @@ async function finishActivity(activity, correct, verified = true) {
   if (state.inputLocked) return;
   state.inputLocked = true;
   recordAttempt(state.progress, state.progress.activeSession, activity, { correct, verified, latencyMs: performance.now() - state.activityStartedAt });
+  if (correct && verified) await playSuccessFeedback();
   await save();
   state.inputLocked = false;
   nextActivity();
@@ -792,7 +845,7 @@ function completionMarkup() {
   const session = state.progress.activeSession;
   const theme = planetTheme(session.stage);
   const discoveryCount = discoveriesFor(state.progress, session.stage).length;
-  return `<div class="completion"><div class="landing-scene" aria-hidden="true"><span class="landing-planet"><i>${theme.symbol}</i></span><span class="landing-rocket">▲</span><span class="landing-beam"></span><span class="next-discovery" style="--slot:${discoveryCount % 6}">✦</span>${momo('landing-momo momo-happy')}</div><h2>Lądowanie udane!</h2><p>Momo znalazł nowe odkrycie na planecie ${html(CURRICULUM.stages[session.stage].planet)}. Zobaczysz je po powrocie do statku.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}<button id="finishMission" class="button primary large mission-action">Koniec na dziś</button></div>`;
+  return `<div class="completion"><div class="landing-scene" aria-hidden="true"><span class="landing-planet"><i>${theme.symbol}</i></span><span class="landing-rocket">▲</span><span class="landing-beam"></span><span class="next-discovery" style="--slot:${discoveryCount % 6}">✦</span>${momo('landing-momo momo-happy')}</div><h2>Lądowanie udane!</h2><p>Momo znalazł nowe odkrycie na planecie ${html(CURRICULUM.stages[session.stage].planet)}. Zobaczysz je po powrocie do statku.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}${iconAction('finishMission', '⌂', 'Wróć do statku')}</div>`;
 }
 
 async function completeMission() {
@@ -816,6 +869,9 @@ function renderParent() {
   const progress = state.progress;
   const sessions = progress.sessions;
   const latest = sessions.at(-1);
+  const lessonNotes = teachingNotesForStage(progress.currentStage);
+  const currentLessonIndex = lessonIndexFor(progress, progress.currentStage);
+  const currentLesson = lessonNotes[currentLessonIndex];
   const discoveryTotal = Object.values(ensureExploration(progress).discoveriesByStage).reduce((sum, entries) => sum + entries.length, 0);
   const confusionRows = Object.entries(progress.errors).sort((a, b) => b[1] - a[1]).slice(0, 8);
   const dueProbes = progress.parentProbes.filter((probe) => probe.due);
@@ -832,6 +888,10 @@ function renderParent() {
     <div class="card"><p class="eyebrow">Etapy i umiejętności</p><h2>Droga przez planety</h2>
       <div class="table-wrap"><table><thead><tr><th>Etap</th><th>Nowe znaki</th><th>Status</th></tr></thead><tbody>${CURRICULUM.stages.slice(1).map((stage) => `<tr><td>${stage.order}. ${html(stage.planet)}</td><td>${html(stage.introducedGraphemes.join(' · '))}</td><td>${stage.order < progress.currentStage ? 'ukończony' : stage.order === progress.currentStage ? 'w toku' : 'później'}</td></tr>`).join('')}</tbody></table></div>
       <p class="small">Znaki etapu bieżącego: ${CURRICULUM.stages[progress.currentStage].introducedGraphemes.map((grapheme) => `${html(grapheme)} — ${progress.mastery[`grapheme:${grapheme}`]?.provisional ? 'opanowany w próbach mieszanych' : `${progress.mastery[`grapheme:${grapheme}`]?.trials ?? 0}/12 prób`}`).join('; ') || 'płynność tekstu i zbitki spółgłoskowe'}.</p>
+    </div>
+    <div class="card"><p class="eyebrow">Kolejność wewnątrz planety</p><h2>Lekcja ${currentLessonIndex + 1} z ${lessonNotes.length}</h2>
+      <p><strong>${currentLesson?.focusGrapheme ? `Nowy znak: ${html(currentLesson.focusGrapheme)}` : 'Utrwalenie i transfer'}</strong><br>${html(currentLesson?.purpose ?? '')}</p>
+      <div class="lesson-sequence">${lessonNotes.map((lesson, index) => `<div class="lesson-step ${index < currentLessonIndex ? 'done' : index === currentLessonIndex ? 'current' : ''}"><span>${index + 1}</span><div><strong>${lesson.focusGrapheme ? html(lesson.focusGrapheme) : 'utrw.'}</strong><small>${html(lesson.targetAnswers.slice(0, 6).join(' · ') || 'dźwięk i znak')}</small></div></div>`).join('')}</div>
     </div>
     <div class="card"><p class="eyebrow">Baza początkowa</p><h2>Ocena startowa</h2>
       ${progress.baseline ? `<p>Małe litery: <strong>${percent(progress.baseline.scores.lowercase)}</strong><br>Dźwięki liter: <strong>${percent(progress.baseline.scores.sound)}</strong><br>Pierwszy dźwięk: <strong>${percent(progress.baseline.scores.firstSound)}</strong><br>Łączenie: <strong>${percent(progress.baseline.scores.blending)}</strong><br>Dzielenie: <strong>${percent(progress.baseline.scores.segmentation)}</strong><br>Czytanie słów: <strong>${percent(progress.baseline.scores.decoding)}</strong></p>` : '<p>Brak zapisanej bazy.</p>'}
