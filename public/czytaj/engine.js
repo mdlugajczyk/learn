@@ -18,6 +18,7 @@ export function createProgress(profile = {}) {
     sessions: [],
     errors: {},
     parentProbes: [],
+    exploration: { discoveriesByStage: {}, lastLanding: null },
     settings: { sound: true, effects: true, motion: true },
     offline: { version: null, verifiedAt: null, assetCount: 0, totalBytes: 0 },
     updatedAt: new Date().toISOString()

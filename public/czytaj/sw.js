@@ -1,10 +1,10 @@
-const SHELL_CACHE = 'czytaj-shell-v12';
+const SHELL_CACHE = 'czytaj-shell-v13';
 const PACK_PREFIX = 'czytaj-pack-';
 const SCOPE_URL = self.registration.scope;
 const SCOPE_PATH = new URL(SCOPE_URL).pathname;
 const scoped = (path = '') => new URL(path, SCOPE_URL).href;
 const SHELL = [
-  '', 'index.html', 'styles.css', 'app.js', 'engine.js', 'store.js', 'audio.js',
+  '', 'index.html', 'styles.css', 'app.js', 'engine.js', 'experience.js', 'store.js', 'audio.js',
   'data/curriculum.js', 'data/audio-manifest.js', 'manifest.webmanifest',
   'assets/icon-192.png', 'assets/icon-512.png', 'assets/AtkinsonHyperlegibleNext.woff2'
 ].map(scoped);

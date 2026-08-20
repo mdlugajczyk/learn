@@ -1,18 +1,23 @@
 {
   "schemaVersion": 1,
-  "version": "czytaj-a4bc95bbe391",
-  "assetCount": 502,
-  "totalBytes": 10144843,
+  "version": "czytaj-e537d7d4ef1e",
+  "assetCount": 504,
+  "totalBytes": 11870704,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 50991,
-      "sha256": "2f1d48029808e4b1aa301d07cffab756feb037c0e89ba44cdef69214381f5af7"
+      "bytes": 59316,
+      "sha256": "16ed1308bc8dfae1311b52ea9c09f2c7470c6ed5c910c1a6e28eed146078e57a"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
       "bytes": 48188,
       "sha256": "abde1ad5cf78b9ac575ef90d991f2e9101eb0b3b6668bde9a00e2e1e27d99afd"
+    },
+    {
+      "path": "assets/cockpit-ametyst-v2.png",
+      "bytes": 1693206,
+      "sha256": "c465fe3c5317d3ba238ba743b26d8c9d13c4df910056079ca07aa1213ead8275"
     },
     {
       "path": "assets/czytaj-space-card.png",
@@ -2486,8 +2491,13 @@
     },
     {
       "path": "engine.js",
-      "bytes": 11939,
-      "sha256": "46264f698e5bda1a3e7c6c941742017e7b5959bb97d696fe864652f387ea1689"
+      "bytes": 12003,
+      "sha256": "fbf158e4197fb6a5ec8c752006fb21766f69fa17666fd6ed337a9e4b4781ae77"
+    },
+    {
+      "path": "experience.js",
+      "bytes": 4078,
+      "sha256": "1607be7e9495516e8e0d18feb64c8228967b90b57ab626408b70480d1c20f832"
     },
     {
       "path": "index.html",
@@ -2506,13 +2516,13 @@
     },
     {
       "path": "styles.css",
-      "bytes": 30504,
-      "sha256": "1d3a1cb7f4c4d77a6722d49b1e872afa2896c72cc15cdd7bd8a70ac2ba6ec57c"
+      "bytes": 50675,
+      "sha256": "a24e2b096c2aad8f4287ce9311981df40ee80886ddfb4d48d3eb9f9ac69b65cd"
     },
     {
       "path": "sw.js",
-      "bytes": 5017,
-      "sha256": "750808fb62f0908232b7f4508722d8bd34095d1d181fa6e616c34acbde3c7157"
+      "bytes": 5034,
+      "sha256": "5a8ce7d81865e7cbcfbb483268f033422280d0507b699d9e7e122bede4faadc5"
     }
   ]
 }

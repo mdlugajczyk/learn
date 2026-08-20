@@ -1,6 +1,7 @@
 import { AudioQueue } from './audio.js';
 import { CURRICULUM, PICTURE_EMOJI, PICTURE_SPRITE_INDEX, cumulativeGraphemes, itemById, itemsForStage } from './data/curriculum.js';
 import { assignBaselineStage, canBeginNextActivity, finalizeSession, mustStop, recordAttempt, selectSession, shuffled } from './engine.js';
+import { addDiscovery, chapterFor, chapterState, discoveriesFor, ensureExploration, missionChapters, planetTheme } from './experience.js';
 import { exportBackup, importBackupAtomically, progressStore, requestPersistentStorage } from './store.js';
 
 const app = document.querySelector('#app');
@@ -24,8 +25,12 @@ const state = {
   activityStartedAt: 0,
   meaningRevealed: false,
   buildSlots: [],
+  storyStep: 0,
+  storyAttempted: false,
+  showLaunch: false,
   sessionCompleted: false,
-  presentationToken: 0
+  presentationToken: 0,
+  justUnlockedStage: null
 };
 
 const html = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
@@ -48,7 +53,7 @@ async function setInstruction(id, autoplay = true) {
 }
 
 function momo(variant = '') {
-  return `<div class="momo ${variant}" aria-label="Momo, mały robot przewodnik"><span class="momo-antenna"></span><span class="momo-body"></span><span class="momo-face"></span><span class="momo-glow"></span></div>`;
+  return `<div class="momo ${variant}" aria-label="Momo, mały robot przewodnik"><span class="momo-antenna"></span><span class="momo-arm arm-left"></span><span class="momo-arm arm-right"></span><span class="momo-body"></span><span class="momo-face"></span><span class="momo-glow"></span></div>`;
 }
 
 async function save() {
@@ -69,6 +74,7 @@ async function registerServiceWorker() {
 async function init() {
   try {
     state.progress = await progressStore.load();
+    ensureExploration(state.progress);
   } catch (error) {
     app.innerHTML = `<section class="screen"><div class="card"><p class="eyebrow">Błąd danych</p><h1>Potrzebna jest pomoc dorosłego</h1><p>${html(error.message)}</p></div></section>`;
     return;
@@ -251,25 +257,41 @@ async function downloadOrVerifyPack(verifyOnly = false) {
 
 function renderHome() {
   const stage = CURRICULUM.stages[state.progress.currentStage];
+  const theme = planetTheme(stage.order);
+  const discoveries = discoveriesFor(state.progress, stage.order);
   const ready = Boolean(state.progress.offline.verifiedAt);
   const sessionCount = state.progress.sessions.length;
-  app.innerHTML = `<section class="screen">
-    <div class="card hero-card" style="--hero-image:url('assets/czytaj-space-card.png')">
-      ${momo()}
-      <div class="hero-copy">
-        <p class="eyebrow">${ready ? 'Gotowe offline' : 'Potrzebna pomoc dorosłego'}</p>
-        <h1>Cześć, ${html(state.progress.profile.address)}!</h1>
-        <p>${ready ? 'Momo przygotował krótką misję czytelniczą.' : 'Pakiet dźwięków i ćwiczeń nie został w pełni sprawdzony.'}</p>
+  app.innerHTML = `<section class="screen child-home planet-${theme.slug}" style="--planet-accent:${theme.accent};--planet-deep:${theme.deep}">
+    <div class="cockpit-home">
+      <div class="cockpit-window" aria-hidden="true">
+        <span class="home-planet"><i>${theme.symbol}</i></span>
+        <span class="orbit-moon moon-one"></span><span class="orbit-moon moon-two"></span>
+        ${state.justUnlockedStage === stage.order ? '<span class="new-planet-banner">NOWA PLANETA</span>' : ''}
       </div>
+      ${momo('home-momo momo-wave')}
+      <div class="home-copy">
+        <p class="eyebrow">${ready ? `Planeta ${stage.order} z 12` : 'Potrzebna pomoc dorosłego'}</p>
+        <h1>${state.justUnlockedStage === stage.order ? `Nowy kurs: ${html(stage.planet)}!` : `Cześć, ${html(state.progress.profile.address)}!`}</h1>
+        <p>${ready ? `Momo odebrał sygnał z planety ${html(stage.planet)}.` : 'Pakiet dźwięków i ćwiczeń nie został w pełni sprawdzony.'}</p>
+      </div>
+      <button id="startMission" class="launch-control" ${ready ? '' : 'disabled'}>
+        <span class="launch-light" aria-hidden="true"></span>
+        <span>${state.progress.activeSession ? 'Dokończ misję' : 'Start misji'}</span>
+        <small>około 10 minut</small>
+      </button>
     </div>
-    <div class="card">
-      <div class="planet-row"><div class="planet"></div><div><p class="eyebrow">Planeta ${stage.order} z 12</p><h2>${html(stage.planet)}</h2></div></div>
-      <div class="mission-map">${CURRICULUM.stages.slice(1).map((value) => `<span class="map-node ${value.order < stage.order ? 'done' : value.order === stage.order ? 'current' : ''}"></span>`).join('')}</div>
+    <div class="planet-log card">
+      <div class="planet-log-heading"><div class="planet-mini"><i>${theme.symbol}</i></div><div><p class="eyebrow">${html(stage.planet)}</p><h2>Odkrycia z wypraw</h2></div></div>
+      <div class="discovery-shelf" aria-label="${discoveries.length} z 6 odkryć">${Array.from({ length: 6 }, (_, index) => {
+        const discovery = discoveries[index];
+        return `<span class="discovery-slot ${discovery ? 'found' : ''}" style="--i:${index}" aria-label="${discovery ? `Odkrycie ${index + 1}` : 'Jeszcze nieodkryte'}">${discovery?.symbol ?? '·'}</span>`;
+      }).join('')}</div>
+      <div class="mission-map" aria-label="Droga przez 12 planet">${CURRICULUM.stages.slice(1).map((value) => `<span class="map-node ${value.order < stage.order ? 'done' : value.order === stage.order ? 'current' : ''}"></span>`).join('')}</div>
       ${!ready ? '<div class="callout">Dziecko nie może rozpocząć samodzielnej misji, dopóki wszystkie wymagane pliki audio nie są zapisane i sprawdzone.</div>' : ''}
-      <button id="startMission" class="button primary large" ${ready ? '' : 'disabled'}>${state.progress.activeSession ? 'Dokończ misję' : 'Start misji'}</button>
-      <p class="small" style="text-align:center">Misja ${sessionCount + 1} · około 10 minut · bez punktów i presji czasu</p>
+      <p class="small home-note">Misja ${sessionCount + 1} · spokojna wyprawa bez punktów i presji</p>
     </div>
   </section>`;
+  state.justUnlockedStage = null;
   document.querySelector('#startMission')?.addEventListener('click', startMission);
 }
 
@@ -279,10 +301,16 @@ async function startMission() {
   if (!state.progress.activeSession) {
     state.progress.activeSession = selectSession(state.progress);
   }
+  state.showLaunch = created;
   state.view = 'session';
   state.meaningRevealed = false;
   state.buildSlots = [];
   render();
+  if (created) setTimeout(() => {
+    document.querySelector('.launch-sequence')?.classList.add('leaving');
+    setTimeout(() => document.querySelector('.launch-sequence')?.remove(), 520);
+    state.showLaunch = false;
+  }, 850);
   if (created) await save();
 }
 
@@ -297,15 +325,15 @@ function sessionProgress() {
 }
 
 const ACTIVITY_UI = {
-  warmup: ['Rozgrzewka dźwięków', '✦'],
-  'hear-choose': ['Złap dźwięk', '◖'],
-  mapping: ['Nowy znak', '⌁'],
-  blend: ['Połącz litery', '↝'],
-  build: ['Zbuduj słowo', '◇'],
-  meaning: ['Odkryj znaczenie', '◎'],
-  nonword: ['Wiadomość kosmity', '☄'],
-  story: ['Czytelnicza kapsuła', '▤'],
-  complete: ['Meta misji', '★']
+  warmup: ['Uruchom sygnał', '✦'],
+  'hear-choose': ['Podłącz antenę', '◖'],
+  mapping: ['Laboratorium znaku', '⌁'],
+  blend: ['Zbuduj most światła', '↝'],
+  build: ['Napraw ładownię', '◇'],
+  meaning: ['Otwórz obserwatorium', '◎'],
+  nonword: ['Sygnał kosmity', '☄'],
+  story: ['Archiwum planety', '▤'],
+  complete: ['Lądowanie', '★']
 };
 
 function activityUi(type) {
@@ -330,16 +358,21 @@ function renderSession() {
   const activity = currentActivity();
   if (!activity) { completeMission(); return; }
   const ui = activityUi(activity.type);
+  const theme = planetTheme(session.stage);
+  const currentChapter = chapterFor(activity.type);
+  const chapters = missionChapters(session);
   const instructionId = activity.type === 'meaning' && state.meaningRevealed ? 'choose-meaning' : activity.instructionId;
   state.activityStartedAt = performance.now();
-  app.innerHTML = `<section class="screen session-screen" data-activity-type="${html(activity.type)}">
-    <div class="mission-sky" aria-hidden="true">
-      ${momo('session-momo')}
-      <div class="flight-path"><span class="tiny-planet"></span><span class="tiny-rocket" style="--flight-progress:${sessionProgress()}%">➤</span></div>
+  app.innerHTML = `<section class="screen session-screen planet-${theme.slug}" data-activity-type="${html(activity.type)}" data-chapter="${currentChapter.id}" style="--planet-accent:${theme.accent};--planet-deep:${theme.deep}">
+    ${state.showLaunch ? '<div class="launch-sequence" aria-hidden="true"><span class="launch-ring one"></span><span class="launch-ring two"></span><span class="launch-ship">▲</span><strong>START MISJI</strong></div>' : ''}
+    <div class="mission-deck" aria-hidden="true">
+      <div class="deck-window"><span class="deck-planet"><i>${theme.symbol}</i></span><span class="passing-star star-a">✦</span><span class="passing-star star-b">✦</span></div>
+      ${momo(`session-momo momo-${currentChapter.id}`)}
+      <div class="engine-cells">${Array.from({ length: 5 }, (_, index) => `<span class="${sessionProgress() >= (index + 1) * 18 ? 'charged' : ''}"></span>`).join('')}</div>
     </div>
-    <div class="mission-meta"><span>${session.repair ? 'Misja utrwalająca' : `Misja ${session.number}`}</span><span>Planeta ${session.stage}</span></div>
-    <div class="progress-bar mission-progress"><span style="width:${sessionProgress()}%"></span></div>
-    <div class="card exercise-card activity-${html(activity.type)}">
+    <div class="mission-route" aria-label="Etapy misji">${chapters.map((chapter) => `<span class="route-stop ${chapterState(session, chapter)}" aria-label="${chapter.label}"><i>${chapterState(session, chapter) === 'done' ? '✓' : ''}</i><small>${chapter.label}</small></span>`).join('')}</div>
+    <div class="mission-meta"><span>${session.repair ? 'Misja utrwalająca' : `Misja ${session.number}`}</span><span>${html(CURRICULUM.stages[session.stage].planet)}</span></div>
+    <div class="card exercise-card activity-${html(activity.type)} chapter-${currentChapter.id}">
       <div class="activity-heading"><span class="activity-badge"><b>${ui.icon}</b>${ui.label}</span></div>
       <div class="instruction"><span class="speaker-orb">🔊</span><span id="instructionText">${instructionText(instructionId)}</span></div>
       <div class="play-zone">${activityMarkup(activity)}</div>
@@ -367,7 +400,7 @@ function instructionText(id) {
     'warmup-blend': 'Posłuchaj dźwięków. Połącz je w słowo.',
     'review-choose': 'Posłuchaj dźwięku. Dotknij pasującej litery.',
     'mapping-new': 'Poznajemy nowy znak. Dotknij go, aby usłyszeć dźwięk.',
-    'blend-swipe': 'Przesuń kropkę. Posłuchaj całego słowa.',
+    'blend-swipe': 'Poprowadź światło pod literami. Na końcu usłyszysz całe słowo.',
     'build-word': 'Ułóż litery w pustych polach.',
     'read-first': 'Przeczytaj słowo sam. Obrazki pojawią się później.',
     'choose-meaning': 'Wybierz obrazek, który pasuje do słowa.',
@@ -404,29 +437,29 @@ function activityMarkup(activity) {
     const parts = splitGraphemes(target.answer, session.stage);
     const choices = shuffled([target, ...itemsForStage(session.stage).filter((item) => item.id !== target.id).slice(0, 2)], `${session.seed}:warmup`).slice(0, 3);
     activity.choices = choices;
-    return `<div class="sound-orbit" style="${graphemeLayout(parts)}" aria-label="${parts.length} dźwięki"><span class="orbit-thread"></span>${parts.map((_, index) => `<span class="sound-orb" style="--i:${index}"><i></i></span>`).join('')}</div><p class="play-prompt">Które słowo zbudowały dźwięki?</p><div class="choices word-choice-grid">${choices.map((item, index) => `<button class="choice word-choice" data-answer="${html(item.id)}" style="--i:${index}"><span class="landing-dot" aria-hidden="true"></span>${html(item.answer)}</button>`).join('')}</div>`;
+    return `<div class="signal-field"><span class="signal-dish" aria-hidden="true"></span><div class="sound-orbit" style="${graphemeLayout(parts)}" aria-label="${parts.length} dźwięki"><span class="orbit-thread"></span>${parts.map((_, index) => `<span class="sound-orb" style="--i:${index}"><i></i></span>`).join('')}</div></div><p class="play-prompt">Który kod przysłała planeta?</p><div class="choices word-choice-grid">${choices.map((item, index) => `<button class="choice word-choice" data-answer="${html(item.id)}" style="--i:${index}"><span class="landing-dot" aria-hidden="true"></span>${html(item.answer)}</button>`).join('')}</div>`;
   }
-  if (activity.type === 'hear-choose') return `<div class="sound-console" aria-hidden="true"><span class="sound-core">♪</span><span class="sound-ring ring-one"></span><span class="sound-ring ring-two"></span><span class="sound-ring ring-three"></span></div><p class="play-prompt">Na której literze wyląduje dźwięk?</p><div class="choices letter-choices">${activity.choices.map((choice, index) => `<button class="choice letter-choice" data-grapheme="${html(choice)}" style="--i:${index}">${html(choice)}</button>`).join('')}</div>`;
-  if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Możesz posłuchać kilka razy.</p><button id="mappingDone" class="button primary large">Znam ten dźwięk</button>`;
+  if (activity.type === 'hear-choose') return `<div class="antenna-console"><div class="sound-console" aria-hidden="true"><span class="sound-core">♪</span><span class="sound-ring ring-one"></span><span class="sound-ring ring-two"></span><span class="sound-ring ring-three"></span></div><span class="signal-wire" aria-hidden="true"></span></div><p class="play-prompt">Dotknij anteny z pasującą literą.</p><div class="choices letter-choices">${activity.choices.map((choice, index) => `<button class="choice letter-choice antenna-pad" data-grapheme="${html(choice)}" style="--i:${index}"><i aria-hidden="true"></i><span>${html(choice)}</span></button>`).join('')}</div>`;
+  if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><span class="scanner-beam" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Każde dotknięcie uruchamia skaner.</p><button id="mappingDone" class="button primary large mission-action">Znak rozpoznany</button>`;
   if (activity.type === 'blend') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
     const duration = Math.max(1.1, 1 + parts.length * .14).toFixed(2);
-    return `<div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"></span></div></div><p class="play-prompt">Przesuń kropkę do końca. Momo powie całe słowo.</p><button id="blendStart" class="button primary large action-with-icon"><span aria-hidden="true">↝</span> Połącz i posłuchaj</button><div id="blendResult" class="blend-result hidden"><span>Razem</span><strong>${html(activity.item.answer)}</strong><button id="blendReplay" class="blend-replay" type="button" aria-label="Posłuchaj całego słowa jeszcze raz">🔊 Jeszcze raz</button></div><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Słyszę całe słowo</button>`;
+    return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p><button id="blendStart" class="button primary large action-with-icon mission-action"><span aria-hidden="true">↝</span> Momo może pokazać</button><div id="blendResult" class="blend-result hidden"><span>Całe słowo</span><strong>${html(activity.item.answer)}</strong><button id="blendReplay" class="blend-replay" type="button" aria-label="Posłuchaj całego słowa jeszcze raz">🔊 Jeszcze raz</button></div><button id="blendDone" class="button secondary large hidden" style="margin-top:10px">Most gotowy</button>`;
   }
   if (activity.type === 'build') {
     const parts = splitGraphemes(activity.item.answer, session.stage);
     activity.parts = parts;
     const tiles = shuffled(parts.map((value, index) => ({ value, index })), `${session.seed}:${activity.item.id}:tiles`);
-    return `<div class="builder"><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Litery do załadunku</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Dotknij litery albo przeciągnij ją do pola.</p><button id="buildReset" class="button secondary compact">Ułóż od nowa</button>`;
+    return `<div class="builder"><div class="cargo-machine" aria-hidden="true"><span></span><i></i></div><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Moduły literowe</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Najłatwiej: dotknij litery. Możesz też ją przeciągnąć.</p><button id="buildReset" class="button secondary compact">Zacznij układanie od nowa</button>`;
   }
   if (activity.type === 'meaning') {
-    if (!state.meaningRevealed) return `<div class="meaning-window"><span class="window-star star-one" aria-hidden="true">✦</span><span class="window-star star-two" aria-hidden="true">✦</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Najpierw przeczytaj. Obrazki jeszcze nie podpowiadają.</p><button id="revealMeaning" class="button primary large">Gotowe — odkryj obrazki</button>`;
+    if (!state.meaningRevealed) return `<div class="meaning-window shutters-closed"><span class="window-shutter shutter-left" aria-hidden="true"></span><span class="window-shutter shutter-right" aria-hidden="true"></span><span class="window-star star-one" aria-hidden="true">✦</span><span class="window-star star-two" aria-hidden="true">✦</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Najpierw przeczytaj. Okno otworzy się po próbie.</p><button id="revealMeaning" class="button primary large mission-action">Otwórz obserwatorium</button>`;
     const candidates = shuffled(CURRICULUM.items.filter((item) => item.imageId && item.id !== activity.item.id), `${session.seed}:pictures`).slice(0, 3);
     activity.meaningChoices = shuffled([activity.item, ...candidates], `${session.seed}:picture-order`);
-    return `<div class="word-chip">${html(activity.item.answer)}</div><p class="play-prompt">Wybierz znaczenie słowa.</p><div class="choices picture-choices">${activity.meaningChoices.map((item, index) => `<button class="choice picture" data-picture="${html(item.id)}" aria-label="${html(item.answer)}" style="--i:${index}">${pictureMarkup(item.answer)}</button>`).join('')}</div>`;
+    return `<div class="word-chip">${html(activity.item.answer)}</div><p class="play-prompt">Wybierz właściwe okno.</p><div class="choices picture-choices observatory-choices">${activity.meaningChoices.map((item, index) => `<button class="choice picture porthole-choice" data-picture="${html(item.id)}" aria-label="${html(item.answer)}" style="--i:${index}">${pictureMarkup(item.answer)}</button>`).join('')}</div>`;
   }
-  if (activity.type === 'nonword') return `<div class="alien-signal"><span aria-hidden="true">⌁</span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Kosmita wymyślił to słowo. Odczytaj jego kod.</p><button id="unverifiedDone" class="button primary large">Odczytałem kod</button><p class="small">To próba bez oceniania — pomaga Momo dobrać kolejne ćwiczenia.</p>`;
-  if (activity.type === 'story') return `<div class="story-capsule"><span class="capsule-light" aria-hidden="true"></span><div class="story">${activity.story.sentences.map((sentence) => `<p>${html(sentence)}</p>`).join('')}</div></div><div class="button-row story-actions"><button id="storyListen" class="button secondary">🔊 Posłuchaj po próbie</button><button id="storyDone" class="button primary">Przeczytałem</button></div>`;
+  if (activity.type === 'nonword') return `<div class="alien-signal"><span class="alien-rings" aria-hidden="true">⌁</span><span class="alien-eye" aria-hidden="true"></span><div class="word-display">${html(activity.item.answer)}</div></div><p class="play-prompt">Kosmita wymyślił ten kod. Spróbuj go odczytać.</p><button id="unverifiedDone" class="button primary large mission-action">Ustabilizuj sygnał</button><p class="small">To spokojna próba bez oceniania.</p>`;
+  if (activity.type === 'story') return `<div class="story-capsule"><span class="capsule-light" aria-hidden="true"></span><div class="story-progress" aria-label="Zdanie ${state.storyStep + 1} z ${activity.story.sentences.length}">${activity.story.sentences.map((_, index) => `<span class="${index < state.storyStep ? 'done' : index === state.storyStep ? 'current' : ''}"></span>`).join('')}</div><div class="story">${activity.story.sentences.map((sentence, index) => `<p class="story-line ${index === state.storyStep ? 'active' : ''}" data-story-line="${index}" ${index === state.storyStep ? '' : 'hidden'}>${html(sentence)}</p>`).join('')}</div></div><div class="button-row story-actions"><button id="storyListen" class="button secondary" ${state.storyAttempted ? '' : 'disabled'}>🔊 Posłuchaj po próbie</button><button id="storyAdvance" class="button primary">${state.storyAttempted ? 'Archiwum gotowe' : state.storyStep < activity.story.sentences.length - 1 ? 'Następne zdanie' : 'Skończyłem czytać'}</button></div>`;
   return completionMarkup();
 }
 
@@ -436,7 +469,11 @@ function bindActivity(activity) {
   } else if (activity.type === 'hear-choose') {
     document.querySelectorAll('[data-grapheme]').forEach((button) => button.addEventListener('click', () => objectiveAnswer(button, button.dataset.grapheme === activity.grapheme, activity, `sound-${activity.grapheme}`)));
   } else if (activity.type === 'mapping') {
-    document.querySelector('#mappingLetter').addEventListener('click', () => audio.play(`sound-${activity.grapheme}`));
+    document.querySelector('#mappingLetter').addEventListener('click', async (event) => {
+      event.currentTarget.closest('.letter-scanner')?.classList.add('scanning');
+      await audio.play(`sound-${activity.grapheme}`);
+      setTimeout(() => event.currentTarget.closest('.letter-scanner')?.classList.remove('scanning'), 420);
+    });
     document.querySelector('#mappingDone').addEventListener('click', () => finishActivity(activity, true));
   } else if (activity.type === 'blend') {
     const area = document.querySelector('#blendArea');
@@ -459,6 +496,8 @@ function bindActivity(activity) {
         beam.classList.add('moving');
       }
       area.classList.add('is-joining');
+      beam.style.transform = '';
+      beam.classList.add('at-end');
       const played = await audio.play(activity.item.audioIds[0]);
       area.classList.remove('is-joining');
       if (!played || token !== state.presentationToken) return;
@@ -476,20 +515,21 @@ function bindActivity(activity) {
     area.addEventListener('pointermove', (event) => {
       if (!dragStart || running) return;
       const bounds = area.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, (event.clientX - bounds.left - bounds.width * .05) / (bounds.width * .9 - 20)));
-      beam.style.transform = `translateX(${progress * (bounds.width * .9 - 20)}px)`;
+      const travel = bounds.width * .9 - beam.offsetWidth;
+      const progress = Math.max(0, Math.min(1, (event.clientX - bounds.left - bounds.width * .05) / travel));
+      beam.style.transform = `translateX(${progress * travel}px)`;
       area.querySelectorAll('.grapheme').forEach((element, index, elements) => element.classList.toggle('is-crossed', progress >= index / Math.max(1, elements.length - 1)));
     });
     area.addEventListener('pointerup', (event) => {
       if (!dragStart || running) return;
       const bounds = area.getBoundingClientRect();
-      const progress = (event.clientX - dragStart.x) / Math.max(1, bounds.width * .65);
+      const progress = (event.clientX - bounds.left) / Math.max(1, bounds.width);
       dragStart = null;
       beam.classList.remove('is-dragging');
-      if (progress >= .82) runBlend({ fromDrag: true });
+      if (progress >= .68) runBlend({ fromDrag: true });
       else {
-        beam.style.transform = '';
-        area.querySelectorAll('.grapheme').forEach((element) => element.classList.remove('is-crossed'));
+        area.classList.add('needs-more');
+        setTimeout(() => area.classList.remove('needs-more'), 650);
       }
     });
     area.addEventListener('pointercancel', () => {
@@ -509,7 +549,26 @@ function bindActivity(activity) {
     document.querySelector('#unverifiedDone').addEventListener('click', () => finishActivity(activity, true, false));
   } else if (activity.type === 'story') {
     document.querySelector('#storyListen').addEventListener('click', async () => { for (const id of activity.story.audioIds) await audio.play(id); });
-    document.querySelector('#storyDone').addEventListener('click', () => finishActivity(activity, true, false));
+    document.querySelector('#storyAdvance').addEventListener('click', () => {
+      if (state.storyAttempted) { finishActivity(activity, true, false); return; }
+      if (state.storyStep < activity.story.sentences.length - 1) {
+        state.storyStep += 1;
+        document.querySelectorAll('[data-story-line]').forEach((line, index) => {
+          line.hidden = index !== state.storyStep;
+          line.classList.toggle('active', index === state.storyStep);
+        });
+        document.querySelectorAll('.story-progress span').forEach((dot, index) => {
+          dot.classList.toggle('done', index < state.storyStep);
+          dot.classList.toggle('current', index === state.storyStep);
+        });
+        document.querySelector('#storyAdvance').textContent = state.storyStep < activity.story.sentences.length - 1 ? 'Następne zdanie' : 'Skończyłem czytać';
+        return;
+      }
+      state.storyAttempted = true;
+      document.querySelector('#storyListen').disabled = false;
+      document.querySelector('#storyAdvance').textContent = 'Archiwum gotowe';
+      document.querySelector('.story-capsule')?.classList.add('story-complete');
+    });
   } else if (activity.type === 'complete') {
     document.querySelector('#finishMission').addEventListener('click', completeMission);
   }
@@ -543,7 +602,23 @@ async function objectiveAnswer(button, correct, activity, modelAudio = null) {
     if (modelAudio) await audio.play(modelAudio);
   }
   await save();
-  setTimeout(() => { state.inputLocked = false; nextActivity(); }, correct ? 520 : 420);
+  if (correct) {
+    setTimeout(() => { state.inputLocked = false; nextActivity(); }, 520);
+    return;
+  }
+  const answerSelector = activity.type === 'warmup'
+    ? `[data-answer="${CSS.escape(activity.item.id)}"]`
+    : activity.type === 'hear-choose'
+      ? `[data-grapheme="${CSS.escape(activity.grapheme)}"]`
+      : `[data-picture="${CSS.escape(activity.item.id)}"]`;
+  const correctButton = document.querySelector(answerSelector);
+  correctButton?.classList.add('guided');
+  setTimeout(() => {
+    button.classList.remove('retry');
+    document.querySelector('.exercise-card')?.classList.remove('is-retry');
+    document.querySelector('.session-momo')?.classList.remove('momo-thinking');
+    state.inputLocked = false;
+  }, 520);
 }
 
 function bindBuildTile(button, activity) {
@@ -557,7 +632,7 @@ function bindBuildTile(button, activity) {
   };
   const move = (event) => {
     if (!origin) return;
-    if (!dragged && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > 8) {
+    if (!dragged && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > 12) {
       dragged = true;
       ghost = button.cloneNode(true);
       ghost.className = 'tile drag-ghost';
@@ -572,7 +647,14 @@ function bindBuildTile(button, activity) {
   };
   const end = (event) => {
     if (!origin) return;
-    const dropTarget = dragged ? document.elementFromPoint(event.clientX, event.clientY)?.closest('.sound-box') : null;
+    const exactTarget = dragged ? document.elementFromPoint(event.clientX, event.clientY)?.closest('.sound-box') : null;
+    const nearestTarget = dragged ? [...document.querySelectorAll('.sound-box:not(.filled)')]
+      .map((slot) => {
+        const bounds = slot.getBoundingClientRect();
+        return { slot, distance: Math.hypot(event.clientX - (bounds.left + bounds.width / 2), event.clientY - (bounds.top + bounds.height / 2)) };
+      })
+      .sort((a, b) => a.distance - b.distance)[0] : null;
+    const dropTarget = exactTarget ?? (nearestTarget?.distance <= 96 ? nearestTarget.slot : null);
     origin = null;
     document.removeEventListener('pointermove', move);
     document.removeEventListener('pointerup', end);
@@ -581,7 +663,10 @@ function bindBuildTile(button, activity) {
     if (dragged) {
       event.preventDefault();
       if (dropTarget) addBuildTile(button, activity, Number(dropTarget.dataset.slot), false);
-      else button.classList.add('soft-wobble');
+      else {
+        button.classList.add('soft-wobble');
+        setTimeout(() => button.classList.remove('soft-wobble'), 450);
+      }
     }
   };
   const cancel = () => {
@@ -660,10 +745,21 @@ async function addBuildTile(button, activity, requestedSlot = null, animate = tr
     await finishActivity(activity, true);
   } else {
     recordAttempt(state.progress, state.progress.activeSession, activity, { correct: false, answer, latencyMs: performance.now() - state.activityStartedAt });
+    const mismatch = state.buildSlots.findIndex((value, index) => value.value !== activity.parts[index]);
+    const wrongSlot = document.querySelector(`[data-slot="${mismatch}"]`);
+    wrongSlot?.classList.add('needs-fix');
     await audio.play('retry-gentle');
+    if (activity.parts[mismatch]) await audio.play(`sound-${activity.parts[mismatch]}`);
     await save();
-    state.buildSlots = [];
-    renderSession();
+    for (let index = mismatch; index < state.buildSlots.length; index += 1) {
+      const placedTile = state.buildSlots[index];
+      document.querySelector(`[data-tile="${placedTile?.tile}"]`)?.classList.remove('used');
+      const slot = document.querySelector(`[data-slot="${index}"]`);
+      if (slot) { slot.textContent = ''; slot.classList.remove('filled'); }
+      state.buildSlots[index] = null;
+    }
+    setTimeout(() => wrongSlot?.classList.remove('needs-fix'), 700);
+    state.inputLocked = false;
   }
 }
 
@@ -683,6 +779,8 @@ async function nextActivity() {
   session.activityIndex += 1;
   state.meaningRevealed = false;
   state.buildSlots = [];
+  state.storyStep = 0;
+  state.storyAttempted = false;
   if (!canBeginNextActivity(session) && session.activities[session.activityIndex]?.type !== 'complete') {
     session.activityIndex = session.activities.findIndex((value) => value.type === 'complete');
   }
@@ -692,7 +790,9 @@ async function nextActivity() {
 
 function completionMarkup() {
   const session = state.progress.activeSession;
-  return `<div class="completion"><div class="completion-space" aria-hidden="true"><span class="completion-planet"></span><span class="completion-orbit"></span><span class="completion-rocket">➤</span><span class="completion-star one">✦</span><span class="completion-star two">✦</span></div><h2>Planeta odkryta!</h2><p>Momo zapisuje dzisiejsze odkrycia. Rakieta przesuwa się o jeden spokojny krok.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}<button id="finishMission" class="button primary large">Koniec na dziś</button></div>`;
+  const theme = planetTheme(session.stage);
+  const discoveryCount = discoveriesFor(state.progress, session.stage).length;
+  return `<div class="completion"><div class="landing-scene" aria-hidden="true"><span class="landing-planet"><i>${theme.symbol}</i></span><span class="landing-rocket">▲</span><span class="landing-beam"></span><span class="next-discovery" style="--slot:${discoveryCount % 6}">✦</span>${momo('landing-momo momo-happy')}</div><h2>Lądowanie udane!</h2><p>Momo znalazł nowe odkrycie na planecie ${html(CURRICULUM.stages[session.stage].planet)}. Zobaczysz je po powrocie do statku.</p>${session.number % 5 === 0 ? '<div class="callout">W trybie rodzica czeka pięcioelementowa próba czytania. Nie blokuje kolejnej misji.</div>' : ''}<button id="finishMission" class="button primary large mission-action">Koniec na dziś</button></div>`;
 }
 
 async function completeMission() {
@@ -700,7 +800,12 @@ async function completeMission() {
   state.sessionCompleted = true;
   state.presentationToken += 1;
   audio.stop();
+  const completedStage = state.progress.activeSession.stage;
+  const completedNumber = state.progress.activeSession.number;
+  const priorStage = state.progress.currentStage;
+  addDiscovery(state.progress, completedStage, completedNumber);
   finalizeSession(state.progress, state.progress.activeSession);
+  if (state.progress.currentStage > priorStage) state.justUnlockedStage = state.progress.currentStage;
   await save();
   state.sessionCompleted = false;
   state.view = 'home';
@@ -711,6 +816,7 @@ function renderParent() {
   const progress = state.progress;
   const sessions = progress.sessions;
   const latest = sessions.at(-1);
+  const discoveryTotal = Object.values(ensureExploration(progress).discoveriesByStage).reduce((sum, entries) => sum + entries.length, 0);
   const confusionRows = Object.entries(progress.errors).sort((a, b) => b[1] - a[1]).slice(0, 8);
   const dueProbes = progress.parentProbes.filter((probe) => probe.due);
   app.innerHTML = `<section class="screen">
@@ -721,6 +827,7 @@ function renderParent() {
       <div class="stat"><span>Misje</span><strong>${sessions.length}</strong></div>
       <div class="stat"><span>Ostatnia trafność</span><strong>${latest ? percent(latest.accuracy) : '—'}</strong></div>
       <div class="stat"><span>Do powtórki</span><strong>${progress.reviewQueue.length}</strong></div>
+      <div class="stat"><span>Odkrycia</span><strong>${discoveryTotal}</strong></div>
     </div></div>
     <div class="card"><p class="eyebrow">Etapy i umiejętności</p><h2>Droga przez planety</h2>
       <div class="table-wrap"><table><thead><tr><th>Etap</th><th>Nowe znaki</th><th>Status</th></tr></thead><tbody>${CURRICULUM.stages.slice(1).map((stage) => `<tr><td>${stage.order}. ${html(stage.planet)}</td><td>${html(stage.introducedGraphemes.join(' · '))}</td><td>${stage.order < progress.currentStage ? 'ukończony' : stage.order === progress.currentStage ? 'w toku' : 'później'}</td></tr>`).join('')}</tbody></table></div>
