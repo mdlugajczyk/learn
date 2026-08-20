@@ -11,12 +11,13 @@ test('startup and onboarding never play a narrator test sample', () => {
   assert.match(appSource, /setInstruction\('welcome-home', false\)/);
 });
 
-test('the blend gesture models the complete word rather than replaying isolated phonemes', () => {
+test('the blend gesture models separate sounds and then the complete joined word', () => {
   const blendHandlerStart = appSource.indexOf("} else if (activity.type === 'blend') {");
   const blendHandlerEnd = appSource.indexOf("} else if (activity.type === 'build') {", blendHandlerStart);
   const blendHandler = appSource.slice(blendHandlerStart, blendHandlerEnd);
+  assert.match(blendHandler, /await playSegmented\(activity\.item\.answer/);
   assert.match(blendHandler, /await audio\.play\(activity\.item\.audioIds\[0\]\)/);
-  assert.doesNotMatch(blendHandler, /playSegmented/);
+  assert.ok(blendHandler.indexOf('playSegmented') < blendHandler.indexOf('audio.play(activity.item.audioIds[0])'));
   assert.match(appSource, /id="blendResult"/);
 });
 
@@ -53,7 +54,7 @@ test('a wrong objective answer stays for a guided retry', () => {
 
 test('the playful shell keeps meaning pictures behind the reading attempt', () => {
   assert.match(appSource, /class="meaning-window shutters-closed"/);
-  assert.match(appSource, /id="revealMeaning"/);
+  assert.match(appSource, /iconAction\('revealMeaning'/);
   const hiddenAttempt = appSource.indexOf("if (!state.meaningRevealed)");
   const pictureChoices = appSource.indexOf('observatory-choices', hiddenAttempt);
   assert.ok(hiddenAttempt >= 0 && pictureChoices > hiddenAttempt);
