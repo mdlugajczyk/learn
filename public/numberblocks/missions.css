@@ -68,6 +68,55 @@
 .home-progress-stars i { color: rgba(37, 92, 81, .2); font-style: normal; }
 .home-progress-stars i.earned { color: #f2b73d; filter: drop-shadow(0 2px 0 #fff); }
 
+.range-layer { align-items: flex-start; overflow-y: auto; }
+.range-card {
+  width: min(100%, 500px);
+  position: relative;
+  margin: auto 0;
+  padding: 24px;
+  border: 5px solid rgba(255,255,255,.94);
+  border-radius: 32px;
+  background: var(--cream);
+  box-shadow: 0 15px 0 rgba(23, 52, 86, .17), 0 26px 50px rgba(23, 52, 86, .25);
+  color: var(--ink);
+  text-align: center;
+  animation: welcome-arrive .55s var(--ease-spring) both;
+}
+.range-stars { margin-bottom: 3px; color: var(--yellow-deep); font-size: 1.25rem; letter-spacing: .18em; }
+.range-card h2 { margin: 2px 0 7px; font-size: clamp(1.65rem, 7vw, 2.15rem); line-height: 1; }
+.range-intro { max-width: 360px; margin: 0 auto 16px; color: var(--ink-soft); font-size: .75rem; line-height: 1.35; }
+.range-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.range-choice { min-height: 75px; display: flex; align-items: center; position: relative; padding: 11px 35px 11px 13px; border: 3px solid #dbe5e8; border-radius: 18px; background: #fff; cursor: pointer; text-align: left; transition: transform .18s var(--ease-spring), border-color .18s ease, background .18s ease; }
+.range-choice:active { transform: scale(.97); }
+.range-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.range-choice-copy { display: flex; flex-direction: column; gap: 2px; }
+.range-choice-copy strong { color: var(--ink); font-size: 1.08rem; }
+.range-choice-copy small { color: var(--ink-soft); font-size: .59rem; line-height: 1.2; }
+.range-choice > i { width: 23px; height: 23px; display: grid; place-items: center; position: absolute; right: 9px; border-radius: 50%; background: #dbe5e8; color: transparent; font-size: .7rem; font-style: normal; }
+.range-choice input:checked ~ .range-choice-copy strong { color: #276f48; }
+.range-choice input:checked ~ i { background: #43b876; color: #fff; }
+.range-choice:has(input:checked) { border-color: #43b876; background: #edf9ef; box-shadow: 0 4px 0 rgba(40, 125, 75, .12); }
+.range-choice:focus-within { outline: 5px solid rgba(255, 216, 77, .72); outline-offset: 2px; }
+.setup-auto-row { min-height: 61px; display: flex; align-items: center; gap: 11px; margin: 12px 0 10px; padding: 9px 12px; border-radius: 16px; background: #e9f5fa; text-align: left; }
+.setup-auto-row input { width: 23px; height: 23px; flex: 0 0 auto; accent-color: #43b876; }
+.setup-auto-row span { display: flex; flex-direction: column; gap: 2px; }
+.setup-auto-row strong { font-size: .78rem; }
+.setup-auto-row small { color: var(--ink-soft); font-size: .62rem; line-height: 1.28; }
+.range-save-button { width: 100%; }
+.range-private-note { margin: 12px 0 0; color: var(--ink-soft); font-size: .6rem; }
+
+.learning-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.learning-heading h3, .learning-heading p { margin: 0; }
+.learning-heading p { max-width: 270px; }
+.mastery-count { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; background: #e4f6e9; color: #276f48; font-size: .59rem; }
+.range-choices.compact { margin-top: 12px; gap: 7px; }
+.range-choices.compact .range-choice { min-height: 58px; padding-block: 7px; border-radius: 14px; }
+.range-choices.compact .range-choice-copy strong { font-size: .85rem; }
+.range-choices.compact .range-choice-copy small { font-size: .52rem; }
+.restart-range-button { width: 100%; min-height: 35px; margin-top: 7px; border: 0; border-radius: 11px; background: #eef2f4; color: var(--ink-soft); font-size: .61rem; cursor: pointer; }
+.auto-grow-row { margin-top: 7px; border-top: 1px solid #e6e7dd; }
+.level-unlocked-copy { padding: 5px 10px; border: 3px solid rgba(255,255,255,.78); border-radius: 999px; background: #43b876; color: #fff; font-weight: 1000; }
+
 .mission-play-content {
   height: calc(100svh - 66px - var(--safe-top));
   display: grid;
@@ -312,6 +361,11 @@
   .session-ten .number-character { --unit: 34px; }
   .session-complete-card h2 { font-size: 1.42rem; }
   .session-complete-card p { margin: 3px 0 9px; }
+  .range-card { padding: 15px 18px; border-radius: 26px; }
+  .range-card h2 { font-size: 1.5rem; }
+  .range-intro { margin-bottom: 10px; }
+  .range-choice { min-height: 60px; padding-block: 7px; }
+  .setup-auto-row { min-height: 52px; margin-block: 8px; padding-block: 6px; }
 }
 
 @media (orientation: landscape) and (max-height: 560px) {

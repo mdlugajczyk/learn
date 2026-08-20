@@ -3,10 +3,17 @@ import assert from 'node:assert/strict';
 
 import {
   MISSION_FACTS,
+  RANGE_PRESETS,
+  advanceLearning,
   answerChoices,
+  chooseFact,
   createMissionPlan,
   factKey,
+  isFactMastered,
   isCorrectSplit,
+  learningStatus,
+  normalizeLearningSettings,
+  recordFactResult,
   unlockedTier
 } from '../public/numberblocks/missions.js';
 
@@ -51,4 +58,58 @@ test('Ten missions unlock only after foundational sessions', () => {
   assert.equal(unlockedTier(2), 2);
   assert.equal(unlockedTier(5), 3);
   assert.equal(unlockedTier(8), 4);
+});
+
+test('parent presets cover gentle, full, and bigger-number starting ranges', () => {
+  assert.deepEqual(RANGE_PRESETS.map(preset => preset.label), ['1–5', '1–7', '1–10', '5–10']);
+  assert.deepEqual(normalizeLearningSettings({ preset: 'big' }), {
+    configured: false,
+    preset: 'big',
+    autoAdvance: true,
+    adaptiveMax: 10
+  });
+});
+
+test('a fact becomes strong after two clean answers and a mistake requires recovery', () => {
+  const fact = { a: 2, b: 2, sum: 4 };
+  let progress = recordFactResult({}, fact, { firstTry: true });
+  assert.equal(isFactMastered(progress, fact), false);
+  progress = recordFactResult(progress, fact, { firstTry: true });
+  assert.equal(isFactMastered(progress, fact), true);
+  progress = recordFactResult(progress, fact, { firstTry: false });
+  assert.equal(isFactMastered(progress, fact), false);
+  progress = recordFactResult(progress, fact, { firstTry: true });
+  progress = recordFactResult(progress, fact, { firstTry: true });
+  assert.equal(isFactMastered(progress, fact), true);
+});
+
+test('mastering most frontier facts unlocks exactly one new total', () => {
+  const learning = { configured: true, preset: 'little', autoAdvance: true, adaptiveMax: 5 };
+  const frontier = MISSION_FACTS.filter(fact => fact.sum >= 3 && fact.sum <= 5).slice(0, 4);
+  let progress = {};
+  for (const fact of frontier) {
+    progress = recordFactResult(progress, fact, { firstTry: true });
+    progress = recordFactResult(progress, fact, { firstTry: true });
+  }
+  assert.equal(learningStatus(progress, learning).readyToAdvance, true);
+  assert.deepEqual(advanceLearning(progress, learning), {
+    learning: { ...learning, adaptiveMax: 6 },
+    unlocked: 6
+  });
+});
+
+test('mission selection respects the parent floor and adaptive ceiling', () => {
+  const learning = { configured: true, preset: 'big', autoAdvance: false, adaptiveMax: 10 };
+  for (let index = 0; index < 12; index += 1) {
+    const plan = createMissionPlan({}, () => index / 12, learning);
+    assert.equal(plan.every(mission => mission.fact.sum >= 5 && mission.fact.sum <= 10), true);
+  }
+});
+
+test('strong earlier facts remain in occasional review rotation', () => {
+  const masteredFact = MISSION_FACTS.find(fact => fact.a === 1 && fact.b === 1);
+  let progress = recordFactResult({}, masteredFact, { firstTry: true });
+  progress = recordFactResult(progress, masteredFact, { firstTry: true });
+  const review = chooseFact(progress, () => 0, { learning: { preset: 'little', adaptiveMax: 5 } });
+  assert.equal(factKey(review), factKey(masteredFact));
 });

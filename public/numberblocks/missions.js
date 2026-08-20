@@ -19,6 +19,13 @@ export const MISSION_FACTS = Object.freeze([
   { a: 5, b: 5, sum: 10, tier: 4, favorite: true }
 ]);
 
+export const RANGE_PRESETS = Object.freeze([
+  { id: 'little', label: '1–5', minSum: 2, maxSum: 5, description: 'Small number friends' },
+  { id: 'growing', label: '1–7', minSum: 2, maxSum: 7, description: 'Ready for six and seven' },
+  { id: 'all', label: '1–10', minSum: 2, maxSum: 10, description: 'The whole Number Magic world' },
+  { id: 'big', label: '5–10', minSum: 5, maxSum: 10, description: 'Skip straight to bigger totals' }
+]);
+
 export function factKey(fact) {
   return `${fact.a}+${fact.b}`;
 }
@@ -30,28 +37,119 @@ export function unlockedTier(sessionsCompleted = 0) {
   return 1;
 }
 
+export function normalizeLearningSettings(value = {}) {
+  const preset = RANGE_PRESETS.find(item => item.id === value.preset) || RANGE_PRESETS[0];
+  const requestedMax = Number(value.adaptiveMax ?? preset.maxSum);
+  return {
+    configured: value.configured === true,
+    preset: preset.id,
+    autoAdvance: value.autoAdvance !== false,
+    adaptiveMax: Math.max(preset.maxSum, Math.min(10, requestedMax))
+  };
+}
+
+export function rangeForLearning(value = {}) {
+  const settings = normalizeLearningSettings(value);
+  const preset = RANGE_PRESETS.find(item => item.id === settings.preset) || RANGE_PRESETS[0];
+  return { minSum: preset.minSum, maxSum: settings.adaptiveMax, startMax: preset.maxSum };
+}
+
+function factStat(progress, fact) {
+  const key = factKey(fact);
+  const stored = progress.factStats?.[key] || {};
+  const legacyWins = Number(progress.factWins?.[key] || 0);
+  const attempts = Number(stored.attempts ?? legacyWins);
+  const recent = Array.isArray(stored.recent)
+    ? stored.recent.slice(-5).map(value => value ? 1 : 0)
+    : Array(Math.min(2, legacyWins)).fill(1);
+  return {
+    attempts,
+    perfect: Number(stored.perfect ?? recent.reduce((total, value) => total + value, 0)),
+    streak: Number(stored.streak ?? (recent.every(Boolean) ? recent.length : 0)),
+    recent
+  };
+}
+
+export function isFactMastered(progress = {}, fact) {
+  const stat = factStat(progress, fact);
+  return stat.attempts >= 2 && stat.recent.length >= 2 && stat.recent.slice(-2).every(Boolean);
+}
+
+export function recordFactResult(progress = {}, fact, { firstTry = true } = {}) {
+  const key = factKey(fact);
+  const previous = factStat(progress, fact);
+  const result = firstTry ? 1 : 0;
+  return {
+    ...progress,
+    factWins: {
+      ...(progress.factWins || {}),
+      [key]: Number(progress.factWins?.[key] || 0) + 1
+    },
+    factStats: {
+      ...(progress.factStats || {}),
+      [key]: {
+        attempts: previous.attempts + 1,
+        perfect: previous.perfect + result,
+        streak: result ? previous.streak + 1 : 0,
+        recent: [...previous.recent, result].slice(-5)
+      }
+    }
+  };
+}
+
+export function learningStatus(progress = {}, learning = {}) {
+  const settings = normalizeLearningSettings(learning);
+  const range = rangeForLearning(settings);
+  const frontierMin = Math.max(range.minSum, range.maxSum - 2);
+  const frontier = MISSION_FACTS.filter(fact => fact.sum >= frontierMin && fact.sum <= range.maxSum);
+  const mastered = frontier.filter(fact => isFactMastered(progress, fact)).length;
+  const needed = Math.max(1, Math.ceil(frontier.length * .75));
+  return {
+    minSum: range.minSum,
+    maxSum: range.maxSum,
+    frontierTotal: frontier.length,
+    frontierMastered: mastered,
+    needed,
+    readyToAdvance: settings.autoAdvance && range.maxSum < 10 && mastered >= needed
+  };
+}
+
+export function advanceLearning(progress = {}, learning = {}) {
+  const settings = normalizeLearningSettings(learning);
+  const status = learningStatus(progress, settings);
+  if (!status.readyToAdvance) return { learning: settings, unlocked: null };
+  const unlocked = Math.min(10, settings.adaptiveMax + 1);
+  return { learning: { ...settings, adaptiveMax: unlocked }, unlocked };
+}
+
 function sample(values, random) {
   return values[Math.min(values.length - 1, Math.floor(random() * values.length))];
 }
 
 export function chooseFact(progress = {}, random = Math.random, options = {}) {
-  const sessionsCompleted = Number(progress.sessionsCompleted || 0);
-  const tier = options.tier || unlockedTier(sessionsCompleted);
-  const eligible = MISSION_FACTS.filter(fact => fact.tier <= tier && (!options.excludeKey || factKey(fact) !== options.excludeKey));
-  const wins = progress.factWins || {};
-  const leastPractised = Math.min(...eligible.map(fact => Number(wins[factKey(fact)] || 0)));
-  const reviewPool = eligible.filter(fact => Number(wins[factKey(fact)] || 0) === leastPractised);
+  const range = rangeForLearning(options.learning);
+  const eligible = MISSION_FACTS.filter(fact => (
+    fact.sum >= range.minSum
+    && fact.sum <= range.maxSum
+    && (!options.excludeKey || factKey(fact) !== options.excludeKey)
+  ));
+  const learningPool = eligible.filter(fact => !isFactMastered(progress, fact));
+  const masteredPool = eligible.filter(fact => isFactMastered(progress, fact));
+  const useReview = learningPool.length && masteredPool.length && random() < .2;
+  const pool = useReview ? masteredPool : (learningPool.length ? learningPool : eligible);
+  const leastPractised = Math.min(...pool.map(fact => factStat(progress, fact).attempts));
+  const reviewPool = pool.filter(fact => factStat(progress, fact).attempts === leastPractised);
   return { ...sample(reviewPool.length ? reviewPool : eligible, random) };
 }
 
-export function createMissionPlan(progress = {}, random = Math.random) {
-  const first = chooseFact(progress, random);
+export function createMissionPlan(progress = {}, random = Math.random, learning = {}) {
+  const first = chooseFact(progress, random, { learning });
   let third;
-  const canUseTen = unlockedTier(progress.sessionsCompleted || 0) >= 4;
+  const canUseTen = rangeForLearning(learning).maxSum >= 10;
   if (canUseTen && Number(progress.sessionsCompleted || 0) % 3 === 2) {
     third = { ...sample(MISSION_FACTS.filter(fact => fact.favorite), random) };
   } else {
-    third = chooseFact(progress, random, { excludeKey: factKey(first) });
+    third = chooseFact(progress, random, { excludeKey: factKey(first), learning });
   }
   return [
     { mode: 'forward', fact: first },

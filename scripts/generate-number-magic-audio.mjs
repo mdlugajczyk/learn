@@ -74,6 +74,12 @@ const missionEntries = [
 ];
 
 const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))].sort((left, right) => left - right);
+for (let number = 6; number <= 10; number += 1) {
+  missionEntries.push({
+    filename: `mission-unlock-${number}.m4a`,
+    text: `Amazing! Number ${numberNames[number]} is ready to play!`
+  });
+}
 for (const number of missionNumbers) {
   missionEntries.push(
     {
