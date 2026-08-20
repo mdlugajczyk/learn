@@ -39,6 +39,18 @@ test('known syllables become the blending and building units for longer words', 
   assert.match(appSource, /audioIdForUnit\(part\)/);
 });
 
+test('mama highlights ma then ma before joining into the whole word', () => {
+  const blendHandlerStart = appSource.indexOf("} else if (activity.type === 'blend') {");
+  const blendHandlerEnd = appSource.indexOf("} else if (activity.type === 'build') {", blendHandlerStart);
+  const blendHandler = appSource.slice(blendHandlerStart, blendHandlerEnd);
+  assert.match(appSource, /data-blend-unit="\$\{index\}"/);
+  assert.match(appSource, /id="joinedWord"/);
+  assert.ok(blendHandler.indexOf('await playUnits(activity.item') < blendHandler.indexOf("area.classList.add('is-assembling')"));
+  assert.ok(blendHandler.indexOf("area.classList.add('is-assembled')") < blendHandler.indexOf('await audio.play(activity.item.audioIds[0])'));
+  assert.doesNotMatch(blendHandler, /is-joining/);
+  assert.match(stylesSource, /\.graphemes\.has-known-units\.is-assembled \.joined-word/);
+});
+
 test('parent mode gate opens on a normal tap during a mission', () => {
   const gateHandlerStart = appSource.indexOf('const openParentGate = () => {');
   const gateHandlerEnd = appSource.indexOf("gateForm.addEventListener('submit'", gateHandlerStart);

@@ -477,7 +477,8 @@ function activityMarkup(activity) {
   if (activity.type === 'blend') {
     const parts = learningUnits(activity.item, session.stage);
     const duration = Math.max(1.1, 1 + parts.length * .14).toFixed(2);
-    return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p>${iconAction('blendStart', '↻', 'Momo pokazuje jeszcze raz')}<div id="blendResult" class="blend-result hidden"><span class="visually-hidden">Całe słowo</span><strong>${html(activity.item.answer)}</strong>${iconAction('blendReplay', '🔊', 'Posłuchaj całego słowa jeszcze raz', 'blend-replay')}</div>${iconAction('blendDone', '➜', 'Dalej', 'button secondary large hidden')}`;
+    const joinsKnownUnits = parts.length > 1;
+    return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes ${joinsKnownUnits ? 'has-known-units' : ''}" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" data-blend-unit="${index}" style="--i:${index}">${html(part)}</span>`).join('')}${joinsKnownUnits ? `<strong class="joined-word" id="joinedWord" aria-hidden="true">${html(activity.item.answer)}</strong>` : ''}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p>${iconAction('blendStart', '↻', 'Momo pokazuje jeszcze raz')}<div id="blendResult" class="blend-result ${joinsKnownUnits ? 'joined-controls' : ''} hidden"><span class="visually-hidden">Całe słowo</span>${joinsKnownUnits ? '' : `<strong>${html(activity.item.answer)}</strong>`}${iconAction('blendReplay', '🔊', 'Posłuchaj całego słowa jeszcze raz', 'blend-replay')}</div>${iconAction('blendDone', '➜', 'Dalej', 'button secondary large hidden')}`;
   }
   if (activity.type === 'build') {
     const parts = learningUnits(activity.item, session.stage);
@@ -536,14 +537,21 @@ function bindActivity(activity) {
         void beam.offsetWidth;
         beam.classList.add('moving');
       }
-      area.classList.add('is-joining');
       beam.style.transform = '';
       beam.classList.add('at-end');
       await playUnits(activity.item, '.grapheme', token);
       if (token !== state.presentationToken) return;
-      await pause(120);
+      if (parts.length > 1) {
+        area.classList.add('is-assembling');
+        await pause(360);
+        if (token !== state.presentationToken) return;
+        area.classList.add('is-assembled');
+        document.querySelector('#joinedWord')?.setAttribute('aria-hidden', 'false');
+        await pause(180);
+      } else {
+        await pause(120);
+      }
       const played = await audio.play(activity.item.audioIds[0]);
-      area.classList.remove('is-joining');
       if (!played || token !== state.presentationToken) return;
       area.querySelectorAll('.grapheme').forEach((element) => element.classList.add('was-sounded'));
       document.querySelector('#blendResult').classList.remove('hidden');
@@ -640,7 +648,8 @@ async function playUnits(item, selector = null, token = state.presentationToken)
     await audio.play(audioIdForUnit(part));
     elements[index]?.classList.remove('is-sounding');
     elements[index]?.classList.add('was-sounded');
-    await pause(70);
+    // A short, visible beat keeps repeated chunks such as ma + ma distinct.
+    await pause(parts.length > 1 ? 190 : 70);
   }
   return true;
 }
