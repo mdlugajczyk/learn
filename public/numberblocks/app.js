@@ -3,8 +3,8 @@ import {
   advanceLearning,
   answerChoices,
   createMissionPlan,
-  isCorrectSplit,
   learningStatus,
+  nextSplitStep,
   normalizeLearningSettings,
   rangeForLearning,
   recordFactResult,
@@ -40,12 +40,14 @@ const state = {
   phase: 'home',
   counts: [0, 0],
   splitParts: [],
+  splitCount: 0,
   choices: [],
   missionMistake: false,
   newLevel: null,
   prompt: { file: 'welcome.m4a', text: '' },
   phaseToken: 0,
   celebrationTimer: null,
+  transitionTimer: null,
   toastTimer: null,
   resetArmedUntil: 0
 };
@@ -317,7 +319,9 @@ function renderHomeProgress() {
 function clearPhaseTimers() {
   state.phaseToken += 1;
   clearTimeout(state.celebrationTimer);
+  clearTimeout(state.transitionTimer);
   state.celebrationTimer = null;
+  state.transitionTimer = null;
 }
 
 function setPrompt(file, text, repeatAfter = true) {
@@ -351,6 +355,7 @@ function startMission() {
   const mission = currentMission();
   state.counts = [0, 0];
   state.splitParts = [];
+  state.splitCount = 0;
   state.choices = answerChoices(mission.fact.sum);
   state.missionMistake = false;
   state.phase = mission.mode === 'forward' ? 'build-first' : 'split';
@@ -358,7 +363,7 @@ function startMission() {
   if (mission.mode === 'forward') {
     setPrompt(`mission-build-first-${mission.fact.a}.m4a`, `First, build ${numberName(mission.fact.a)}! Drag blocks into the glowing spot.`);
   } else {
-    setPrompt(missionAudioName('split', mission.fact), `Here is ${numberName(mission.fact.sum)}. Pull away ${numberName(mission.fact.a)} ${blockNoun(mission.fact.a)}!`);
+    setPrompt(missionAudioName('split', mission.fact), `Here is ${numberName(mission.fact.sum)}. Pull one block at a time to make ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}!`);
   }
 }
 
@@ -383,6 +388,7 @@ function renderMission() {
 
   if (state.phase === 'build-first' || state.phase === 'build-second') renderBuildStage(mission.fact);
   else if (state.phase === 'split') renderSplitStage(mission.fact);
+  else if (state.phase === 'split-reveal') renderSplitRevealStage(mission.fact);
   else if (state.phase === 'choose') renderChoiceStage(mission.fact);
   else if (state.phase === 'combine') renderCombineStage(mission.fact);
   else if (state.phase === 'success') renderSuccessStage(mission.fact);
@@ -414,7 +420,11 @@ function renderEquation() {
   if (!mission) return;
   const { a, b, sum } = mission.fact;
   let values;
-  if (mission.mode === 'reverse' && state.phase === 'split') values = [sum, '=', '?', '+', '?'];
+  if (mission.mode === 'reverse' && state.phase === 'split') {
+    values = state.splitCount > 0
+      ? [sum, '=', state.splitCount, '+', sum - state.splitCount]
+      : [sum, '=', '?', '+', '?'];
+  } else if (mission.mode === 'reverse' && state.phase === 'split-reveal') values = [sum, '=', a, '+', b];
   else if (state.phase === 'build-first') values = [a, '+', '?', '=', '?'];
   else if (state.phase === 'build-second') values = [a, '+', b, '=', '?'];
   else if (state.phase === 'success') values = [a, '+', b, '=', sum];
@@ -709,18 +719,39 @@ function attachCombineGesture(button, index) {
 }
 
 function renderSplitStage(fact) {
+  const pulled = state.splitCount;
+  const remaining = fact.sum - pulled;
   const splitArena = makeElement('div', 'split-arena');
-  const pads = makeElement('div', 'split-targets');
-  [fact.a, fact.b].forEach(value => pads.appendChild(makeElement('span', 'split-target', value)));
+  const collected = makeElement('div', `split-progress-side${pulled ? ' has-blocks' : ''}`);
+  collected.setAttribute('aria-label', pulled
+    ? `${numberName(pulled, true)} ${blockNoun(pulled)} pulled away. Make ${numberName(fact.a)}.`
+    : `Empty building spot. Make ${numberName(fact.a)}.`);
+  if (pulled > 0) {
+    collected.appendChild(characterHost(pulled, 'mission-character split-progress-character'));
+  } else {
+    const ghost = makeElement('span', 'split-progress-ghost');
+    ghost.style.setProperty('--ghost-cols', CHARACTER_DATA[fact.a].columns);
+    for (let index = 0; index < fact.a; index += 1) ghost.appendChild(makeElement('i'));
+    collected.appendChild(ghost);
+  }
+  collected.appendChild(makeElement('span', 'split-target-badge', fact.a));
+
+  const plus = makeElement('span', 'split-progress-plus', '+');
   const whole = makeElement('button', 'reverse-whole');
   whole.type = 'button';
-  whole.setAttribute('aria-label', `Number ${numberName(fact.sum)}. Pull some of its blocks away.`);
-  whole.append(characterHost(fact.sum, 'mission-character reverse-character'), makeElement('span', 'friend-badge', fact.sum));
+  whole.setAttribute('aria-label', `Number ${numberName(remaining)}. Pull one block away.`);
+  whole.append(characterHost(remaining, 'mission-character reverse-character'), makeElement('span', 'friend-badge', remaining));
   attachSplitGesture(whole, fact);
+
+  const progress = makeElement('div', 'split-pull-progress');
+  progress.setAttribute('aria-label', `${pulled} of ${fact.a} blocks pulled away`);
+  for (let index = 0; index < fact.a; index += 1) {
+    progress.appendChild(makeElement('i', index < pulled ? 'filled' : '', index < pulled ? '★' : ''));
+  }
   const coach = makeElement('div', 'reverse-coach');
   coach.setAttribute('aria-hidden', 'true');
-  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '↗'));
-  splitArena.append(pads, whole, coach);
+  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '←'));
+  splitArena.append(collected, plus, whole, progress, coach);
   elements.missionStage.appendChild(splitArena);
 }
 
@@ -728,13 +759,11 @@ function attachSplitGesture(button, fact) {
   let pointerId = null;
   let startX = 0;
   let startY = 0;
-  let lastX = 0;
-  let lastY = 0;
-  let chunk = 0;
   let moved = false;
   let armed = false;
   let splitTimer = null;
-  let selected = [];
+  let selected = null;
+  let selectedCenter = null;
   let completed = false;
 
   const cleanup = () => {
@@ -747,39 +776,31 @@ function attachSplitGesture(button, fact) {
     if (completed) return;
     completed = true;
     cleanup();
-    const parts = [chunk, fact.sum - chunk];
-    if (isCorrectSplit(fact, parts)) {
-      sounds.effect('snap');
-      button.classList.add('split-success');
-      setTimeout(() => completeSplit(parts), state.gentleMotion ? 20 : 260);
-    } else {
-      state.missionMistake = true;
-      state.progress.mistakes += 1;
-      saveState();
-      sounds.effect('wrong');
-      button.classList.add('split-wrong');
-      setPrompt('mission-split-retry.m4a', `Almost! Try pulling ${numberName(fact.a)} ${blockNoun(fact.a)} away.`, false);
-      setTimeout(() => renderMission(), state.gentleMotion ? 20 : 480);
+    elements.missionStage.querySelector('.mission-split-preview')?.remove();
+    const target = elements.missionStage.querySelector('.split-progress-side');
+    if (target && selected && selectedCenter) {
+      const targetRect = target.getBoundingClientRect();
+      selected.style.setProperty('--peel-x', `${targetRect.left + targetRect.width / 2 - selectedCenter.x}px`);
+      selected.style.setProperty('--peel-y', `${targetRect.top + targetRect.height * .62 - selectedCenter.y}px`);
     }
+    sounds.effect('snap');
+    button.classList.add('split-success');
+    setTimeout(() => acceptPulledBlock(fact), state.gentleMotion ? 20 : 360);
   };
   const move = event => {
     if (event.pointerId !== pointerId || completed) return;
     event.preventDefault();
-    lastX = event.clientX;
-    lastY = event.clientY;
     const dx = event.clientX - startX;
     const dy = event.clientY - startY;
     if (!moved && Math.hypot(dx, dy) < 7) return;
     moved = true;
-    selected.forEach(cube => {
-      cube.style.setProperty('--peel-x', `${dx}px`);
-      cube.style.setProperty('--peel-y', `${dy}px`);
-    });
-    armed = Math.hypot(dx, dy) > 48;
+    selected.style.setProperty('--peel-x', `${dx}px`);
+    selected.style.setProperty('--peel-y', `${dy}px`);
+    armed = Math.hypot(dx, dy) > 42;
     button.classList.toggle('split-armed', armed);
     const preview = elements.missionStage.querySelector('.mission-split-preview');
     if (preview) {
-      preview.textContent = `${chunk} + ${fact.sum - chunk}`;
+      preview.textContent = `${state.splitCount + 1} + ${fact.sum - state.splitCount - 1}`;
       preview.classList.toggle('armed', armed);
       const arena = elements.missionStage.getBoundingClientRect();
       preview.style.left = `${Math.min(arena.width - 44, Math.max(44, event.clientX - arena.left + 20))}px`;
@@ -797,10 +818,8 @@ function attachSplitGesture(button, fact) {
     elements.missionStage.querySelector('.mission-split-preview')?.remove();
     if (event.type !== 'pointercancel' && moved && armed) resolve();
     else {
-      selected.forEach(cube => {
-        cube.style.removeProperty('--peel-x');
-        cube.style.removeProperty('--peel-y');
-      });
+      selected?.style.removeProperty('--peel-x');
+      selected?.style.removeProperty('--peel-y');
       button.classList.add('split-return');
       setTimeout(() => button.classList.remove('split-return', 'split-armed'), 280);
     }
@@ -820,13 +839,12 @@ function attachSplitGesture(button, fact) {
     pointerId = event.pointerId;
     startX = event.clientX;
     startY = event.clientY;
-    lastX = startX;
-    lastY = startY;
-    chunk = Math.min(Number(cube.dataset.cubeIndex) + 1, fact.sum - 1);
-    selected = cubes.slice(0, chunk);
-    selected.forEach(item => item.classList.add('peel-cube'));
-    cubes.slice(chunk).forEach(item => item.classList.add('stay-cube'));
-    const preview = makeElement('span', 'mission-split-preview', `${chunk} + ${fact.sum - chunk}`);
+    selected = cube;
+    const selectedRect = cube.getBoundingClientRect();
+    selectedCenter = { x: selectedRect.left + selectedRect.width / 2, y: selectedRect.top + selectedRect.height / 2 };
+    selected.classList.add('peel-cube');
+    cubes.filter(item => item !== selected).forEach(item => item.classList.add('stay-cube'));
+    const preview = makeElement('span', 'mission-split-preview', `${state.splitCount + 1} + ${fact.sum - state.splitCount - 1}`);
     elements.missionStage.appendChild(preview);
     document.addEventListener('pointermove', move, { passive: false });
     document.addEventListener('pointerup', finish);
@@ -834,13 +852,47 @@ function attachSplitGesture(button, fact) {
   });
 }
 
-function completeSplit(parts) {
+function acceptPulledBlock(fact) {
+  if (state.phase !== 'split') return;
+  const step = nextSplitStep(fact, state.splitCount);
+  state.splitCount = step.pulled;
+  if (step.complete) {
+    completeSplit();
+    return;
+  }
+  clearPhaseTimers();
+  renderMission();
+  setPrompt('mission-pull-next.m4a', 'Great! Pull one more block.', false);
+}
+
+function renderSplitRevealStage(fact) {
+  const reveal = makeElement('div', 'split-reveal');
+  reveal.setAttribute('aria-label', `${numberName(fact.a, true)} and ${numberName(fact.b)}`);
+  reveal.append(makeElement('span', 'split-reveal-spark split-reveal-spark-1', '✦'));
+  [fact.a, fact.b].forEach((value, index) => {
+    const friend = makeElement('div', `split-reveal-friend split-reveal-friend-${index + 1}`);
+    friend.append(characterHost(value, 'mission-character split-reveal-character'), makeElement('span', 'friend-badge', value));
+    reveal.appendChild(friend);
+    if (index === 0) reveal.appendChild(makeElement('span', 'split-reveal-plus', '+'));
+  });
+  reveal.append(makeElement('span', 'split-reveal-spark split-reveal-spark-2', '★'));
+  elements.missionStage.appendChild(reveal);
+}
+
+function completeSplit() {
   clearPhaseTimers();
   const mission = currentMission();
-  state.splitParts = parts;
-  state.phase = 'choose';
+  state.splitParts = [mission.fact.a, mission.fact.b];
+  state.phase = 'split-reveal';
   renderMission();
-  setPrompt(missionAudioName('split-made', mission.fact), `You made ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}! What do they make?`);
+  setPrompt(missionAudioName('split-made', mission.fact), `You made ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}! Look at the two number friends.`, false);
+  state.transitionTimer = setTimeout(() => {
+    if (state.phase !== 'split-reveal') return;
+    clearPhaseTimers();
+    state.phase = 'choose';
+    renderMission();
+    setPrompt(missionAudioName('predict', mission.fact), `What do ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} make? Choose a number friend!`);
+  }, 3550);
 }
 
 function completeMission() {

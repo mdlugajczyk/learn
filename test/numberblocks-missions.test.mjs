@@ -12,6 +12,7 @@ import {
   isFactMastered,
   isCorrectSplit,
   learningStatus,
+  nextSplitStep,
   normalizeLearningSettings,
   recordFactResult,
   unlockedTier
@@ -51,6 +52,13 @@ test('split checking ignores left-to-right order', () => {
   assert.equal(isCorrectSplit(fact, [2, 3]), true);
   assert.equal(isCorrectSplit(fact, [3, 2]), true);
   assert.equal(isCorrectSplit(fact, [1, 4]), false);
+});
+
+test('reverse missions pull exactly one block at a time', () => {
+  const fact = { a: 2, b: 3, sum: 5 };
+  assert.deepEqual(nextSplitStep(fact, 0), { pulled: 1, remaining: 4, complete: false });
+  assert.deepEqual(nextSplitStep(fact, 1), { pulled: 2, remaining: 3, complete: true });
+  assert.deepEqual(nextSplitStep(fact, 2), { pulled: 2, remaining: 3, complete: true });
 });
 
 test('Ten missions unlock only after foundational sessions', () => {

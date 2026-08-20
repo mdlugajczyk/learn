@@ -181,6 +181,20 @@ export function isCorrectSplit(fact, parts) {
   return expected[0] === actual[0] && expected[1] === actual[1];
 }
 
+export function nextSplitStep(fact, pulled = 0) {
+  if (!fact || !Number.isFinite(fact.a) || !Number.isFinite(fact.sum)) {
+    return { pulled: 0, remaining: 0, complete: false };
+  }
+  const target = Math.max(1, Math.min(fact.sum - 1, Math.floor(fact.a)));
+  const current = Math.max(0, Math.min(target, Math.floor(Number(pulled) || 0)));
+  const next = Math.min(target, current + 1);
+  return {
+    pulled: next,
+    remaining: fact.sum - next,
+    complete: next === target
+  };
+}
+
 export function missionAudioName(kind, fact) {
   if (!fact) return `mission-${kind}.m4a`;
   return `mission-${kind}-${fact.a}-${fact.b}.m4a`;

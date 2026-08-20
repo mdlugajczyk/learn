@@ -43,6 +43,9 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   if (!appSource.includes("addEventListener('pointerdown'") || !appSource.includes('attachSplitGesture')) {
     errors.push('Reverse missions must split through direct pointer gestures');
   }
+  if (!appSource.includes('nextSplitStep(fact, state.splitCount)') || !appSource.includes("state.phase = 'split-reveal'")) {
+    errors.push('Reverse missions must pull one block per step and pause for a split reveal');
+  }
   if (!appSource.includes('attachLooseBlockGesture') || !appSource.includes('attachCombineGesture')) {
     errors.push('Forward missions must build and combine through direct gestures');
   }
@@ -71,7 +74,7 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
       expectedAudio.push(`composition-${target}-${parts.join('-')}.m4a`);
     }
   }
-  expectedAudio.push('mission-try-again.m4a', 'mission-split-retry.m4a', 'mission-session-complete.m4a');
+  expectedAudio.push('mission-try-again.m4a', 'mission-split-retry.m4a', 'mission-pull-next.m4a', 'mission-session-complete.m4a');
   for (let number = 6; number <= 10; number += 1) expectedAudio.push(`mission-unlock-${number}.m4a`);
   const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))];
   for (const number of missionNumbers) {

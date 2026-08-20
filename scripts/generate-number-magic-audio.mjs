@@ -68,6 +68,10 @@ const missionEntries = [
     text: 'Almost! Let the blocks bounce back, count carefully, and pull again.'
   },
   {
+    filename: 'mission-pull-next.m4a',
+    text: 'Great! Pull one more block.'
+  },
+  {
     filename: 'mission-session-complete.m4a',
     text: 'Three missions complete! Ten is very proud of you!'
   }
@@ -106,11 +110,11 @@ for (const fact of MISSION_FACTS) {
     },
     {
       filename: `mission-split-${pair}.m4a`,
-      text: `Here is ${numberNames[fact.sum]}. Pull away ${numberNames[fact.a]} ${blockNoun(fact.a)} to make ${numberNames[fact.a]} and ${numberNames[fact.b]}!`
+      text: `Here is ${numberNames[fact.sum]}. Pull one block at a time to make ${numberNames[fact.a]} and ${numberNames[fact.b]}!`
     },
     {
       filename: `mission-split-made-${pair}.m4a`,
-      text: `You made ${numberNames[fact.a]} and ${numberNames[fact.b]}! What do they make?`
+      text: `You made ${numberNames[fact.a]} and ${numberNames[fact.b]}! Look at the two number friends.`
     },
     {
       filename: `mission-success-${pair}.m4a`,

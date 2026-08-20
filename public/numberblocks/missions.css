@@ -234,26 +234,53 @@
 .combine-coach i,
 .reverse-coach i { display: block; color: #fff6a4; font-size: 1.65rem; font-style: normal; text-align: center; text-shadow: 0 3px 0 rgba(45, 86, 105, .16); }
 
-.split-arena { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; z-index: 4; padding-bottom: 30px; }
-.split-targets { display: flex; justify-content: space-between; position: absolute; inset: 14px 12px auto; }
-.split-target { width: 43%; height: 94px; display: grid; place-items: center; border: 4px dashed rgba(255,255,255,.66); border-radius: 22px; background: rgba(255,255,255,.16); color: rgba(46, 94, 122, .52); font-size: 2rem; font-weight: 1000; }
-.reverse-whole { min-width: 160px; height: calc(100% - 72px); display: flex; align-items: flex-end; justify-content: center; position: relative; z-index: 6; padding: 0 8px 42px; border: 0; background: transparent; touch-action: none; }
+.split-arena { width: 100%; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr); align-items: stretch; position: relative; z-index: 4; gap: 2px; padding: 18px 7px 58px; }
+.split-progress-side,
+.reverse-whole { min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; padding: 32px 2px 40px; border-radius: 26px; }
+.split-progress-side { z-index: 5; border: 4px dashed rgba(255,255,255,.72); background: rgba(255,255,255,.16); box-shadow: inset 0 0 0 4px rgba(255,255,255,.08); }
+.split-progress-side.has-blocks { border-style: solid; background: rgba(255, 246, 153, .2); }
+.split-progress-ghost { --ghost-size: clamp(44px, 11.8vw, 62px); display: grid; grid-template-columns: repeat(var(--ghost-cols), var(--ghost-size)); grid-auto-rows: var(--ghost-size); margin-bottom: 8px; opacity: .28; }
+.split-progress-ghost i { border: 4px dashed #fff; border-radius: calc(var(--ghost-size) * .15); background: rgba(49, 122, 160, .16); }
+.split-progress-character .number-character,
+.reverse-character .number-character { --unit: clamp(48px, 12vw, 64px); }
+.split-progress-character .number-character { animation: split-block-land .48s var(--ease-spring) both; }
+.split-target-badge { min-width: 42px; height: 36px; display: grid; place-items: center; position: absolute; z-index: 15; left: 50%; bottom: 7px; transform: translateX(-50%); border: 3px solid #fff; border-radius: 999px; background: #f28b35; box-shadow: 0 4px 0 rgba(32, 68, 94, .17); color: #fff; font-size: 1rem; font-weight: 1000; }
+.split-progress-plus { display: grid; place-items: end center; z-index: 8; padding-bottom: 44px; color: #fff8ad; font-size: 2.2rem; font-weight: 1000; text-shadow: 0 3px 0 rgba(47, 99, 122, .15); }
+.reverse-whole { z-index: 6; border: 4px solid rgba(255,255,255,.42); background: rgba(255,255,255,.1); cursor: grab; touch-action: none; }
 .reverse-character,
 .reverse-character .number-character,
 .reverse-character .body-wrap,
 .reverse-character .cube-grid,
 .reverse-character .cube { pointer-events: auto; }
-.reverse-character .number-character { --unit: clamp(50px, 13vw, 72px); }
+.reverse-character .number-character { animation: split-remainder-reshape .42s var(--ease-spring) both; }
 .reverse-whole .friend-badge { left: 50%; bottom: 8px; transform: translateX(-50%); background: var(--red); }
 .reverse-whole .peel-cube { z-index: 12; transform: translate3d(var(--peel-x, 0), var(--peel-y, 0), 0) scale(1.03); filter: brightness(1.12) drop-shadow(0 8px 7px rgba(45, 81, 114, .25)); transition: none; }
-.reverse-whole.split-armed .stay-cube { opacity: .68; filter: saturate(.7); }
+.reverse-whole.split-armed { border-color: #ffe56e; background: rgba(255, 244, 146, .3); }
+.reverse-whole.split-armed .stay-cube { opacity: .62; filter: saturate(.72); }
 .reverse-whole.split-return .peel-cube { transform: translate3d(0, 0, 0); transition: transform .26s var(--ease-spring); }
-.reverse-whole.split-success { animation: split-flash .28s ease-in both; }
-.reverse-whole.split-wrong { animation: wrong-wiggle .48s ease; }
+.reverse-whole.split-success .peel-cube { transform: translate3d(var(--peel-x), var(--peel-y), 0) scale(.88) rotate(-7deg); filter: brightness(1.18) drop-shadow(0 10px 8px rgba(45, 81, 114, .22)); transition: transform .34s var(--ease-spring), filter .2s ease; }
+.reverse-whole.split-success .stay-cube { animation: split-remainder-nudge .34s var(--ease-spring); }
+
+.split-pull-progress { height: 32px; display: flex; align-items: center; justify-content: center; gap: 7px; position: absolute; z-index: 18; left: 8px; right: 8px; bottom: 13px; }
+.split-pull-progress i { width: 23px; height: 23px; display: grid; place-items: center; border: 3px solid rgba(255,255,255,.8); border-radius: 8px; background: rgba(49, 122, 160, .18); color: #fff; font-size: .62rem; font-style: normal; transition: transform .25s var(--ease-spring), background .2s ease; }
+.split-pull-progress i.filled { transform: rotate(-5deg) scale(1.08); background: #f28b35; box-shadow: 0 3px 0 rgba(42, 81, 101, .14); }
 
 .mission-split-preview { min-width: 78px; min-height: 42px; display: grid; place-items: center; position: absolute; z-index: 40; transform: translate(-50%, -50%) scale(.9); border: 3px solid #fff; border-radius: 999px; background: rgba(42, 78, 111, .88); box-shadow: 0 5px 0 rgba(31, 70, 98, .2); color: #fff; font-size: 1.05rem; font-weight: 1000; opacity: .76; pointer-events: none; }
 .mission-split-preview.armed { transform: translate(-50%, -50%) scale(1.08); background: #ef5464; opacity: 1; }
-.reverse-coach { left: 67%; top: 51%; animation-name: reverse-hand; }
+.reverse-coach { left: 72%; top: 51%; animation-name: reverse-hand; }
+
+.split-reveal { width: 100%; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); align-items: end; position: relative; z-index: 5; gap: 3px; padding: 28px 10px 49px; background: radial-gradient(circle at 50% 50%, rgba(255, 247, 157, .52), transparent 52%); }
+.split-reveal-friend { min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; padding-bottom: 38px; }
+.split-reveal-character .number-character { --unit: clamp(48px, 12.2vw, 66px); }
+.split-reveal-friend-1 { animation: split-friend-reveal-left .7s var(--ease-spring) both; }
+.split-reveal-friend-2 { animation: split-friend-reveal-right .7s .12s var(--ease-spring) both; }
+.split-reveal-friend .friend-badge { left: 50%; bottom: 4px; transform: translateX(-50%); }
+.split-reveal-friend-1 .friend-badge { background: #f28b35; }
+.split-reveal-friend-2 .friend-badge { background: #f1c92f; }
+.split-reveal-plus { display: grid; place-items: end center; padding-bottom: 47px; color: #fff8ad; font-size: 2.5rem; font-weight: 1000; text-shadow: 0 4px 0 rgba(47, 99, 122, .15); animation: split-plus-reveal .46s .48s var(--ease-spring) both; }
+.split-reveal-spark { position: absolute; z-index: 12; color: #fff6a4; font-size: 2.15rem; animation: twinkle 1s ease-in-out infinite; }
+.split-reveal-spark-1 { left: 13%; top: 13%; }
+.split-reveal-spark-2 { right: 12%; top: 22%; animation-delay: .3s; }
 
 .mission-success { width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; z-index: 5; padding-bottom: 42px; }
 .success-character .number-character { --unit: clamp(51px, 13.5vw, 74px); animation: success-arrive .72s var(--ease-spring) both; }
@@ -308,10 +335,39 @@
   90% { opacity: 0; }
 }
 @keyframes reverse-hand {
-  0%, 18%, 100% { transform: translate(-50%, 24px) rotate(-12deg); opacity: 0; }
+  0%, 18%, 100% { transform: translate(20px, 18px) rotate(8deg); opacity: 0; }
   28% { opacity: 1; }
-  68%, 80% { transform: translate(45px, -46px) rotate(8deg); opacity: 1; }
+  68%, 80% { transform: translate(-92px, -30px) rotate(-10deg); opacity: 1; }
   90% { opacity: 0; }
+}
+@keyframes split-block-land {
+  from { transform: translate(75px, -16px) scale(.72) rotate(7deg); opacity: .25; }
+  68% { transform: translate(-4px, 3px) scale(1.06) rotate(-2deg); opacity: 1; }
+  to { transform: translate(0, 0) scale(1) rotate(0); opacity: 1; }
+}
+@keyframes split-remainder-reshape {
+  from { transform: translateX(12px) scale(.92); opacity: .6; filter: brightness(1.2); }
+  70% { transform: translateX(-3px) scale(1.035); opacity: 1; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes split-remainder-nudge {
+  0%, 100% { transform: translateX(0); }
+  55% { transform: translateX(7px) scale(.97); }
+}
+@keyframes split-friend-reveal-left {
+  from { transform: translateX(90px) scale(.72); opacity: .15; filter: brightness(1.3); }
+  68% { transform: translateX(-7px) scale(1.06); opacity: 1; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes split-friend-reveal-right {
+  from { transform: translateX(-90px) scale(.72); opacity: .15; filter: brightness(1.3); }
+  68% { transform: translateX(7px) scale(1.06); opacity: 1; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes split-plus-reveal {
+  from { transform: scale(.2) rotate(-18deg); opacity: 0; }
+  70% { transform: scale(1.22) rotate(4deg); opacity: 1; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
 }
 @keyframes friend-hop {
   0%, 100% { transform: translateY(0); }
@@ -343,8 +399,16 @@
   .answer-character .number-character { --unit: 46px; }
   .preview-character .number-character { --unit: 59px; }
   .built-friend { min-width: 230px; }
+  .split-progress-character .number-character,
   .reverse-character .number-character,
+  .split-reveal-character .number-character,
   .success-character .number-character { --unit: 72px; }
+  .split-arena { grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr); gap: 12px; padding: 28px 22px 74px; }
+  .split-progress-side,
+  .reverse-whole { padding-bottom: 48px; }
+  .split-progress-plus { padding-bottom: 53px; font-size: 2.7rem; }
+  .split-pull-progress { bottom: 21px; }
+  .split-reveal { grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); gap: 15px; padding: 38px 28px 65px; }
 }
 
 @media (max-height: 720px) {
@@ -354,8 +418,15 @@
   .block-tray { min-height: 105px; }
   .mission-mentor-strip .mentor-mini { --host-scale: .21; }
   .mission-mentor-strip .speech-bubble { min-height: 48px; }
+  .split-progress-character .number-character,
   .reverse-character .number-character,
+  .split-reveal-character .number-character,
   .success-character .number-character { --unit: 48px; }
+  .split-arena { padding-top: 10px; padding-bottom: 52px; }
+  .split-progress-side,
+  .reverse-whole { padding-top: 24px; padding-bottom: 37px; }
+  .split-pull-progress { bottom: 9px; }
+  .split-reveal { padding-top: 16px; padding-bottom: 42px; }
   .session-complete-card { padding: 8px; }
   .session-ten { height: 188px; margin: -3px 0 2px; }
   .session-ten .number-character { --unit: 34px; }
