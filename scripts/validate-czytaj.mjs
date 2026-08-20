@@ -29,6 +29,12 @@ function contentCharacters(value) {
   return [...value.toLocaleLowerCase('pl-PL').normalize('NFC')].filter((character) => /\p{L}/u.test(character));
 }
 
+function unitAudioId(unit) {
+  if ([...unit].length === 1) return `sound-${unit}`;
+  const slug = unit.toLocaleLowerCase('pl-PL').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l').replace(/[^a-z0-9]+/g, '-');
+  return `word-${slug}`;
+}
+
 export async function validateCzytaj({ strictAudio = false } = {}) {
   const errors = [];
   const stageIds = new Set();
@@ -71,6 +77,10 @@ export async function validateCzytaj({ strictAudio = false } = {}) {
     if (item.imageId) assert(Boolean(PICTURE_EMOJI[item.answer]), `Missing picture reference ${item.imageId} in ${item.id}`, errors);
     assert(Array.isArray(item.graphemes) && item.graphemes.length > 0, `Missing grapheme analysis in ${item.id}`, errors);
     if (item.stage < 12) assert(item.graphemes.join('') === item.answer.toLocaleLowerCase('pl-PL'), `Grapheme analysis does not rebuild ${item.id}`, errors);
+    if (item.syllables?.length) {
+      assert(item.syllables.join('') === item.answer.toLocaleLowerCase('pl-PL'), `Syllable analysis does not rebuild ${item.id}`, errors);
+      if (item.syllables.length > 1) for (const unit of item.syllables) assert(audioIds.has(unitAudioId(unit)), `Missing learned-unit audio ${unitAudioId(unit)} for ${item.id}`, errors);
+    }
     if (item.stage < 12) {
       const allowed = new Set(cumulativeGraphemes(item.stage).flatMap((grapheme) => [...grapheme]));
       for (const character of contentCharacters(item.answer)) assert(allowed.has(character), `Untaught grapheme character “${character}” in ${item.id} (${item.answer})`, errors);

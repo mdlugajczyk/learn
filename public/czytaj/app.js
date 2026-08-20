@@ -403,7 +403,7 @@ async function presentActivity(activity, instructionId) {
   if (token !== state.presentationToken) return;
   await pause(220);
   if (token !== state.presentationToken) return;
-  if (activity.type === 'warmup') await playSegmented(activity.item.answer, '.sound-orb', token);
+  if (activity.type === 'warmup') await playUnits(activity.item, '.sound-orb', token);
   if (activity.type === 'hear-choose') await audio.play(`sound-${activity.grapheme}`);
 }
 
@@ -437,6 +437,19 @@ function splitGraphemes(word, stage) {
   return result;
 }
 
+function learningUnits(item, stage) {
+  // Jednosylabowe „ma” najpierw budujemy z m + a. Kiedy ta sylaba jest już
+  // znana, dłuższe słowo pokazujemy na wyższym poziomie: ma + ma → mama.
+  if (item.syllables?.length > 1) return item.syllables;
+  return item.graphemes?.length ? item.graphemes : splitGraphemes(item.answer, stage);
+}
+
+function audioIdForUnit(unit) {
+  if ([...unit].length === 1) return `sound-${unit}`;
+  const slug = unit.toLocaleLowerCase('pl-PL').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l').replace(/[^a-z0-9]+/g, '-');
+  return `word-${slug}`;
+}
+
 function pictureMarkup(word) {
   const index = PICTURE_SPRITE_INDEX[word];
   if (index == null) return `<span aria-hidden="true">${PICTURE_EMOJI[word] ?? '❔'}</span>`;
@@ -454,7 +467,7 @@ function activityMarkup(activity) {
   </div><p class="play-prompt">Momo pokaże po kolei trzy przyciski.</p>`;
   if (activity.type === 'warmup') {
     const target = activity.item;
-    const parts = splitGraphemes(target.answer, session.stage);
+    const parts = learningUnits(target, session.stage);
     const choices = activity.choices ?? [target];
     activity.choices = choices;
     return `<div class="signal-field"><span class="signal-dish" aria-hidden="true"></span><div class="sound-orbit" style="${graphemeLayout(parts)}" aria-label="${parts.length} dźwięki"><span class="orbit-thread"></span>${parts.map((_, index) => `<span class="sound-orb" style="--i:${index}"><i></i></span>`).join('')}</div></div><p class="play-prompt">Który kod przysłała planeta?</p><div class="choices word-choice-grid">${choices.map((item, index) => `<button class="choice word-choice" data-answer="${html(item.id)}" style="--i:${index}"><span class="landing-dot" aria-hidden="true"></span>${html(item.answer)}</button>`).join('')}</div>`;
@@ -462,12 +475,12 @@ function activityMarkup(activity) {
   if (activity.type === 'hear-choose') return `<div class="antenna-console"><div class="sound-console" aria-hidden="true"><span class="sound-core">♪</span><span class="sound-ring ring-one"></span><span class="sound-ring ring-two"></span><span class="sound-ring ring-three"></span></div><span class="signal-wire" aria-hidden="true"></span></div><p class="play-prompt">Dotknij anteny z pasującą literą.</p><div class="choices letter-choices">${activity.choices.map((choice, index) => `<button class="choice letter-choice antenna-pad" data-grapheme="${html(choice)}" style="--i:${index}"><i aria-hidden="true"></i><span>${html(choice)}</span></button>`).join('')}</div>`;
   if (activity.type === 'mapping') return `<div class="letter-scanner"><span class="scanner-ring" aria-hidden="true"></span><span class="scanner-beam" aria-hidden="true"></span><button id="mappingLetter" class="mapping-letter" aria-label="Litera ${html(activity.grapheme)}. Dotknij, aby usłyszeć dźwięk."><span>${html(activity.grapheme)}</span><small>${html(activity.capital)}</small></button></div><p class="play-prompt">Dotknij znaku. Każde dotknięcie uruchamia skaner.</p>${iconAction('mappingDone', '➜', 'Dalej')}`;
   if (activity.type === 'blend') {
-    const parts = splitGraphemes(activity.item.answer, session.stage);
+    const parts = learningUnits(activity.item, session.stage);
     const duration = Math.max(1.1, 1 + parts.length * .14).toFixed(2);
     return `<div class="bridge-status" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="blend-lab"><div class="graphemes" id="blendArea" style="${graphemeLayout(parts)};--beam-duration:${duration}s">${parts.map((part, index) => `<span class="grapheme" style="--i:${index}">${html(part)}</span>`).join('')}<span class="beam-track"></span><span class="beam" id="beam"><i></i></span></div></div><p class="play-prompt">Przeciągnij duże światło po szerokiej drodze.</p>${iconAction('blendStart', '↻', 'Momo pokazuje jeszcze raz')}<div id="blendResult" class="blend-result hidden"><span class="visually-hidden">Całe słowo</span><strong>${html(activity.item.answer)}</strong>${iconAction('blendReplay', '🔊', 'Posłuchaj całego słowa jeszcze raz', 'blend-replay')}</div>${iconAction('blendDone', '➜', 'Dalej', 'button secondary large hidden')}`;
   }
   if (activity.type === 'build') {
-    const parts = splitGraphemes(activity.item.answer, session.stage);
+    const parts = learningUnits(activity.item, session.stage);
     activity.parts = parts;
     const tiles = shuffled(parts.map((value, index) => ({ value, index })), `${session.seed}:${activity.item.id}:tiles`);
     return `<div class="builder"><div class="cargo-machine" aria-hidden="true"><span></span><i></i></div><div class="sound-boxes" style="${graphemeLayout(parts)}">${parts.map((_, index) => `<span class="sound-box" data-slot="${index}" aria-label="Pole ${index + 1}"></span>`).join('')}</div><div class="cargo-bay"><span class="cargo-label">Moduły literowe</span><div class="tile-rack">${tiles.map((tile, index) => `<button class="tile" data-tile="${tile.index}" data-value="${html(tile.value)}" style="--i:${index}" aria-label="Litera ${html(tile.value)}. Dotknij lub przeciągnij.">${html(tile.value)}</button>`).join('')}</div></div></div><p class="play-prompt">Najłatwiej: dotknij litery. Możesz też ją przeciągnąć.</p>${iconAction('buildReset', '↻', 'Ułóż od początku', 'button secondary compact')}`;
@@ -526,7 +539,7 @@ function bindActivity(activity) {
       area.classList.add('is-joining');
       beam.style.transform = '';
       beam.classList.add('at-end');
-      await playSegmented(activity.item.answer, '.grapheme', token);
+      await playUnits(activity.item, '.grapheme', token);
       if (token !== state.presentationToken) return;
       await pause(120);
       const played = await audio.play(activity.item.audioIds[0]);
@@ -618,13 +631,13 @@ async function advanceControlTutorial(completedStep, nextInstructionId) {
   await setInstruction(nextInstructionId);
 }
 
-async function playSegmented(word, selector = null, token = state.presentationToken) {
-  const parts = splitGraphemes(word, state.progress.activeSession.stage);
+async function playUnits(item, selector = null, token = state.presentationToken) {
+  const parts = learningUnits(item, state.progress.activeSession.stage);
   const elements = selector ? [...document.querySelectorAll(selector)] : [];
   for (const [index, part] of parts.entries()) {
     if (token !== state.presentationToken) return false;
     elements[index]?.classList.add('is-sounding');
-    await audio.play(`sound-${part}`);
+    await audio.play(audioIdForUnit(part));
     elements[index]?.classList.remove('is-sounding');
     elements[index]?.classList.add('was-sounded');
     await pause(70);
@@ -801,7 +814,7 @@ async function addBuildTile(button, activity, requestedSlot = null, animate = tr
     const wrongSlot = document.querySelector(`[data-slot="${mismatch}"]`);
     wrongSlot?.classList.add('needs-fix');
     await audio.play('retry-gentle');
-    if (activity.parts[mismatch]) await audio.play(`sound-${activity.parts[mismatch]}`);
+    if (activity.parts[mismatch]) await audio.play(audioIdForUnit(activity.parts[mismatch]));
     await save();
     for (let index = mismatch; index < state.buildSlots.length; index += 1) {
       const placedTile = state.buildSlots[index];

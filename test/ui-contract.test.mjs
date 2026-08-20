@@ -15,10 +15,16 @@ test('the blend gesture models separate sounds and then the complete joined word
   const blendHandlerStart = appSource.indexOf("} else if (activity.type === 'blend') {");
   const blendHandlerEnd = appSource.indexOf("} else if (activity.type === 'build') {", blendHandlerStart);
   const blendHandler = appSource.slice(blendHandlerStart, blendHandlerEnd);
-  assert.match(blendHandler, /await playSegmented\(activity\.item\.answer/);
+  assert.match(blendHandler, /await playUnits\(activity\.item/);
   assert.match(blendHandler, /await audio\.play\(activity\.item\.audioIds\[0\]\)/);
-  assert.ok(blendHandler.indexOf('playSegmented') < blendHandler.indexOf('audio.play(activity.item.audioIds[0])'));
+  assert.ok(blendHandler.indexOf('playUnits') < blendHandler.indexOf('audio.play(activity.item.audioIds[0])'));
   assert.match(appSource, /id="blendResult"/);
+});
+
+test('known syllables become the blending and building units for longer words', () => {
+  assert.match(appSource, /if \(item\.syllables\?\.length > 1\) return item\.syllables/);
+  assert.match(appSource, /const parts = learningUnits\(activity\.item, session\.stage\)/);
+  assert.match(appSource, /audioIdForUnit\(part\)/);
 });
 
 test('parent mode gate opens on a normal tap during a mission', () => {

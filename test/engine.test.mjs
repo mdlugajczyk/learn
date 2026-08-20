@@ -83,6 +83,16 @@ test('Ametyst follows a fixed child-sized decoding progression', () => {
   }
 });
 
+test('Ametyst words move from phonemes to reusable syllable chunks', () => {
+  const item = (answer) => CURRICULUM.items.find((value) => value.stage === 1 && value.answer === answer);
+  assert.deepEqual(item('ma').graphemes, ['m', 'a']);
+  assert.deepEqual(item('ma').syllables, ['ma']);
+  assert.deepEqual(item('mama').syllables, ['ma', 'ma']);
+  assert.deepEqual(item('tata').syllables, ['ta', 'ta']);
+  assert.deepEqual(item('mata').syllables, ['ma', 'ta']);
+  assert.deepEqual(item('tama').syllables, ['ta', 'ma']);
+});
+
 test('every planet has ordered internal lessons and avoids impossible sound-to-spelling questions', () => {
   for (let stage = 1; stage <= 12; stage += 1) assert.ok(lessonsForStage(stage).length >= 1);
   for (const stage of [7, 8, 9, 11]) {
