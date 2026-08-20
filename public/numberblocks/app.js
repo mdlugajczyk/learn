@@ -852,7 +852,7 @@ function completeMission() {
   saveState();
   sounds.effect('join');
   renderMission();
-  setPrompt(missionAudioName('success', mission.fact), `${numberName(mission.fact.a, true)} and ${numberName(mission.fact.b)} make ${numberName(mission.fact.sum)}! Number magic!`, false);
+  setPrompt(missionAudioName('success', mission.fact), `${numberName(mission.fact.a, true)} and ${numberName(mission.fact.b)} make ${numberName(mission.fact.sum)}!`, false);
   celebrate();
   state.celebrationTimer = setTimeout(nextMission, state.gentleMotion ? 900 : 3200);
 }

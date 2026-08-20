@@ -114,7 +114,7 @@ for (const fact of MISSION_FACTS) {
     },
     {
       filename: `mission-success-${pair}.m4a`,
-      text: `${sentenceName(fact.a)} and ${numberNames[fact.b]} make ${numberNames[fact.sum]}! Number magic!`
+      text: `${sentenceName(fact.a)} and ${numberNames[fact.b]} make ${numberNames[fact.sum]}!`
     }
   );
 }
