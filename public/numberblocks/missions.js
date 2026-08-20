@@ -196,6 +196,6 @@ export function nextSplitStep(fact, pulled = 0) {
 }
 
 export function missionAudioName(kind, fact) {
-  if (!fact) return `mission-${kind}.m4a`;
-  return `mission-${kind}-${fact.a}-${fact.b}.m4a`;
+  if (!fact) return `mission-${kind}.mp3`;
+  return `mission-${kind}-${fact.a}-${fact.b}.mp3`;
 }

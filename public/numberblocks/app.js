@@ -44,7 +44,7 @@ const state = {
   choices: [],
   missionMistake: false,
   newLevel: null,
-  prompt: { file: 'welcome.m4a', text: '' },
+  prompt: { file: 'welcome.mp3', text: '' },
   phaseToken: 0,
   celebrationTimer: null,
   transitionTimer: null,
@@ -74,23 +74,17 @@ class SoundStudio {
     this.voiceToken += 1;
     this.voice.pause();
     this.voice.removeAttribute('src');
-    window.speechSynthesis?.cancel();
   }
 
-  speak(filename, fallbackText = '') {
+  speak(filename) {
     if (!state.sound || !state.audioUnlocked || !filename) return;
     const token = ++this.voiceToken;
     this.voice.pause();
     this.voice.src = `audio/${filename}`;
     this.voice.currentTime = 0;
     this.voice.play().catch(() => {
-      if (token !== this.voiceToken || !fallbackText || !('speechSynthesis' in window)) return;
-      const fallback = new SpeechSynthesisUtterance(fallbackText);
-      fallback.lang = 'en-GB';
-      fallback.rate = .86;
-      fallback.pitch = 1.06;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(fallback);
+      if (token !== this.voiceToken) return;
+      showToast('Voice file unavailable. Please ask a grown-up to reopen the app online.');
     });
   }
 
@@ -361,7 +355,7 @@ function startMission() {
   state.phase = mission.mode === 'forward' ? 'build-first' : 'split';
   renderMission();
   if (mission.mode === 'forward') {
-    setPrompt(`mission-build-first-${mission.fact.a}.m4a`, `First, build ${numberName(mission.fact.a)}! Drag blocks into the glowing spot.`);
+    setPrompt(`mission-build-first-${mission.fact.a}.mp3`, `First, build ${numberName(mission.fact.a)}! Drag blocks into the glowing spot.`);
   } else {
     setPrompt(missionAudioName('split', mission.fact), `Here is ${numberName(mission.fact.sum)}. Pull one block at a time to make ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}!`);
   }
@@ -574,7 +568,7 @@ function placeLooseBlock(zoneIndex) {
     if (zoneIndex === 0) {
       state.phase = 'build-second';
       renderMission();
-      setPrompt(`mission-build-next-${mission.fact.b}.m4a`, `You built ${numberName(mission.fact.a)}! Now build ${numberName(mission.fact.b)}.`);
+      setPrompt(`mission-build-next-${mission.fact.b}.mp3`, `You built ${numberName(mission.fact.a)}! Now build ${numberName(mission.fact.b)}.`);
     } else {
       state.phase = 'choose';
       renderMission();
@@ -622,7 +616,7 @@ function chooseAnswer(button, value) {
     sounds.effect('wrong');
     button.classList.remove('wrong-answer');
     requestAnimationFrame(() => button.classList.add('wrong-answer'));
-    setPrompt('mission-try-again.m4a', `Nearly! Count ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}, then try again.`, false);
+    setPrompt('mission-try-again.mp3', `Nearly! Count ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}, then try again.`, false);
     return;
   }
   clearPhaseTimers();
@@ -862,7 +856,7 @@ function acceptPulledBlock(fact) {
   }
   clearPhaseTimers();
   renderMission();
-  setPrompt('mission-pull-next.m4a', 'Great! Pull one more block.', false);
+  setPrompt('mission-pull-next.mp3', 'Great! Pull one more block.', false);
 }
 
 function renderSplitRevealStage(fact) {
@@ -936,9 +930,9 @@ function nextMission() {
   state.phase = 'session-complete';
   renderMission();
   if (state.newLevel) {
-    setPrompt(`mission-unlock-${state.newLevel}.m4a`, `Amazing! Number ${numberName(state.newLevel)} is ready to play!`, false);
+    setPrompt(`mission-unlock-${state.newLevel}.mp3`, `Amazing! Number ${numberName(state.newLevel)} is ready to play!`, false);
   } else {
-    setPrompt('mission-session-complete.m4a', 'Three missions complete! Ten is very proud of you!', false);
+    setPrompt('mission-session-complete.mp3', 'Three missions complete! Ten is very proud of you!', false);
   }
 }
 
@@ -1081,7 +1075,7 @@ function wireEvents() {
       elements.rangeOverlay.hidden = false;
       return;
     }
-    sounds.speak('welcome.m4a', "Hello, number maker! I'm Ten. Ready for some number magic?");
+    sounds.speak('welcome.mp3', "Hello, number maker! I'm Ten. Ready for some number magic?");
   });
   elements.missionButton.addEventListener('click', startSession);
   elements.backButton.addEventListener('click', goHome);
@@ -1128,7 +1122,7 @@ function wireEvents() {
     const selected = elements.setupRangeChoices.querySelector('input[data-range-preset]:checked')?.value || 'little';
     setLearningPreset(selected, elements.setupAutoAdvance.checked);
     elements.rangeOverlay.hidden = true;
-    sounds.speak('welcome.m4a', "Hello, number maker! I'm Ten. Ready for some number magic?");
+    sounds.speak('welcome.mp3', "Hello, number maker! I'm Ten. Ready for some number magic?");
     showToast('Starting range saved');
   });
   elements.resetProgressButton.addEventListener('click', resetProgress);

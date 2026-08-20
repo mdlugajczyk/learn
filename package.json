@@ -13,6 +13,7 @@
     "audio:elevenlabs": "node scripts/generate-elevenlabs-reading-audio.mjs",
     "audio:temporary": "node scripts/generate-temporary-reading-audio.mjs",
     "audio:number-magic": "node scripts/generate-number-magic-audio.mjs",
+    "audio:number-magic:elevenlabs": "node scripts/generate-elevenlabs-number-magic-audio.mjs",
     "icons:number-magic": "python3 scripts/generate-number-magic-icons.py"
   }
 }

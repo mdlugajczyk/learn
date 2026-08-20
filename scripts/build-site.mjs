@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { validateCzytaj } from './validate-czytaj.mjs';
 import { validateNumberMagic } from './validate-number-magic.mjs';
@@ -25,7 +25,11 @@ async function walk(directory) {
 
 const czytajFiles = (await walk(path.join(publicRoot, 'czytaj'))).map((file) => path.relative(projectRoot, file));
 const numberMagicFiles = (await walk(path.join(publicRoot, 'numberblocks'))).map((file) => path.relative(projectRoot, file));
-const sourceFiles = [...new Set([...tracked, ...czytajFiles, ...numberMagicFiles])].filter((file) => !file.endsWith('.DS_Store'));
+const sourceCandidates = [...new Set([...tracked, ...czytajFiles, ...numberMagicFiles])].filter((file) => !file.endsWith('.DS_Store'));
+const sourceFiles = [];
+for (const file of sourceCandidates) {
+  try { await access(path.join(projectRoot, file)); sourceFiles.push(file); } catch {}
+}
 
 await rm(outputRoot, { recursive: true, force: true });
 await mkdir(clientRoot, { recursive: true });

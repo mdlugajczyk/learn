@@ -1,0 +1,5432 @@
+{
+  "version": 1,
+  "language": "en",
+  "provider": "elevenlabs",
+  "model": "eleven_flash_v2",
+  "voice": "Jessica - Playful, Bright, Warm",
+  "voiceId": "cgSgspJ2msm6clMCkdW9",
+  "releaseStatus": "pending-listening-review",
+  "characterCount": 12021,
+  "entries": [
+    {
+      "filename": "welcome.mp3",
+      "text": "Hello, number maker! I'm Ten. Ready for some number magic?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5c8b9da11985542bd48882be654e7d519b69f0ffff5518d84867b5e5c43bcfd7",
+      "generatedAt": "2026-08-20T12:50:35.228Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-2.mp3",
+      "text": "Pull some of two's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d8094a66bd7b80d960b5d5549f17b90310f4624a23b44b9a9f87b98668e054d3",
+      "generatedAt": "2026-08-20T12:50:35.231Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-2.mp3",
+      "text": "All together again. Two is still two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a05f7ae17554eae32d3dfe3c5bb89c934ab03317dabb7f624a9c387044cb96f1",
+      "generatedAt": "2026-08-20T12:50:35.221Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-2.mp3",
+      "text": "Can you make two a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "bcf5d56de9bc60c7b6d72d307da92af262a094fc5be223f037e71bc0707d8fea",
+      "generatedAt": "2026-08-20T12:50:35.480Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-2-1-1.mp3",
+      "text": "Two is made of one and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "53434fd0a8a688d01811b3879afb552e8569ee5143a8b6d7d72ac0628d17d63f",
+      "generatedAt": "2026-08-20T12:50:35.420Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-3.mp3",
+      "text": "Pull some of three's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7df040838b367ed4b47ec0698253f7e05079847bba2deb3e815b779028ac0519",
+      "generatedAt": "2026-08-20T12:50:35.552Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-3.mp3",
+      "text": "All together again. Three is still three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9b9c8642e74a8145ddbc3156c1514b47346270e40e96f8e894a24e9089eb385a",
+      "generatedAt": "2026-08-20T12:50:35.684Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-3.mp3",
+      "text": "Can you make three a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "274ec82284ba1c150f862a344e215125e25ce70f1ef25c01a5fea00d21be0926",
+      "generatedAt": "2026-08-20T12:50:35.724Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-3-2-1.mp3",
+      "text": "Three is made of two and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7534b2b006d214f87f94b7e2bba2f2291fc25ee2fb42367f36d937461cc3eaba",
+      "generatedAt": "2026-08-20T12:50:35.724Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-3-1-1-1.mp3",
+      "text": "Three is made of one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "91c966d640f2303f7370d5b49a2de484b9ae6c45a91b8e0cb8116845f74e64e6",
+      "generatedAt": "2026-08-20T12:50:35.941Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-4.mp3",
+      "text": "Pull some of four's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1e49cb6faedfc10f232cf1be1c0c7f1982fc5a8b3f4c136cf07e6579292f4af8",
+      "generatedAt": "2026-08-20T12:50:36.177Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-4.mp3",
+      "text": "All together again. Four is still four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2b0537915afbf08fd80972002ffd95034c7d0eaa66648eb2e9e4ee2481db5f90",
+      "generatedAt": "2026-08-20T12:50:36.007Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-4.mp3",
+      "text": "Can you make four a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "364bc7e58b3712cf886d70a49f5761b081da6299e05c5871059419caf90d192e",
+      "generatedAt": "2026-08-20T12:50:36.187Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-4-3-1.mp3",
+      "text": "Four is made of three and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ec6fc085444c69b8073b3b2e4221634d06583cf191fa216fbe9fb327b7e0d77a",
+      "generatedAt": "2026-08-20T12:50:36.174Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-4-2-2.mp3",
+      "text": "Four is made of two and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e5a1533d0e2293ee5b5d01f4db95ba78cfac6fb33ccdd74c4ed3c05541c35dd3",
+      "generatedAt": "2026-08-20T12:50:36.362Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-4-2-1-1.mp3",
+      "text": "Four is made of two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "37ca5c3cc47677be7ae4c768a7db80beac9d1a49bfce0c96c33b69e713da17eb",
+      "generatedAt": "2026-08-20T12:50:36.440Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-4-1-1-1-1.mp3",
+      "text": "Four is made of one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e6978e661d9f73133d729e9f1e17d4faf3b750f23b353105db4e188a0c56e17f",
+      "generatedAt": "2026-08-20T12:50:36.467Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-5.mp3",
+      "text": "Pull some of five's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1abfc124b6e0d1f5c63268dd0b81e873d3636565deeb9f56a5791a6afa1ba3ec",
+      "generatedAt": "2026-08-20T12:50:36.671Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-5.mp3",
+      "text": "All together again. Five is still five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "bec6a142594d60b38b92acb33a63d2154f821dae793422c6b8c18b64a4e0b06b",
+      "generatedAt": "2026-08-20T12:50:36.710Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-5.mp3",
+      "text": "Can you make five a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fd63247aeae3e425f4102219e6c6e56786d3e7b601958879cfdcbfff0ae3302d",
+      "generatedAt": "2026-08-20T12:50:36.718Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-4-1.mp3",
+      "text": "Five is made of four and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a046b78fb6166a47cf4d2ebae14bd8930935d9eb761c9316405966b0f2fee616",
+      "generatedAt": "2026-08-20T12:50:36.842Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-3-2.mp3",
+      "text": "Five is made of three and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e9b68988af46d664f19e84ac5dfbe0810801962b3a843567d952b3a00759fb26",
+      "generatedAt": "2026-08-20T12:50:36.899Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-3-1-1.mp3",
+      "text": "Five is made of three, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "dbe94388999d9570ee5182002ab61e1562a45e095c5fc414d3597229f9305f44",
+      "generatedAt": "2026-08-20T12:50:36.974Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-2-2-1.mp3",
+      "text": "Five is made of two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "83c96bcd7dc811659765cd09238a6b81d0fc6e621e80b7338b3e724087be4252",
+      "generatedAt": "2026-08-20T12:50:37.088Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-2-1-1-1.mp3",
+      "text": "Five is made of two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d420df17426f9435602082b3d343017dad9c9c4b275896ec19ad2fdff415f0f9",
+      "generatedAt": "2026-08-20T12:50:37.161Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-5-1-1-1-1-1.mp3",
+      "text": "Five is made of one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "eaa3749a7e6077062c87fa3da2dfbb90e8b2bd45263eb85919f833583913415b",
+      "generatedAt": "2026-08-20T12:50:37.254Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-6.mp3",
+      "text": "Pull some of six's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "dd7083875e08bc451440d4362e8551549c7377af187eff380eb3575c3b0724d7",
+      "generatedAt": "2026-08-20T12:50:37.406Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-6.mp3",
+      "text": "All together again. Six is still six!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a0a64b51706b9589ae03faf1aca525a72d3bc3cc9717a227994e0cc55718037f",
+      "generatedAt": "2026-08-20T12:50:37.422Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-6.mp3",
+      "text": "Can you make six a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "0486d8710b8bd3a7d9fe3ba70927179542497bc9abda1c62b246a28e0b8c416c",
+      "generatedAt": "2026-08-20T12:50:37.503Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-5-1.mp3",
+      "text": "Six is made of five and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "38f92ee831473eaaf2a732336d5dd28cae75b809c9c5fdab3c5f994ab91c8c39",
+      "generatedAt": "2026-08-20T12:50:37.572Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-4-2.mp3",
+      "text": "Six is made of four and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9d4dbea438794b5fb6bdaf14d74ee51223303c6f369d55a05755e4f738e1320e",
+      "generatedAt": "2026-08-20T12:50:37.606Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-4-1-1.mp3",
+      "text": "Six is made of four, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3c09c18dfde66ce44fc5359db2a1b316167d3c784412aebea28a9bb2bbc6efa7",
+      "generatedAt": "2026-08-20T12:50:37.773Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-3-3.mp3",
+      "text": "Six is made of three and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "71f339d83e80553deb2d42cfe5f110aea9d881980e2d6e4326dcac65badfdd8f",
+      "generatedAt": "2026-08-20T12:50:37.811Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-3-2-1.mp3",
+      "text": "Six is made of three, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a668e38bd23a8ecf4691fcf5c721a0be34d8fc3c5561040028daa59b3a48be57",
+      "generatedAt": "2026-08-20T12:50:37.872Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-3-1-1-1.mp3",
+      "text": "Six is made of three, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "897271ee412971efcc82c739c4d10ea90524adc00b310fc5f952cda36c177943",
+      "generatedAt": "2026-08-20T12:50:38.042Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-2-2-2.mp3",
+      "text": "Six is made of two, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "58e952f29016583db076e88adc47984e7c9da8e90de9b18b6a3d90131e44bc2b",
+      "generatedAt": "2026-08-20T12:50:38.306Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-2-2-1-1.mp3",
+      "text": "Six is made of two, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9fb4c0fe0430719fe58797b8626217a501fa34b77e6ac9081956d190136b6091",
+      "generatedAt": "2026-08-20T12:50:38.149Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-2-1-1-1-1.mp3",
+      "text": "Six is made of two, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cd46fd4360797c1f395f4e1b5f52d5292b70e76ee2c83665d9d71cb8bf0062ec",
+      "generatedAt": "2026-08-20T12:50:38.311Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-6-1-1-1-1-1-1.mp3",
+      "text": "Six is made of one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e11b7f852d5d695812fc77a8d11673c32f5365a7042650dd9faa6181dbefa020",
+      "generatedAt": "2026-08-20T12:50:38.423Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-7.mp3",
+      "text": "Pull some of seven's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6a036784e46fa30feafdab81521971cf4ccb975f412b3ef49215eda1a355d523",
+      "generatedAt": "2026-08-20T12:50:38.613Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-7.mp3",
+      "text": "All together again. Seven is still seven!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3653cde3e5239061d24285f6089700f447d5a5872a86c4b51d27b940a7160354",
+      "generatedAt": "2026-08-20T12:50:38.654Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-7.mp3",
+      "text": "Can you make seven a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1a773b1ab2c6a8c5c6ae994f87ce355a008fc51aa7def2b8f5a5176dbfff467d",
+      "generatedAt": "2026-08-20T12:50:38.666Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-6-1.mp3",
+      "text": "Seven is made of six and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5f1dfce12bb6ba2a67a4740b7e0a4ca7b44e943eda62bd4d720025782c323cde",
+      "generatedAt": "2026-08-20T12:50:38.775Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-5-2.mp3",
+      "text": "Seven is made of five and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8498c1b03631118a3e9274c2a5c7f7e32a655600aef50ea549a7ecbb55bf15b1",
+      "generatedAt": "2026-08-20T12:50:38.837Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-5-1-1.mp3",
+      "text": "Seven is made of five, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "77d8c3d101ce633f1e35cf56104b2401cf1b870dc648eac23eb1fd56d38b35b1",
+      "generatedAt": "2026-08-20T12:50:38.921Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-4-3.mp3",
+      "text": "Seven is made of four and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "07bb4488e58e0e4d4f2e7f5613d99a02fff47c33a3e97f60f8d7441fdae0b804",
+      "generatedAt": "2026-08-20T12:50:39.008Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-4-2-1.mp3",
+      "text": "Seven is made of four, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "77c8e8cd563b471f327a18b73d468ee1d2e7b582d48a9570be756e8441ccb6a5",
+      "generatedAt": "2026-08-20T12:50:39.099Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-4-1-1-1.mp3",
+      "text": "Seven is made of four, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "da111b040c1bd1d282720960a09d89e47924b90d9ef9b8cb4c32b1a32c9ae82d",
+      "generatedAt": "2026-08-20T12:50:39.195Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-3-3-1.mp3",
+      "text": "Seven is made of three, three, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "160dbc0612115b3385d957d77b329cebe90dc2b3856eeee9c51816db25edc6c2",
+      "generatedAt": "2026-08-20T12:50:39.262Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-3-2-2.mp3",
+      "text": "Seven is made of three, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c89457f5e94bf983407ebb1261b712b7e1394c1317be7b546888802721fff4af",
+      "generatedAt": "2026-08-20T12:50:39.372Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-3-2-1-1.mp3",
+      "text": "Seven is made of three, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d19b667ba821f45752f44be1dd989662c7902a31776589ed122ac920681c747f",
+      "generatedAt": "2026-08-20T12:50:39.456Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-3-1-1-1-1.mp3",
+      "text": "Seven is made of three, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cef4caabd6e29027859befbbac3f3012eaaf3d66caa6a0cd9b5b06f9cd94932f",
+      "generatedAt": "2026-08-20T12:50:39.518Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-2-2-2-1.mp3",
+      "text": "Seven is made of two, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "443d97ea37d0d0c4cd27d2a7eca0d47ca5fb626fabc9a3b70198165abe1c7141",
+      "generatedAt": "2026-08-20T12:50:39.670Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-2-2-1-1-1.mp3",
+      "text": "Seven is made of two, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e13dea925c7b1818e359516ec481fec0e0472cc4935e0ef64de34b36c812ed7c",
+      "generatedAt": "2026-08-20T12:50:39.732Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-2-1-1-1-1-1.mp3",
+      "text": "Seven is made of two, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b45b89c297d35bc72fb43bff6cb6491af12de11e5f3ab8d851d49c2f35a438f2",
+      "generatedAt": "2026-08-20T12:50:39.793Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-7-1-1-1-1-1-1-1.mp3",
+      "text": "Seven is made of one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b66c57ddac5fb22236bae38976ca31706e0428faa47b473cb540fe57fcf87eae",
+      "generatedAt": "2026-08-20T12:50:40.129Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-8.mp3",
+      "text": "Pull some of eight's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cc95c5f33f4c6f823399f7fa1d5286ec02743eb950f4d0ca85203a4a76b44e92",
+      "generatedAt": "2026-08-20T12:50:40.053Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-8.mp3",
+      "text": "All together again. Eight is still eight!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2a4ed22b42460b9b239b57111f347d713dc1dbad4c34e511fca11055aff10a49",
+      "generatedAt": "2026-08-20T12:50:40.046Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-8.mp3",
+      "text": "Can you make eight a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "49c92e248d8d4d9f81594fa3fcaf2a0ddacaae86e008136838bacdf5336825f0",
+      "generatedAt": "2026-08-20T12:50:40.275Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-7-1.mp3",
+      "text": "Eight is made of seven and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d0b8bec6b868539af1b16a981812da9cd3604fd3083cb4c4446032497bafe6fc",
+      "generatedAt": "2026-08-20T12:50:40.305Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-6-2.mp3",
+      "text": "Eight is made of six and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8a3354125f5b06c5321db793b579925a8e0fb988bc8baf44eb39f5b901a0720b",
+      "generatedAt": "2026-08-20T12:50:40.309Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-6-1-1.mp3",
+      "text": "Eight is made of six, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ecdec6d7b68503ff84a58a0c79632bb6070ba0682783f4c27af6e44458ce80e6",
+      "generatedAt": "2026-08-20T12:50:40.521Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-5-3.mp3",
+      "text": "Eight is made of five and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "dd0868e231df4710cc6ea5faa461b6e6fdb1840c719aaaece3b5751a3d7ad18f",
+      "generatedAt": "2026-08-20T12:50:40.561Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-5-2-1.mp3",
+      "text": "Eight is made of five, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "24366fe206edb0e241ad8adaf3d64d5ec93736b7f12545abf1cbbbc25e753c1b",
+      "generatedAt": "2026-08-20T12:50:40.567Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-5-1-1-1.mp3",
+      "text": "Eight is made of five, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "97fe7108a840731c91a328ad43f52d8886c1ad9f203e49a93e6f8c523a8109b1",
+      "generatedAt": "2026-08-20T12:50:40.789Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-4-4.mp3",
+      "text": "Eight is made of four and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4eb2c3abcfaa54d0b3ddf82bdd6415c454b46e679d4179ff26b1c66e2cc7a6b6",
+      "generatedAt": "2026-08-20T12:50:40.819Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-4-3-1.mp3",
+      "text": "Eight is made of four, three, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e5239dedbc0164095992aefe521a6f01bf66b0bd411a81e4b4548f1e57d3a150",
+      "generatedAt": "2026-08-20T12:50:40.832Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-4-2-2.mp3",
+      "text": "Eight is made of four, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8153eb73af506c231c30ec53cb46bfe237c9f438ce94dac556295938d98a743a",
+      "generatedAt": "2026-08-20T12:50:41.202Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-4-2-1-1.mp3",
+      "text": "Eight is made of four, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c40b5544689d353e67e1394ce374abdbee9f431951a5fbc428039bd9c6153762",
+      "generatedAt": "2026-08-20T12:50:41.090Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-4-1-1-1-1.mp3",
+      "text": "Eight is made of four, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4c0a7d1b572ffef9e168598178c3efcac6f2087896bb18434ceb79ec42d67a7e",
+      "generatedAt": "2026-08-20T12:50:41.125Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-3-3-2.mp3",
+      "text": "Eight is made of three, three, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6b0a481bdbeb5caef9331c70484aacbfa082463898ab14b51f68120c383c7030",
+      "generatedAt": "2026-08-20T12:50:41.354Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-3-3-1-1.mp3",
+      "text": "Eight is made of three, three, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ee5d31cfba86123887d2098a5d6649fc647adcb3341bda4bea977907a3295d6d",
+      "generatedAt": "2026-08-20T12:50:41.397Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-3-2-2-1.mp3",
+      "text": "Eight is made of three, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "49dabdfa0471fbdbb880569ff8724a845a14c00771b116d7ed311236398d8fe9",
+      "generatedAt": "2026-08-20T12:50:41.456Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-3-2-1-1-1.mp3",
+      "text": "Eight is made of three, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4570f519aec4a19501e5729b09fbb98470e63ee48d6c8cb04cee3c3a4b528e37",
+      "generatedAt": "2026-08-20T12:50:41.619Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-3-1-1-1-1-1.mp3",
+      "text": "Eight is made of three, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1abb373264d3ac59e833507db8f5342f4073f3395f8872791def2cca623c87dc",
+      "generatedAt": "2026-08-20T12:50:41.693Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-2-2-2-2.mp3",
+      "text": "Eight is made of two, two, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a59a7894a8a0dd65c4934535dc11b30b7123b331bbb4574430f3c416de13064e",
+      "generatedAt": "2026-08-20T12:50:41.704Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-2-2-2-1-1.mp3",
+      "text": "Eight is made of two, two, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5690e991e472a6331f811f197b0279420a04a905b2a046fa2a205822ef56be42",
+      "generatedAt": "2026-08-20T12:50:41.882Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-2-2-1-1-1-1.mp3",
+      "text": "Eight is made of two, two, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8e7346620c064f3e8714fc81e242be41327aa6417ed18f87c3b3e8d62dc6f8fe",
+      "generatedAt": "2026-08-20T12:50:41.982Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-2-1-1-1-1-1-1.mp3",
+      "text": "Eight is made of two, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cd5ac26a35dc5ef5d93378cdf50c1efd8b36f4ba32b70b76973c3f26e0432bb5",
+      "generatedAt": "2026-08-20T12:50:42.000Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-8-1-1-1-1-1-1-1-1.mp3",
+      "text": "Eight is made of one, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3629f0056e5ebdca396154e311d2857b92cdeaab589cea7697216d0b5d28e48b",
+      "generatedAt": "2026-08-20T12:50:42.180Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-9.mp3",
+      "text": "Pull some of nine's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d4a93ff93c28cd9f18a8d7d2d5f8db3e7304d0de95c0e674eaacd45927a0110b",
+      "generatedAt": "2026-08-20T12:50:42.307Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-9.mp3",
+      "text": "All together again. Nine is still nine!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "be3aa479595448aad0b402c88017936272176e95c61e92b9ee2e64d765c9bd27",
+      "generatedAt": "2026-08-20T12:50:42.252Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-9.mp3",
+      "text": "Can you make nine a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "974e3e25d6cf0f1ed43a7ec3e938f84e8f15fd8b909213223a92eeb9ecccaa7d",
+      "generatedAt": "2026-08-20T12:50:42.422Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-8-1.mp3",
+      "text": "Nine is made of eight and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "676d5d6266813fdb229c7130f43afff6cd43354698a0a0c5520a58baec63d3b3",
+      "generatedAt": "2026-08-20T12:50:42.415Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-7-2.mp3",
+      "text": "Nine is made of seven and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2d59f48b86ce55a41a66e65259b4f08d00d017bbb17333dc9cebcd81ada28c63",
+      "generatedAt": "2026-08-20T12:50:42.488Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-7-1-1.mp3",
+      "text": "Nine is made of seven, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "00f8e848edf4980b8768cde0ebf40716d07cdbd58e052034914814bfc86b228f",
+      "generatedAt": "2026-08-20T12:50:42.660Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-6-3.mp3",
+      "text": "Nine is made of six and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f91069cc4fa2d2ba4f18300bdc0b051ff746a89e931d64535dad103fbf1a7681",
+      "generatedAt": "2026-08-20T12:50:42.603Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-6-2-1.mp3",
+      "text": "Nine is made of six, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c1d88c9a283accdb6eb5d7933a2a9a25b281693d817f969fd3496b39bbf86743",
+      "generatedAt": "2026-08-20T12:50:42.739Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-6-1-1-1.mp3",
+      "text": "Nine is made of six, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "910666a0929594d7d85880299ebb18e800ec9508af101ee148c021fc0f7f4f05",
+      "generatedAt": "2026-08-20T12:50:42.859Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-5-4.mp3",
+      "text": "Nine is made of five and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "670d367e8438be2dde8a12f41d79e9485f0be3a61e0e2cabc0fa25a706624e5e",
+      "generatedAt": "2026-08-20T12:50:42.827Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-5-3-1.mp3",
+      "text": "Nine is made of five, three, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a77f209c9c7c7492fb15bb54db721a8c402d8111bc53d0aa321fee88046e7d26",
+      "generatedAt": "2026-08-20T12:50:43.006Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-5-2-2.mp3",
+      "text": "Nine is made of five, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "37263968f38f68e70ad857266c18858f9d5a7eb1973e9ca713cebe44aab16dc2",
+      "generatedAt": "2026-08-20T12:50:43.071Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-5-2-1-1.mp3",
+      "text": "Nine is made of five, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2184c9886880ff9cd2b71d8ec9c360119abc3429a1bb2e824f73f217096e522b",
+      "generatedAt": "2026-08-20T12:50:43.351Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-5-1-1-1-1.mp3",
+      "text": "Nine is made of five, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "47e47a22291bd9102d0edf29f1067f5bb19b2a8658d34ccb1b66295a5daba1ca",
+      "generatedAt": "2026-08-20T12:50:43.272Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-4-1.mp3",
+      "text": "Nine is made of four, four, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f91451f2689225f8b17bb47aa8edd656e6fc55235e9bc1a94aadbae37ee941b5",
+      "generatedAt": "2026-08-20T12:50:43.320Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-3-2.mp3",
+      "text": "Nine is made of four, three, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c43751c3860e7b135a935b621ab0424a6ff8b57c4a96330e6e70caba401a2c13",
+      "generatedAt": "2026-08-20T12:50:43.525Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-3-1-1.mp3",
+      "text": "Nine is made of four, three, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "399ae6bde9ba005c4364a4217359203f7b3af9c339c5582aa0f1fad0ec5156cd",
+      "generatedAt": "2026-08-20T12:50:43.576Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-2-2-1.mp3",
+      "text": "Nine is made of four, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3db471c3b990a0f61b4fc7e7b1f84bbd72fd7030a4d4498965bb0c4d594da589",
+      "generatedAt": "2026-08-20T12:50:43.615Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-2-1-1-1.mp3",
+      "text": "Nine is made of four, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "21b1f067eedddcf97b5d6b8b82c7a2d800e39e000137c72bbdfee7ee2e3c1c97",
+      "generatedAt": "2026-08-20T12:50:43.789Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-4-1-1-1-1-1.mp3",
+      "text": "Nine is made of four, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3e5def64fdbfbd79770b25800c5423e02a3bb9a67e8f2ca2d54ff36bace4e1bf",
+      "generatedAt": "2026-08-20T12:50:43.876Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-3-3.mp3",
+      "text": "Nine is made of three, three, and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ee58c8b8aa600f73635af33657a73e402747f8d06d40546c9e56541570def9b5",
+      "generatedAt": "2026-08-20T12:50:43.874Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-3-2-1.mp3",
+      "text": "Nine is made of three, three, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7278d5c8eeb530de75e658f2a65156286cb0f2639471089980c30644b78359f5",
+      "generatedAt": "2026-08-20T12:50:44.055Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-3-1-1-1.mp3",
+      "text": "Nine is made of three, three, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5a857680d236e6451e87f197b792d5b76563b937d4425453ca18f33c042e8427",
+      "generatedAt": "2026-08-20T12:50:44.132Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-2-2-2.mp3",
+      "text": "Nine is made of three, two, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "397f333e84f4db8c430f34ac0f070b0cc17b0e8329e2790b1bff118f0bf5da64",
+      "generatedAt": "2026-08-20T12:50:44.120Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-2-2-1-1.mp3",
+      "text": "Nine is made of three, two, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ead8254f14f902b7bad24e98feb74693a160226a1f8ca9ac942617f1297fe450",
+      "generatedAt": "2026-08-20T12:50:44.312Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-2-1-1-1-1.mp3",
+      "text": "Nine is made of three, two, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a6f2f630d90b73f9d1dfdd2bf3e1f8f7395eba7006747e60d563a347e72ee9c7",
+      "generatedAt": "2026-08-20T12:50:44.403Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-3-1-1-1-1-1-1.mp3",
+      "text": "Nine is made of three, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "12ae34e9affcc25454f64c49f7962d9c6e15929b73b372344fde287dc0fa5371",
+      "generatedAt": "2026-08-20T12:50:44.432Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-2-2-2-2-1.mp3",
+      "text": "Nine is made of two, two, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "855d365c76a7c245f7e92ddf762d906fa5ea12337747ed8904c590f9f01bcddb",
+      "generatedAt": "2026-08-20T12:50:44.584Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-2-2-2-1-1-1.mp3",
+      "text": "Nine is made of two, two, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6e8371f941fcda2e0feb704e49f3f1aaf0d489ff02c8a4928a04bf646d32420c",
+      "generatedAt": "2026-08-20T12:50:44.670Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-2-2-1-1-1-1-1.mp3",
+      "text": "Nine is made of two, two, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "07c04b73fc97657376b145eaa80d7623dd3be66dae9578d6f7e52f4d90f3b419",
+      "generatedAt": "2026-08-20T12:50:44.720Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-2-1-1-1-1-1-1-1.mp3",
+      "text": "Nine is made of two, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "701880c1323938dd03bb842e3dc4b02cbf698813037960bd39e59afa8c594ca3",
+      "generatedAt": "2026-08-20T12:50:44.875Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-9-1-1-1-1-1-1-1-1-1.mp3",
+      "text": "Nine is made of one, one, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b57717c66e3df664f79e646b3f77aa3febe292a33f35e614847cc33f1dc6f524",
+      "generatedAt": "2026-08-20T12:50:44.976Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "play-10.mp3",
+      "text": "Pull some of ten's blocks away. Bump the number friends together, or flick them up!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9f958a8a895ac466ca951ce7905dd97fce35364b929315d38211c67318504a99",
+      "generatedAt": "2026-08-20T12:50:45.029Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "together-10.mp3",
+      "text": "All together again. Ten is still ten!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f240509158ca702776a5f4de6991b878ec603aeda768c34ccb1277d66ad7e647",
+      "generatedAt": "2026-08-20T12:50:45.141Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "new-way-10.mp3",
+      "text": "Can you make ten a different way?",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "eed5a2eb5c19911f38075346354c3e4d4c2d84f8259345a684b72d6229370541",
+      "generatedAt": "2026-08-20T12:50:45.226Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-9-1.mp3",
+      "text": "Ten is made of nine and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5d42774dcf9404f3e4cbc34fc4ddda618020b791e9c6801f15dce216af00a778",
+      "generatedAt": "2026-08-20T12:50:45.209Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-8-2.mp3",
+      "text": "Ten is made of eight and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "469e184fe559fbee6ce162a39bb885a9ab78c1e23954cc12ddffbd9f32c1cdf9",
+      "generatedAt": "2026-08-20T12:50:45.329Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-8-1-1.mp3",
+      "text": "Ten is made of eight, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "819edff533bacca2d0310ebf79fd8981caeaecf89836f886a1be2902ce93b518",
+      "generatedAt": "2026-08-20T12:50:45.459Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-7-3.mp3",
+      "text": "Ten is made of seven and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e6c8b8e3046021fdeaa45e5bbe215d61e4caaf82d424da94c329a1b9a9408aec",
+      "generatedAt": "2026-08-20T12:50:45.469Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-7-2-1.mp3",
+      "text": "Ten is made of seven, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2d5f69911a077e2d0508644cccc22a2b6047e4122fe4c5988fe94b5d6bb15100",
+      "generatedAt": "2026-08-20T12:50:45.590Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-7-1-1-1.mp3",
+      "text": "Ten is made of seven, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8b867cdf4bc769d9bd790da7628c3d9cb965fc8674cd378f8b2881607eb2f0f0",
+      "generatedAt": "2026-08-20T12:50:45.722Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-6-4.mp3",
+      "text": "Ten is made of six and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fff2f1f34986deaaf25758f0db235539c17a19f7be9210d0880abfeaff8b48fd",
+      "generatedAt": "2026-08-20T12:50:45.635Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-6-3-1.mp3",
+      "text": "Ten is made of six, three, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4edf29f964b46ba7caf1d3d7fb43f402a338d292fc6101151f8e6a0ba8ffe4dc",
+      "generatedAt": "2026-08-20T12:50:45.862Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-6-2-2.mp3",
+      "text": "Ten is made of six, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5bb6246cfb9199050273e85d23437b434014a8ff4db3f574340a9f8f6218f65c",
+      "generatedAt": "2026-08-20T12:50:45.870Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-6-2-1-1.mp3",
+      "text": "Ten is made of six, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9bbd5c35b900833be39ce241edfee30247c6cd22ff0cb3c93794aa2f2d8174cc",
+      "generatedAt": "2026-08-20T12:50:45.993Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-6-1-1-1-1.mp3",
+      "text": "Ten is made of six, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "bd78e093b4848d9d119e01ca8b76e50256a40d84668fe838c64d496bb3bb180a",
+      "generatedAt": "2026-08-20T12:50:46.132Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-5.mp3",
+      "text": "Ten is made of five and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b5ea0fe331d7139bea44218bcbdff87fa87eec960ddc36516aa3a61a9141e7fb",
+      "generatedAt": "2026-08-20T12:50:46.049Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-4-1.mp3",
+      "text": "Ten is made of five, four, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e2bfc13206d2100b03ac559bb6d3e2565ff9354d23f53cecbb909f2b4e2ac15f",
+      "generatedAt": "2026-08-20T12:50:46.253Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-3-2.mp3",
+      "text": "Ten is made of five, three, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f396b658cc06cb66b2bd027467d624aa066b1ee3b8a23d734a6920b3aa085108",
+      "generatedAt": "2026-08-20T12:50:46.288Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-3-1-1.mp3",
+      "text": "Ten is made of five, three, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "10846599fca7ce6596e9109e03e742f5d2f0fd02a8e2f21ef709859aee5a0323",
+      "generatedAt": "2026-08-20T12:50:46.395Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-2-2-1.mp3",
+      "text": "Ten is made of five, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ea955349d3b13f9f29f017411e727c21f17de44a364213bea517ece990a462ee",
+      "generatedAt": "2026-08-20T12:50:46.514Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-2-1-1-1.mp3",
+      "text": "Ten is made of five, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5d22b464f6719b29ed08f87f281b660f050e8705acb31d83318d33d7ec3edd9a",
+      "generatedAt": "2026-08-20T12:50:46.563Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-5-1-1-1-1-1.mp3",
+      "text": "Ten is made of five, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "511c5cdc49c1281e0d4e26bed0178979e8d2597c83c85ce6e5d67944df0ef46a",
+      "generatedAt": "2026-08-20T12:50:46.677Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-4-2.mp3",
+      "text": "Ten is made of four, four, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c1ab2c9be1ded184d0a7be98e644dce55cd02f04c58946a9d20ccc8d5ed49ab2",
+      "generatedAt": "2026-08-20T12:50:46.773Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-4-1-1.mp3",
+      "text": "Ten is made of four, four, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "952fb159de2b8b340b74203a709061ca9967f4cee5e1f6db8b4dc94f2fe84751",
+      "generatedAt": "2026-08-20T12:50:46.829Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-3-3.mp3",
+      "text": "Ten is made of four, three, and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e1984a0e173daacc2b9b59e19bcfaf83f9f19230af3ae611cc03eea6dc0ee2de",
+      "generatedAt": "2026-08-20T12:50:46.940Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-3-2-1.mp3",
+      "text": "Ten is made of four, three, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "034f0449421d7d2261d20dea14fcd80015e9113c60f64ef6c88ad1db991647a7",
+      "generatedAt": "2026-08-20T12:50:47.071Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-3-1-1-1.mp3",
+      "text": "Ten is made of four, three, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "712b202f8ff0b33305cdd294999ec79155d22f7f50cd12f7ce3c157331985b48",
+      "generatedAt": "2026-08-20T12:50:47.104Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-2-2-2.mp3",
+      "text": "Ten is made of four, two, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4a1adb8d68fda2dd5ae82d02fd2d07e61b4d7ac31df8d70d5074ffbcee87cca4",
+      "generatedAt": "2026-08-20T12:50:47.204Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-2-2-1-1.mp3",
+      "text": "Ten is made of four, two, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8c4137d6a8625e0c1f3237ad487d2373ef6d36498e65762d91f659b708360d1c",
+      "generatedAt": "2026-08-20T12:50:47.329Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-2-1-1-1-1.mp3",
+      "text": "Ten is made of four, two, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c2195cb4076e24efa0dafb42e2ac7a24225b760d1b69a2eeaacd516e34c2c21b",
+      "generatedAt": "2026-08-20T12:50:47.371Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-4-1-1-1-1-1-1.mp3",
+      "text": "Ten is made of four, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b62e8e736870c9c20a6ac7e78adee4bee95c6ca4749104cdd8f1341b0281f560",
+      "generatedAt": "2026-08-20T12:50:47.537Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-3-3-1.mp3",
+      "text": "Ten is made of three, three, three, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e27ca97b141c5f1ffd52c8303de96a08f5f02044ebf8cdfb0c9c7398a5c3970e",
+      "generatedAt": "2026-08-20T12:50:47.594Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-3-2-2.mp3",
+      "text": "Ten is made of three, three, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8c2467d4cd559d7948864c896c21da9ba7c58ff47487687f7860cbba8cd49f59",
+      "generatedAt": "2026-08-20T12:50:47.614Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-3-2-1-1.mp3",
+      "text": "Ten is made of three, three, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "de2fc414a3875f8c903d7a4d1286c64553d5ccf1ed3d9a2906537c7de9b4120f",
+      "generatedAt": "2026-08-20T12:50:47.804Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-3-1-1-1-1.mp3",
+      "text": "Ten is made of three, three, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1790ae56b814158328953174935e88ffbd69a56d2ffb8e7cb6e677e8fd27d0df",
+      "generatedAt": "2026-08-20T12:50:47.873Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-2-2-2-1.mp3",
+      "text": "Ten is made of three, two, two, two, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "94a6edfd456907604c3f2239e64d8421cd3eb75c3127118389e4ea6dcf810b86",
+      "generatedAt": "2026-08-20T12:50:47.887Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-2-2-1-1-1.mp3",
+      "text": "Ten is made of three, two, two, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9fc3403f5d10ee21174362f4a19167e9d46fe399c620b3b00bbc0439995b716d",
+      "generatedAt": "2026-08-20T12:50:48.077Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-2-1-1-1-1-1.mp3",
+      "text": "Ten is made of three, two, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9d1667bdfe43ebf9e16fe52e78f16edec8d936f036192549fdf3a0c08e0ea29e",
+      "generatedAt": "2026-08-20T12:50:48.153Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-3-1-1-1-1-1-1-1.mp3",
+      "text": "Ten is made of three, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6b97a2bbc329e285cc9e4b7e21444a4b57890b664f7d73eacb94df557a8ecf35",
+      "generatedAt": "2026-08-20T12:50:48.165Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-2-2-2-2-2.mp3",
+      "text": "Ten is made of two, two, two, two, and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f81b297a722481922c53722220211e5b444c6b60b9720bcba6bc721a43d88454",
+      "generatedAt": "2026-08-20T12:50:48.346Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-2-2-2-2-1-1.mp3",
+      "text": "Ten is made of two, two, two, two, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9b56e5a25ba7c0eaac5de00db9b417389204f3fba1e29024fefaace7800c8dc2",
+      "generatedAt": "2026-08-20T12:50:48.429Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-2-2-2-1-1-1-1.mp3",
+      "text": "Ten is made of two, two, two, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3076a32653ec962457bc228f4345680f0418fdf85c2b286621c7f9b878dc82dd",
+      "generatedAt": "2026-08-20T12:50:48.439Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-2-2-1-1-1-1-1-1.mp3",
+      "text": "Ten is made of two, two, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1de4aba3fa6be44d37650699d7a476d58720dbb187138c97ae73446f1daf37ce",
+      "generatedAt": "2026-08-20T12:50:48.647Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-2-1-1-1-1-1-1-1-1.mp3",
+      "text": "Ten is made of two, one, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b77010f4e655ac19c2f629dcaf51a0b2107b686a8159f652d8a8780ecad96a35",
+      "generatedAt": "2026-08-20T12:50:48.721Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "composition-10-1-1-1-1-1-1-1-1-1-1.mp3",
+      "text": "Ten is made of one, one, one, one, one, one, one, one, one, and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6feeec6318366aa0d233c1034c70d0d8b6dd6a37a298266b61c50e0fd802f117",
+      "generatedAt": "2026-08-20T12:50:48.747Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-try-again.mp3",
+      "text": "Nearly! Count the blocks, then try another number friend.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cea1de9d1c66acf8d0003eb1d1bf9dd9a9d933625713af5da4fcdbe42bc5f5a5",
+      "generatedAt": "2026-08-20T12:50:48.929Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-retry.mp3",
+      "text": "Almost! Let the blocks bounce back, count carefully, and pull again.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "da5ca939463ba8ad63138b30037c7778b443116d09ec7458cd54ce2df56d364e",
+      "generatedAt": "2026-08-20T12:50:49.026Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-pull-next.mp3",
+      "text": "Great! Pull one more block.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "54fb45bad6470bb2864ae4463f9c68b0ad001c711b35ab0ccdd39645a0a93e02",
+      "generatedAt": "2026-08-20T12:50:48.924Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-session-complete.mp3",
+      "text": "Three missions complete! Ten is very proud of you!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e113dc745be10aea3ca943dd32961a2e7460965eca069e24c3a88d1cb4b2ad83",
+      "generatedAt": "2026-08-20T12:50:49.218Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-unlock-6.mp3",
+      "text": "Amazing! Number six is ready to play!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cc6d9f5517c5e7aec1a3e5052a552d4dc60a70ad24afbe27cf738f000a629773",
+      "generatedAt": "2026-08-20T12:50:49.186Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-unlock-7.mp3",
+      "text": "Amazing! Number seven is ready to play!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d59b57145267281202e4e77b96b80ea3dbd1e912799dc24782ddd7a6869aaf54",
+      "generatedAt": "2026-08-20T12:50:49.284Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-unlock-8.mp3",
+      "text": "Amazing! Number eight is ready to play!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "426e5203e15e791bcb7a9a7b7d7868702737f0d4014b436dcd3a93c660131e3f",
+      "generatedAt": "2026-08-20T12:50:49.470Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-unlock-9.mp3",
+      "text": "Amazing! Number nine is ready to play!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "88cbfa61ae3407cfd9cd31dd00506b3ad49463ab7e7838220ef364d446f9ea4c",
+      "generatedAt": "2026-08-20T12:50:49.466Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-unlock-10.mp3",
+      "text": "Amazing! Number ten is ready to play!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "610a84df360400fd6b2b4cddf9340c14aa35dda956b95974b5d3eb28d3045dee",
+      "generatedAt": "2026-08-20T12:50:49.535Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-1.mp3",
+      "text": "First, build one! Drag one block into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "410a9b43d4e203fd4985e79122bd09115d8b2295250fc9ff4e2e4be8b459888d",
+      "generatedAt": "2026-08-20T12:50:49.765Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-1.mp3",
+      "text": "Brilliant! Now build one in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "eb8b0034b509beb7a30bd612b21da972db26eb4f409d53f3a774006be5b2de97",
+      "generatedAt": "2026-08-20T12:50:49.745Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-2.mp3",
+      "text": "First, build two! Drag two blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "93b160e6cfc654c6fdea0585e2867d4fe183d4d5d82dfa06f3d0e884af67cf7b",
+      "generatedAt": "2026-08-20T12:50:49.827Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-2.mp3",
+      "text": "Brilliant! Now build two in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2f211a444bc53c75d15bfb788f613d24317783bd98a754411b19a19d67827afe",
+      "generatedAt": "2026-08-20T12:50:50.010Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-3.mp3",
+      "text": "First, build three! Drag three blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "45e8ee8788e9224683249cdf8a45b975273793af7a5799c2f724106642a76c09",
+      "generatedAt": "2026-08-20T12:50:50.054Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-3.mp3",
+      "text": "Brilliant! Now build three in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "aeb725452ed09c33c39888cf44a64311e3ad32b8033717868d7b74755ed5e003",
+      "generatedAt": "2026-08-20T12:50:50.101Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-4.mp3",
+      "text": "First, build four! Drag four blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "590a3a09779606ad2a16cb95b73a0231bb574abf4d7f7676189953e972a08b7c",
+      "generatedAt": "2026-08-20T12:50:50.324Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-4.mp3",
+      "text": "Brilliant! Now build four in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5a2342377659473b13b395441e8c97aa2c5a64aea3413271ecf7e6e13ac5a32b",
+      "generatedAt": "2026-08-20T12:50:50.307Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-5.mp3",
+      "text": "First, build five! Drag five blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "00cd69304148b524f33c96efb2850e1d55bb7e5a8cb150830ea5276272fb2f60",
+      "generatedAt": "2026-08-20T12:50:50.397Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-5.mp3",
+      "text": "Brilliant! Now build five in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ccb06b3b4ad360150b89a145ed88c181aa8a87eb9565ceed6a18a39f9360134d",
+      "generatedAt": "2026-08-20T12:50:50.559Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-6.mp3",
+      "text": "First, build six! Drag six blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "26fe02d6d34acc8cc320888b6f03a1c7eef74cc85b76597a6ec269d5cc4f13c1",
+      "generatedAt": "2026-08-20T12:50:50.621Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-6.mp3",
+      "text": "Brilliant! Now build six in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "95538af7eb045c3c7fcb12a921f06466e50849ee812159b96fb880ddfea36b5f",
+      "generatedAt": "2026-08-20T12:50:50.660Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-7.mp3",
+      "text": "First, build seven! Drag seven blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a7ffd9eff0beb86b744d77eada4bb1eb2276804fb3d67cdcb0be32d1f8b1a9d2",
+      "generatedAt": "2026-08-20T12:50:50.838Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-7.mp3",
+      "text": "Brilliant! Now build seven in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c7da2ad423c06d95eba4a70b7e97ba786bc05c7452cda87efc401d91d79c95a1",
+      "generatedAt": "2026-08-20T12:50:50.895Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-first-8.mp3",
+      "text": "First, build eight! Drag eight blocks into the glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "1735be1429f46b1503f74da3174d8835945853785b1ef5ea89076031b3d1ba97",
+      "generatedAt": "2026-08-20T12:50:50.952Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-build-next-8.mp3",
+      "text": "Brilliant! Now build eight in the next glowing spot.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9efdd6aa7bec2e777b52169bacf5c5d1400e85c717221c39290274cda6f80cb8",
+      "generatedAt": "2026-08-20T12:50:51.111Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-1-1.mp3",
+      "text": "What do one and one make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4d58fa792fb1312a01f77f7a686a051a62f6a564f6333af303d1351fac42196a",
+      "generatedAt": "2026-08-20T12:50:51.166Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-1-1.mp3",
+      "text": "Yes! Now push one and one together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "3596dffdf46041dacec8a246995c27a15ed1b35d8164c071f8dea5d5cfbabba5",
+      "generatedAt": "2026-08-20T12:50:51.204Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-1-1.mp3",
+      "text": "Here is two. Pull one block at a time to make one and one!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8513f702c10ed6be8b4a430d69b7657aba7f9bfdc83d2788ad5a24b17bc105e3",
+      "generatedAt": "2026-08-20T12:50:51.416Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-1-1.mp3",
+      "text": "You made one and one! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "97778d641f101a0ed27b387b79de91c5de18a16e4a0c8785f1d41a14fba74bd4",
+      "generatedAt": "2026-08-20T12:50:51.457Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-1-1.mp3",
+      "text": "One and one make two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f004e9959ae2bce9e5d10d768840c21710808bc8464871439b8cbd99de057e97",
+      "generatedAt": "2026-08-20T12:50:51.398Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-1-2.mp3",
+      "text": "What do one and two make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d839f4cc4ab4e234d55a1cab51c65e9ee3f0e201ca46b32d9bd8de6747d3345a",
+      "generatedAt": "2026-08-20T12:50:51.666Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-1-2.mp3",
+      "text": "Yes! Now push one and two together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2de6828e9bdb9a20b04eae7680006baabb6eeccdff74ad73b8eb5a2bae282be7",
+      "generatedAt": "2026-08-20T12:50:51.655Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-1-2.mp3",
+      "text": "Here is three. Pull one block at a time to make one and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "64625a1330044aeeabf80832b1844315cc6b63041b33e6491b53eebab0f4866e",
+      "generatedAt": "2026-08-20T12:50:51.743Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-1-2.mp3",
+      "text": "You made one and two! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4a768f19be15370ab0c10910228a2be730d5883a32593a38771c076f575f681f",
+      "generatedAt": "2026-08-20T12:50:51.928Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-1-2.mp3",
+      "text": "One and two make three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d6ec3c127b6fa231d5ac60f1e1701aaae51e4763c32196f33849c700186af979",
+      "generatedAt": "2026-08-20T12:50:51.833Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-2-2.mp3",
+      "text": "What do two and two make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fa6f461a7a57ab93e5e5743e0ac9acef318aa5ca4028ea6f6b55063c0fa9d23f",
+      "generatedAt": "2026-08-20T12:50:52.025Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-2-2.mp3",
+      "text": "Yes! Now push two and two together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a1e9f7199e36fcd17169e82cb3264455f4bfd0897acbabaaec527200a32c2793",
+      "generatedAt": "2026-08-20T12:50:52.081Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-2-2.mp3",
+      "text": "Here is four. Pull one block at a time to make two and two!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8e0f45a22e09991b84f611c8277a854f803f47b7b136a351c72b4ebee6a7db52",
+      "generatedAt": "2026-08-20T12:50:52.205Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-2-2.mp3",
+      "text": "You made two and two! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "30d91c9f71ccc5c1b0ea2c2591cfa459e1984bf4bc6457344948f1ba293e507e",
+      "generatedAt": "2026-08-20T12:50:52.305Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-2-2.mp3",
+      "text": "Two and two make four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "8ad137d6d73ae4ba2883b2c887d78e9a550f4a213a3b1638c85a45101514ce26",
+      "generatedAt": "2026-08-20T12:50:52.254Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-1-3.mp3",
+      "text": "What do one and three make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "efd967b47515e189e05a9c79e876b6bd1af08d309aabe97d3461c396c6acc4aa",
+      "generatedAt": "2026-08-20T12:50:52.473Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-1-3.mp3",
+      "text": "Yes! Now push one and three together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9c5793dc2666c7d3302bb2e8ba331a08966a6fdbc5aeb0f0ec02e1856b29a868",
+      "generatedAt": "2026-08-20T12:50:52.515Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-1-3.mp3",
+      "text": "Here is four. Pull one block at a time to make one and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7ca2cb9fab37d82a396e7c3d47edc764872dace0ae242c2ab4709b737d6892a4",
+      "generatedAt": "2026-08-20T12:50:52.603Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-1-3.mp3",
+      "text": "You made one and three! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7b3abc7b50529f914708c07f87a7fe7896d81dd72e18297e97247002c84b9e95",
+      "generatedAt": "2026-08-20T12:50:52.739Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-1-3.mp3",
+      "text": "One and three make four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fe7192e0e686cac03dc3b6d311a43eb5131cc685372b1814f12d4b24cee4307b",
+      "generatedAt": "2026-08-20T12:50:52.694Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-2-3.mp3",
+      "text": "What do two and three make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "711d2e567dd407459d93bf669584d7f5ace724bdacc5a910042789d56f9212aa",
+      "generatedAt": "2026-08-20T12:50:52.913Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-2-3.mp3",
+      "text": "Yes! Now push two and three together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "689f4f75c5f9300ea5e830fce57ef10992d8c02d377677948224b9767fc5a0f6",
+      "generatedAt": "2026-08-20T12:50:52.961Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-2-3.mp3",
+      "text": "Here is five. Pull one block at a time to make two and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "45d474b9c9cb98fa1f8a47d14b730fda0c727373e375d814bceaed8fb246ea2e",
+      "generatedAt": "2026-08-20T12:50:53.014Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-2-3.mp3",
+      "text": "You made two and three! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ec490a85dcb6742a533a534f5befc172fb5afe6d8cb79910c4155cceebf23904",
+      "generatedAt": "2026-08-20T12:50:53.195Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-2-3.mp3",
+      "text": "Two and three make five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "20e9670d6c25e6392d53951f95ab99874a7d326395c49dadbca1b5a7ec433969",
+      "generatedAt": "2026-08-20T12:50:53.134Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-1-4.mp3",
+      "text": "What do one and four make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "04aa3cbe1df029db5fa1c2e3d3b1012b629695de14b3d568a2fa3a37e84272b8",
+      "generatedAt": "2026-08-20T12:50:53.294Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-1-4.mp3",
+      "text": "Yes! Now push one and four together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "dcc436faddced3f19d4e83eb8ec86176d62e16a1d2e9852cd7de8aea6f11e3ae",
+      "generatedAt": "2026-08-20T12:50:53.386Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-1-4.mp3",
+      "text": "Here is five. Pull one block at a time to make one and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "96d59d5bcde3df50da43ddd5996fbdba85a17eadc34b7b3dfac6e5efca918f94",
+      "generatedAt": "2026-08-20T12:50:53.487Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-1-4.mp3",
+      "text": "You made one and four! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4cf3263d160be0a48669166cdee6121148e23cb0578e685f4dd9c67dbf8cb603",
+      "generatedAt": "2026-08-20T12:50:53.814Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-1-4.mp3",
+      "text": "One and four make five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c8580a4f0855864bab74a7339d9c7c4ab70bd8fdc693183b7c5a37c8a1bcd51c",
+      "generatedAt": "2026-08-20T12:50:53.556Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-1-5.mp3",
+      "text": "What do one and five make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "bf6ee3914b50e856547e066b87bc129a6c24f13cfe0c914e54783054aa056c5f",
+      "generatedAt": "2026-08-20T12:50:53.760Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-1-5.mp3",
+      "text": "Yes! Now push one and five together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "679c51bd63b2f40c70763b6e93857edc0cfc8c0a71056f2417a02bbdd6fc0ab5",
+      "generatedAt": "2026-08-20T12:50:53.814Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-1-5.mp3",
+      "text": "Here is six. Pull one block at a time to make one and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f9b1dc147651854778a82db1b805a44d638e7c3102ce20f34625dcf20934f887",
+      "generatedAt": "2026-08-20T12:50:54.049Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-1-5.mp3",
+      "text": "You made one and five! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "44a7c14a568cb43a592a63308f52cc212af18564de8e987577a2250c0a83f51b",
+      "generatedAt": "2026-08-20T12:50:54.098Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-1-5.mp3",
+      "text": "One and five make six!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "0e0557e0a96a5a8133b899c2e17428ce98ee4208a5b697b4f1ca1c7d283781cd",
+      "generatedAt": "2026-08-20T12:50:53.970Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-2-4.mp3",
+      "text": "What do two and four make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "545c1c0814aa7e06d3e4982bbbc17c6debf4a3b9821fc009de5d703b5f6429f3",
+      "generatedAt": "2026-08-20T12:50:54.226Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-2-4.mp3",
+      "text": "Yes! Now push two and four together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f1712b7ae4029194dfa739b43cf45d35a23ae9459e985078fec194d43108b08a",
+      "generatedAt": "2026-08-20T12:50:54.303Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-2-4.mp3",
+      "text": "Here is six. Pull one block at a time to make two and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4ce10e90628a397dd47dac70e2eebf3ef61fb36804d598335a283402b8f45e1b",
+      "generatedAt": "2026-08-20T12:50:54.379Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-2-4.mp3",
+      "text": "You made two and four! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f649f91ceb47d2f4958dc16312256256a2f260daee77453325797299abdad8a7",
+      "generatedAt": "2026-08-20T12:50:54.504Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-2-4.mp3",
+      "text": "Two and four make six!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "cfbfcbdee0edf89993d5fe5efc69ab41cd5a61ad7ee913041702532e0f2e9d62",
+      "generatedAt": "2026-08-20T12:50:54.473Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-3-3.mp3",
+      "text": "What do three and three make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c4b087a4de99e49d2bebe6569d0efa69e04cc0cb4f32d79442dc9955074d26f6",
+      "generatedAt": "2026-08-20T12:50:54.656Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-3-3.mp3",
+      "text": "Yes! Now push three and three together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fcae785c519af5fa469884c24df64df6ed36fb946fc80b622ca59532e9c967c6",
+      "generatedAt": "2026-08-20T12:50:54.732Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-3-3.mp3",
+      "text": "Here is six. Pull one block at a time to make three and three!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "43d71742ac1332b42a321f3f80d23d3172f8d5a4d27fa8088788387adec7c810",
+      "generatedAt": "2026-08-20T12:50:54.768Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-3-3.mp3",
+      "text": "You made three and three! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ad58f7a8f6ca58c850300429d6a23a06d1b4547a644457e8895c41340f649657",
+      "generatedAt": "2026-08-20T12:50:54.937Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-3-3.mp3",
+      "text": "Three and three make six!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c9a957bca18a5efade7fc9f393c25bbab89af97e1db632f8c1ab8b702606c1ad",
+      "generatedAt": "2026-08-20T12:50:54.910Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-2-5.mp3",
+      "text": "What do two and five make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b252caf45f0da3deb4d063afdc1f00415b9bf8997b2d1f7554fa46ece3c99473",
+      "generatedAt": "2026-08-20T12:50:55.038Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-2-5.mp3",
+      "text": "Yes! Now push two and five together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c9bb5a36e3d2d55c83e6948549d3fab16fe667efaa63f9a99fdaaf7209917e1c",
+      "generatedAt": "2026-08-20T12:50:55.178Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-2-5.mp3",
+      "text": "Here is seven. Pull one block at a time to make two and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "45c410c552e0e144be8b858e24d3ed629ef2b18115ce6d53a001e68d50b4f497",
+      "generatedAt": "2026-08-20T12:50:55.224Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-2-5.mp3",
+      "text": "You made two and five! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "aa2d38b03c5a4ac0bb4a5606a84ee132927e20917065032d8e150cb3589978a3",
+      "generatedAt": "2026-08-20T12:50:55.319Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-2-5.mp3",
+      "text": "Two and five make seven!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f49dffa23a733cd1cae0e7c28abc271b21ce04799c86ea7beaeada528179701f",
+      "generatedAt": "2026-08-20T12:50:55.360Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-3-4.mp3",
+      "text": "What do three and four make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "72c0469e3d41c113548fc2745329c8685fd84a67b8730d3319df9c4f64dee8b8",
+      "generatedAt": "2026-08-20T12:50:55.505Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-3-4.mp3",
+      "text": "Yes! Now push three and four together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "31a77a51154150387777d51e4135e40a63459c2cd87a03d27c0115b23f72dcec",
+      "generatedAt": "2026-08-20T12:50:55.621Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-3-4.mp3",
+      "text": "Here is seven. Pull one block at a time to make three and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "d2a6d42883a3d9e5245443e7ea716405e000483277497cfe005e215985c6dc2e",
+      "generatedAt": "2026-08-20T12:50:55.682Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-3-4.mp3",
+      "text": "You made three and four! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "9373a7e0e4c3fb1bc1f7718b1b885063b7921b282f37fbbea220c2e961abd37d",
+      "generatedAt": "2026-08-20T12:50:55.796Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-3-4.mp3",
+      "text": "Three and four make seven!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2ed23a83ac5ab9a7079c6223c94a1fcd1d20c98af8b84bbbc6e1a701b9869d9a",
+      "generatedAt": "2026-08-20T12:50:55.782Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-3-5.mp3",
+      "text": "What do three and five make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6021c7aabef304fd92a0fc8c2b77e9c163685cb20f9d3cba5434833a1839692f",
+      "generatedAt": "2026-08-20T12:50:55.962Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-3-5.mp3",
+      "text": "Yes! Now push three and five together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "96d5f6b2a239b1cdadc2e580376ad2577ac915eded8e90fb93e58f71b43184ac",
+      "generatedAt": "2026-08-20T12:50:56.016Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-3-5.mp3",
+      "text": "Here is eight. Pull one block at a time to make three and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a7b779edc826ce55c97fecfbbbc6e2c1bc95c82b4b59c68d7c16a6c083ab23c0",
+      "generatedAt": "2026-08-20T12:50:56.080Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-3-5.mp3",
+      "text": "You made three and five! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a624d9806ab37701d7386b2db20bc0c9f4021634ed15fc3538a4980daea59de5",
+      "generatedAt": "2026-08-20T12:50:56.250Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-3-5.mp3",
+      "text": "Three and five make eight!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "e90fb29c30b7d09da40e447ca06627eca0022d48a87d2b30cb38fb6e124eab90",
+      "generatedAt": "2026-08-20T12:50:56.185Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-4-4.mp3",
+      "text": "What do four and four make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b292b79d589a0c119a5cd98656e463d34eada3b12d8b6ff49c0ae166bd464075",
+      "generatedAt": "2026-08-20T12:50:56.363Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-4-4.mp3",
+      "text": "Yes! Now push four and four together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "a8083b04dfb40c4a081dfda1215d3763884264dd503975ba7c96effe0122df62",
+      "generatedAt": "2026-08-20T12:50:56.442Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-4-4.mp3",
+      "text": "Here is eight. Pull one block at a time to make four and four!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "7fb72b46da9ba49fe1c129c42ae94359ae96c9f869b3c4e81bdd75403f792b12",
+      "generatedAt": "2026-08-20T12:50:56.540Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-4-4.mp3",
+      "text": "You made four and four! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b7a7500674eb3ac538fa8ba912f5031d3e514de69e14eb98b02395db01426bd7",
+      "generatedAt": "2026-08-20T12:50:56.653Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-4-4.mp3",
+      "text": "Four and four make eight!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "72457d838075b0ee383886bd12694129ba9f9f4165ee78861a308a514df9f788",
+      "generatedAt": "2026-08-20T12:50:56.621Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-4-5.mp3",
+      "text": "What do four and five make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "81cfd226871c07570bb21cb968d2f6554b9d50160cf4a8f6568888f25933f28d",
+      "generatedAt": "2026-08-20T12:50:56.826Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-4-5.mp3",
+      "text": "Yes! Now push four and five together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "37fe0787d7c1790f3bac0dea67dde3a167432a2b250cb69f102ee05f23ca8f61",
+      "generatedAt": "2026-08-20T12:50:56.864Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-4-5.mp3",
+      "text": "Here is nine. Pull one block at a time to make four and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "748ac049a5572129e9df6a2e6f67bea2e43bbace60d57e5cd674f0c4bc3cc437",
+      "generatedAt": "2026-08-20T12:50:56.955Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-4-5.mp3",
+      "text": "You made four and five! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b1693caa44900388244479dbdd7b2cc37992b1b88818ca406c6dc4c29442ca69",
+      "generatedAt": "2026-08-20T12:50:57.113Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-4-5.mp3",
+      "text": "Four and five make nine!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "437375c7cb0a5f3184a1a4a0b0b0e0048663f8eb885fcd60e453bf2fba3c0ece",
+      "generatedAt": "2026-08-20T12:50:57.026Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-2-8.mp3",
+      "text": "What do two and eight make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "2a64b2a2453da77257d7bd49ff3b9de2fd9fb2621a16d6a6ab1937754bd97af3",
+      "generatedAt": "2026-08-20T12:50:57.245Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-2-8.mp3",
+      "text": "Yes! Now push two and eight together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "ae4b8c3cabd07934a7dc35077c596b31a7cf2ea5022f09d46038d3c2245f0fc0",
+      "generatedAt": "2026-08-20T12:50:57.267Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-2-8.mp3",
+      "text": "Here is ten. Pull one block at a time to make two and eight!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "b4def6a22b16258400fa3204d146f3d15c2a1ad70399cda971189956059b8e0d",
+      "generatedAt": "2026-08-20T12:50:57.410Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-2-8.mp3",
+      "text": "You made two and eight! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "be262b59acaef178f34dd7b3a13edbe888944cf2b20a8058320e99b674a03756",
+      "generatedAt": "2026-08-20T12:50:57.590Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-2-8.mp3",
+      "text": "Two and eight make ten!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "c3b064ba2c323bfe0fe444b8333a342b7e87415454498eaec6e4eee90ec06bd1",
+      "generatedAt": "2026-08-20T12:50:57.424Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-3-7.mp3",
+      "text": "What do three and seven make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "302990581f8f609b27aa73f7f4f078dcbfe864402ec59a00e86098fd3a726752",
+      "generatedAt": "2026-08-20T12:50:57.693Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-3-7.mp3",
+      "text": "Yes! Now push three and seven together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "60640538f3d98a9f7a5c0cf8bdb35be0aba1bb98b702a62bee77f798a3ff424e",
+      "generatedAt": "2026-08-20T12:50:57.668Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-3-7.mp3",
+      "text": "Here is ten. Pull one block at a time to make three and seven!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "790fd649d5f444c3c69e0bd0c57d210c1c666a207fc6311991c7c92da1cca51f",
+      "generatedAt": "2026-08-20T12:50:57.889Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-3-7.mp3",
+      "text": "You made three and seven! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "f99281d6191fe724a5eaed34a3d5495f62d6d34e84b63cb92ac4e0142bfb26a1",
+      "generatedAt": "2026-08-20T12:50:57.933Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-3-7.mp3",
+      "text": "Three and seven make ten!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "5e75e5e140a7ece2c1ae320b03393c225714568c51998727b8853d6d63806765",
+      "generatedAt": "2026-08-20T12:50:57.880Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-4-6.mp3",
+      "text": "What do four and six make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "4814f8a619760e7eae5fe22b0459f41659aab92a55bd113b79ea5a33190cea78",
+      "generatedAt": "2026-08-20T12:50:58.155Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-4-6.mp3",
+      "text": "Yes! Now push four and six together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "17c3fdbbe8d88405cf5a65b46358168552214e9badbcf23194cfe686d3aa83e9",
+      "generatedAt": "2026-08-20T12:50:58.141Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-4-6.mp3",
+      "text": "Here is ten. Pull one block at a time to make four and six!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6fdf0abe5e89b9498dc55ab6bb597f76d4e5a067e07565a7cab4a7cf3ce683ff",
+      "generatedAt": "2026-08-20T12:50:58.210Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-4-6.mp3",
+      "text": "You made four and six! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "136b1236cbd26a9d792464c68a92165389b590a658bf05a9605c7e6803606a5a",
+      "generatedAt": "2026-08-20T12:50:58.413Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-4-6.mp3",
+      "text": "Four and six make ten!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "82dae550b919d3fba11c764d24272b87824071d08ea62c5634833b6ebfb8fca0",
+      "generatedAt": "2026-08-20T12:50:58.324Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-predict-5-5.mp3",
+      "text": "What do five and five make? Choose a number friend!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "95fb2e91033011e111d882fbd91738e5f73cd47cae4b3429859abeaaf61431ee",
+      "generatedAt": "2026-08-20T12:50:58.487Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-combine-5-5.mp3",
+      "text": "Yes! Now push five and five together!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "027068b5265e7e861d271bf9f0bf55f030535c7e4d8d681f3cd7c12bd57da19d",
+      "generatedAt": "2026-08-20T12:50:58.572Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-5-5.mp3",
+      "text": "Here is ten. Pull one block at a time to make five and five!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "fdd29c874e6925f2db99ad06aff71e381f555f94d6afffabc83dbebe706102b1",
+      "generatedAt": "2026-08-20T12:50:58.711Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-split-made-5-5.mp3",
+      "text": "You made five and five! Look at the two number friends.",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "52adce9cb0c92a32a9efa44486c3f63255464d00e28bfabc28944827ac98c7b1",
+      "generatedAt": "2026-08-20T12:50:58.760Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "filename": "mission-success-5-5.mp3",
+      "text": "Five and five make ten!",
+      "provider": "elevenlabs",
+      "source": "ai",
+      "model": "eleven_flash_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "contentHash": "6c94941535770766b616ad2273483f51233f72b91faad04ff92a98e1910d61a7",
+      "generatedAt": "2026-08-20T12:50:58.743Z",
+      "qaStatus": "pending-listening-review"
+    }
+  ]
+}

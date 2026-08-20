@@ -1,7 +1,6 @@
 import { access, readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { enumeratePartitions } from '../public/numberblocks/engine.js';
-import { MISSION_FACTS } from '../public/numberblocks/missions.js';
+import { NUMBER_MAGIC_AUDIO_ENTRIES } from './number-magic-audio-catalog.mjs';
 
 const projectRoot = process.cwd();
 const appRoot = path.join(projectRoot, 'public', 'numberblocks');
@@ -35,6 +34,8 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   const offlinePack = JSON.parse(await readFile(path.join(appRoot, 'offline-pack.json'), 'utf8'));
 
   if (/https?:\/\//i.test(html + appSource + styles + missionStyles)) errors.push('Runtime source contains a remote URL');
+  if (appSource.includes('speechSynthesis') || appSource.includes('SpeechSynthesisUtterance')) errors.push('Runtime browser TTS fallback is forbidden; bundled ElevenLabs audio is required');
+  if (appSource.includes('.m4a')) errors.push('Runtime still references superseded M4A narration');
   if (manifest.display !== 'standalone') errors.push('Manifest must use standalone display mode');
   if (manifest.orientation !== 'portrait-primary') errors.push('Manifest must prefer portrait orientation');
   if (!html.includes('viewport-fit=cover')) errors.push('Missing iPhone safe-area viewport support');
@@ -67,29 +68,7 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   if (!worker.includes('cache.match(event.request')) errors.push('Service worker must read only from its active version cache');
   if (!Array.isArray(offlinePack.assets)) errors.push('Offline pack assets must be an array');
 
-  const expectedAudio = ['welcome.m4a'];
-  for (let target = 2; target <= 10; target += 1) {
-    expectedAudio.push(`play-${target}.m4a`, `together-${target}.m4a`, `new-way-${target}.m4a`);
-    for (const parts of enumeratePartitions(target, { includeWhole: false })) {
-      expectedAudio.push(`composition-${target}-${parts.join('-')}.m4a`);
-    }
-  }
-  expectedAudio.push('mission-try-again.m4a', 'mission-split-retry.m4a', 'mission-pull-next.m4a', 'mission-session-complete.m4a');
-  for (let number = 6; number <= 10; number += 1) expectedAudio.push(`mission-unlock-${number}.m4a`);
-  const missionNumbers = [...new Set(MISSION_FACTS.flatMap(fact => [fact.a, fact.b]))];
-  for (const number of missionNumbers) {
-    expectedAudio.push(`mission-build-first-${number}.m4a`, `mission-build-next-${number}.m4a`);
-  }
-  for (const fact of MISSION_FACTS) {
-    const pair = `${fact.a}-${fact.b}`;
-    expectedAudio.push(
-      `mission-predict-${pair}.m4a`,
-      `mission-combine-${pair}.m4a`,
-      `mission-split-${pair}.m4a`,
-      `mission-split-made-${pair}.m4a`,
-      `mission-success-${pair}.m4a`
-    );
-  }
+  const expectedAudio = NUMBER_MAGIC_AUDIO_ENTRIES.map(entry => entry.filename);
   if (strictAudio) {
     for (const filename of expectedAudio) {
       const audioPath = path.join(appRoot, 'audio', filename);
@@ -99,9 +78,21 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
       }
       if ((await stat(audioPath)).size < 1000) errors.push(`Narration is too small: audio/${filename}`);
     }
-    const actualAudio = (await readdir(path.join(appRoot, 'audio'))).filter(name => name.endsWith('.m4a'));
+    const actualAudio = (await readdir(path.join(appRoot, 'audio'))).filter(name => name.endsWith('.mp3'));
     if (actualAudio.length !== expectedAudio.length) {
       errors.push(`Expected ${expectedAudio.length} narration files, found ${actualAudio.length}`);
+    }
+    const oldAudio = (await readdir(path.join(appRoot, 'audio'))).filter(name => name.endsWith('.m4a'));
+    if (oldAudio.length) errors.push(`Found ${oldAudio.length} superseded system-voice M4A files`);
+    const audioManifestPath = path.join(appRoot, 'audio', 'manifest.json');
+    if (!await exists(audioManifestPath)) errors.push('Missing ElevenLabs audio manifest');
+    else {
+      const audioManifest = JSON.parse(await readFile(audioManifestPath, 'utf8'));
+      if (audioManifest.provider !== 'elevenlabs' || audioManifest.language !== 'en') errors.push('Number Magic audio manifest must identify English ElevenLabs narration');
+      if (audioManifest.entries?.length !== expectedAudio.length) errors.push(`ElevenLabs manifest has ${audioManifest.entries?.length ?? 0}/${expectedAudio.length} entries`);
+      if (!audioManifest.entries?.every(entry => expectedAudio.includes(entry.filename) && entry.provider === 'elevenlabs' && entry.model && entry.voiceId && entry.contentHash)) {
+        errors.push('ElevenLabs manifest contains incomplete or unexpected records');
+      }
     }
   }
 
