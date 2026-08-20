@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-1e1be62a3510",
+  "version": "number-magic-02a2c7765249",
   "assetCount": 276,
-  "totalBytes": 6479220,
+  "totalBytes": 6479500,
   "assets": [
     {
       "path": "app.js",
@@ -1381,8 +1381,8 @@
     },
     {
       "path": "sw.js",
-      "bytes": 2391,
-      "sha256": "9511c7be31735820b40ede6a48be9e1950a33f3af6661a31bae5a52fcac55e90"
+      "bytes": 2671,
+      "sha256": "9cbac1b2e301b7e79c9f78e9e941964b4a2d3916b79747429d94ca04345b118b"
     }
   ]
 }

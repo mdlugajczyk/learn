@@ -54,6 +54,8 @@ export async function validateNumberMagic({ strictAudio = true } = {}) {
   }
   if (!worker.includes("cache.addAll")) errors.push('Service worker must atomically cache the app pack');
   if (!worker.includes("mode === 'navigate'")) errors.push('Service worker needs an offline navigation fallback');
+  if (worker.includes('clients.claim()')) errors.push('Service worker must not take over a page midway through loading');
+  if (!worker.includes('cache.match(event.request')) errors.push('Service worker must read only from its active version cache');
   if (!Array.isArray(offlinePack.assets)) errors.push('Offline pack assets must be an array');
 
   const expectedAudio = ['welcome.m4a'];
