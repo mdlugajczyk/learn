@@ -5,6 +5,18 @@ import test from 'node:test';
 const appSource = await readFile(new URL('../public/czytaj/app.js', import.meta.url), 'utf8');
 const indexSource = await readFile(new URL('../public/czytaj/index.html', import.meta.url), 'utf8');
 const stylesSource = await readFile(new URL('../public/czytaj/styles.css', import.meta.url), 'utf8');
+const launcherSource = await readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+
+test('the main launcher keeps Number Magic visible at the top', () => {
+  const menuStart = launcherSource.indexOf('<div id="startupModal"');
+  const menuEnd = launcherSource.indexOf('</div>\n  </div>', menuStart);
+  const menu = launcherSource.slice(menuStart, menuEnd);
+  const heading = menu.indexOf('<h2>Choose a Mode</h2>');
+  const numberMagic = menu.indexOf("window.location.href='numberblocks/'");
+  const legacyMode = menu.indexOf("initializeMode('lowercase')");
+  assert.ok(heading >= 0 && numberMagic > heading && numberMagic < legacyMode);
+  assert.match(menu, />Ten's Number Magic</);
+});
 
 test('startup and onboarding never play a narrator test sample', () => {
   assert.doesNotMatch(appSource, /narrator-sample|audio\.unlock\(|playSample|approveVoice/);
