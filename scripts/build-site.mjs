@@ -4,6 +4,7 @@ import { access, cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:
 import path from 'node:path';
 import { validateCzytaj } from './validate-czytaj.mjs';
 import { validateNumberMagic } from './validate-number-magic.mjs';
+import { validateMimi } from './validate-mimi.mjs';
 
 const projectRoot = process.cwd();
 const publicRoot = path.join(projectRoot, 'public');
@@ -25,7 +26,8 @@ async function walk(directory) {
 
 const czytajFiles = (await walk(path.join(publicRoot, 'czytaj'))).map((file) => path.relative(projectRoot, file));
 const numberMagicFiles = (await walk(path.join(publicRoot, 'numberblocks'))).map((file) => path.relative(projectRoot, file));
-const sourceCandidates = [...new Set([...tracked, ...czytajFiles, ...numberMagicFiles])].filter((file) => !file.endsWith('.DS_Store'));
+const mimiFiles = (await walk(path.join(publicRoot, 'mimi'))).map((file) => path.relative(projectRoot, file));
+const sourceCandidates = [...new Set([...tracked, ...czytajFiles, ...numberMagicFiles, ...mimiFiles])].filter((file) => !file.endsWith('.DS_Store'));
 const sourceFiles = [];
 for (const file of sourceCandidates) {
   try { await access(path.join(projectRoot, file)); sourceFiles.push(file); } catch {}
@@ -98,6 +100,21 @@ await writeFile(
 );
 await validateNumberMagic({ strictAudio: true });
 
+await validateMimi();
+const mimiRoot = path.join(clientRoot, 'mimi');
+const mimiAssets = [];
+for (const file of (await walk(mimiRoot)).filter(file => !file.endsWith('offline-pack.json') && !file.endsWith('/sw.js'))) {
+  const bytes = await readFile(file);
+  if (bytes.byteLength > 2 * 1024 * 1024) throw new Error(`Mimi asset exceeds 2 MB: ${file}`);
+  mimiAssets.push({ path: path.relative(mimiRoot, file).split(path.sep).join('/'), bytes: bytes.byteLength, sha256: createHash('sha256').update(bytes).digest('hex') });
+}
+mimiAssets.sort((a, b) => a.path.localeCompare(b.path));
+const mimiPack = { schemaVersion: 1, version: createHash('sha256').update(JSON.stringify(mimiAssets) + await readFile(path.join(mimiRoot, 'sw.js'), 'utf8')).digest('hex').slice(0, 12), assets: mimiAssets, totalBytes: mimiAssets.reduce((n, asset) => n + asset.bytes, 0) };
+if (mimiPack.totalBytes > 20 * 1024 * 1024) throw new Error('Mimi offline pack exceeds 20 MB');
+await writeFile(path.join(mimiRoot, 'offline-pack.json'), JSON.stringify(mimiPack, null, 2) + '\n');
+const mimiWorker = await readFile(path.join(mimiRoot, 'sw.js'), 'utf8');
+await writeFile(path.join(mimiRoot, 'sw.js'), mimiWorker.replace('__MIMI_VERSION__', mimiPack.version));
+
 const workerSource = `
 export default {
   async fetch(request, env) {
@@ -125,7 +142,7 @@ if (packManifest.totalBytes >= 60 * 1024 * 1024) throw new Error(`Offline pack e
 if (packManifest.assetCount >= 900) throw new Error(`Offline pack exceeds 900 file budget: ${packManifest.assetCount}`);
 if (numberMagicPack.totalBytes >= 30 * 1024 * 1024) throw new Error(`Number Magic offline pack exceeds 30 MB budget: ${numberMagicPack.totalBytes} bytes`);
 if (numberMagicPack.assetCount >= 300) throw new Error(`Number Magic offline pack exceeds 300 file budget: ${numberMagicPack.assetCount}`);
-console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(numberMagicPack.totalBytes)} Number Magic pack, ${formatBytes(workerBytes)} Worker.`);
+console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(numberMagicPack.totalBytes)} Number Magic pack, ${formatBytes(mimiPack.totalBytes)} Mimi pack, ${formatBytes(workerBytes)} Worker.`);
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;

@@ -1,0 +1,26 @@
+export const SPOKEN = {
+  'meet-family': 'To Mimi z jasnymi plamkami, a to mama w czerwonej sukience. Będziemy czytać i szukać obrazków. Głośnik powtarza polecenie. Okrągła strzałka pokazuje jeszcze raz. Zaczynamy!',
+  'meet-doll': 'Mimi ma nową zabawkę. To lala. Zaraz spróbujemy przeczytać to słowo.',
+  'meet-dad': 'To tata w zielonym swetrze. Nauczymy się czytać jego słowo.',
+  'touch-letter': 'Dotknij litery i posłuchaj jej dźwięku.',
+  'join-sounds': 'Dotknij strzałki. Posłuchaj, jak dźwięki łączą się razem.',
+  'join-chunks': 'Połączmy znane kawałki w całe słowo. Dotknij strzałki.',
+  'listen-choose': 'Posłuchaj. Dotknij pasującego napisu.',
+  'read-tap': 'Przeczytaj i dotknij.',
+  'two-words': 'Teraz dwa słowa. Pierwsze mówi, kogo szukamy. Drugie mówi, co trzeba dotknąć. Pod obrazkami są powiększone kawałki. Zobacz.',
+  'help': 'Przeczytajmy razem.',
+  'retry': 'Spróbuj jeszcze raz. Popatrz uważnie na litery.',
+  'correct-1': 'Brawo, udało się!',
+  'correct-2': 'Bardzo dobrze!',
+  'finish': 'Pięknie się dzisiaj czytało. Mimi dziękuje. Teraz czas na przerwę.',
+  'resume': 'Dotknij strzałki, żeby wrócić do zabawy.',
+  'sound-a': 'a', 'sound-i': 'i', 'sound-m': 'mmm', 'sound-l': 'lll',
+  'sound-o': 'o', 'sound-n': 'nnn', 'sound-s': 'sss',
+  'blend-ma': 'Mmmma.', 'blend-mi': 'Mmmmi.', 'blend-la': 'Lllla.', 'blend-li': 'Lllli.',
+  'blend-ta': 'ta', 'blend-to': 'to', 'blend-ko': 'ko', 'blend-no': 'nnnno', 'blend-ga': 'ga',
+  'word-ma': 'ma', 'word-mi': 'mi', 'word-la': 'la', 'word-li': 'li', 'word-ta': 'ta',
+  'word-to': 'to', 'word-ko': 'ko', 'word-no': 'no', 'word-ga': 'ga',
+  'word-mama': 'mama', 'word-mimi': 'Mimi', 'word-lala': 'lala', 'word-tata': 'tata',
+  'word-oko': 'oko', 'word-nos': 'nos', 'word-noga': 'noga'
+};
+export const AUDIO_IDS = Object.keys(SPOKEN);
