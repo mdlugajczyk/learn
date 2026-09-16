@@ -109,11 +109,15 @@ for (const file of (await walk(mimiRoot)).filter(file => !file.endsWith('offline
   mimiAssets.push({ path: path.relative(mimiRoot, file).split(path.sep).join('/'), bytes: bytes.byteLength, sha256: createHash('sha256').update(bytes).digest('hex') });
 }
 mimiAssets.sort((a, b) => a.path.localeCompare(b.path));
-const mimiPack = { schemaVersion: 1, version: createHash('sha256').update(JSON.stringify(mimiAssets) + await readFile(path.join(mimiRoot, 'sw.js'), 'utf8')).digest('hex').slice(0, 12), assets: mimiAssets, totalBytes: mimiAssets.reduce((n, asset) => n + asset.bytes, 0) };
+// The existing Pages project publishes public/ directly. Keep both release
+// surfaces complete, and normalize the generated version for reproducible builds.
+const mimiWorker = (await readFile(path.join(mimiRoot, 'sw.js'), 'utf8')).replace(/const VERSION = '[^']+';/, "const VERSION = '__MIMI_VERSION__';");
+const mimiPack = { schemaVersion: 1, version: createHash('sha256').update(JSON.stringify(mimiAssets) + mimiWorker).digest('hex').slice(0, 12), assets: mimiAssets, totalBytes: mimiAssets.reduce((n, asset) => n + asset.bytes, 0) };
 if (mimiPack.totalBytes > 20 * 1024 * 1024) throw new Error('Mimi offline pack exceeds 20 MB');
-await writeFile(path.join(mimiRoot, 'offline-pack.json'), JSON.stringify(mimiPack, null, 2) + '\n');
-const mimiWorker = await readFile(path.join(mimiRoot, 'sw.js'), 'utf8');
-await writeFile(path.join(mimiRoot, 'sw.js'), mimiWorker.replace('__MIMI_VERSION__', mimiPack.version));
+for (const destination of [mimiRoot, path.join(publicRoot, 'mimi')]) {
+  await writeFile(path.join(destination, 'offline-pack.json'), JSON.stringify(mimiPack, null, 2) + '\n');
+  await writeFile(path.join(destination, 'sw.js'), mimiWorker.replace('__MIMI_VERSION__', mimiPack.version));
+}
 
 const workerSource = `
 export default {
