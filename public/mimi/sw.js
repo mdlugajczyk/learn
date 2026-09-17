@@ -1,4 +1,4 @@
-const VERSION = '7a1bf8b06968';
+const VERSION = '32ea7f9c87cd';
 const PREFIX = 'mimi-reading-';
 const CACHE = `${PREFIX}${VERSION}`;
 const base = new URL('./', self.location.href);
@@ -26,7 +26,12 @@ self.addEventListener('install', event => event.waitUntil((async () => {
       if (asset.path.startsWith('/') || asset.path.includes('..') || asset.path.includes(':')) throw new Error('Invalid asset path');
       const cached = await fetch(absolute(asset.path), { cache: 'no-store' });
       await verify(cached, asset);
-      await cache.put(absolute(asset.path), cached);
+      // Pages redirects /index.html to /. Store a fresh response so offline
+      // navigations do not reject the cached response's redirected flag.
+      const headers = new Headers(cached.headers);
+      headers.delete('content-encoding');
+      headers.delete('content-length');
+      await cache.put(absolute(asset.path), new Response(await cached.arrayBuffer(), { status: cached.status, headers }));
       done++;
       await notify({ type: 'MIMI_PACK_PROGRESS', done, total: pack.assets.length });
     }));
