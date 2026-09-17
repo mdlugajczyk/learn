@@ -25,11 +25,16 @@ try {
   await page.evaluate(async () => {
     const { Narrator } = await import('/mimi/audio.js');
     window.__spoken = [];
+    window.__highlights = [];
     const play = Narrator.prototype.play;
-    Narrator.prototype.play = function(id, options) { window.__spoken.push(id); return play.call(this, id, options); };
-    // Accelerate playback, retaining real MP3 fetch, decoding, source start/end and cancellation.
-    const start = AudioBufferSourceNode.prototype.start;
-    AudioBufferSourceNode.prototype.start = function(...args) { this.playbackRate.value = 8; return start.apply(this, args); };
+    Narrator.prototype.play = function(id, options) {
+      window.__spoken.push(id);
+      window.__highlights.push({id, active: document.querySelector('.unit.active')?.dataset.unit ?? null});
+      return play.call(this, id, options);
+    };
+    // Accelerate playback, retaining real MP3 media loading, playback and events.
+    const playMedia = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function(...args) { this.defaultPlaybackRate = 8; this.playbackRate = 8; return playMedia.apply(this, args); };
   });
   await page.locator('#start').click();
   let stepsChecked = 0;
@@ -41,7 +46,17 @@ try {
       const step = await page.evaluate(() => { const s = JSON.parse(localStorage.getItem('mimi-reading-v1')).active; return s.steps[s.index]; });
       await fit(`${lesson}:${step.type}:${step.target || 'intro'}`);
       if (step.type === 'letter') await page.locator('#letter').click();
-      if (step.type === 'word' || step.type === 'blend') await page.locator('#modelPlay').click();
+      if (step.type === 'word' || step.type === 'blend') {
+        if (step.type === 'word' && ['MAMA', 'MIMI', 'TATA', 'LALA'].includes(step.target)) {
+          assert.equal(await page.locator('.word-friend').count(), 1);
+          assert.equal(await page.locator('.join-sign').textContent(), '–');
+          await page.setViewportSize({width:375,height:667}); await fit(`small phone ${step.target}`);
+          await page.setViewportSize({width:768,height:1024}); await fit(`iPad ${step.target}`);
+          await page.setViewportSize({width:390,height:844});
+          if (step.target === 'MAMA') await page.screenshot({path:`${output}/iphone-mama-syllables.png`});
+        }
+        await page.locator('#modelPlay').click();
+      }
       if (step.type === 'read') {
         await page.waitForTimeout(550);
         const recent = await page.evaluate(() => window.__spoken.slice(-1)[0]);
@@ -51,12 +66,21 @@ try {
       }
       if (step.type === 'read' || step.type === 'contrast') await page.locator(`[data-answer="${step.target}"]`).click();
       await page.locator('#next').waitFor({state:'visible',timeout:20000});
+      if (step.type === 'word' && ['MAMA', 'MIMI'].includes(step.target)) {
+        const highlights = await page.evaluate(() => window.__highlights.slice(-3));
+        assert.deepEqual(highlights, [
+          {id: `word-${step.units[0].toLowerCase()}`, active: '0'},
+          {id: `word-${step.units[1].toLowerCase()}`, active: '1'},
+          {id: `word-${step.target.toLowerCase()}`, active: null}
+        ]);
+      }
       await fit(`${lesson}:${step.type}:next`);
       await page.locator('#next').click();
       stepsChecked++;
     }
     await page.locator('#finishHome').waitFor();
     await page.locator('#finishHome').click();
+    console.log(`PASS: lesson ${lesson + 1}.`);
   }
   await finishLesson(0);
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mimi-reading-v1')).unlocked), 1);
@@ -69,13 +93,26 @@ try {
   await page.waitForTimeout(600);
   const target = await page.evaluate(() => { const s=JSON.parse(localStorage.getItem('mimi-reading-v1')).active; return s.steps[s.index].target; });
   await page.locator('[data-answer]').filter({ hasNot: page.locator('nonexistent') }).evaluateAll((buttons, correct) => buttons.find(button => button.dataset.answer !== correct).click(), target);
-  await page.waitForTimeout(800);
+  await page.waitForFunction(() => !document.querySelector('.try-again'));
   assert.equal(await page.evaluate(() => { const s=JSON.parse(localStorage.getItem('mimi-reading-v1')).active; return s.states[s.index].mistakes; }), 1);
-  await page.locator('#help').click(); await page.waitForTimeout(1600);
+  await page.locator('#help').click();
+  await page.locator('#help:not(:disabled)').waitFor();
   assert.equal(await page.evaluate(() => { const s=JSON.parse(localStorage.getItem('mimi-reading-v1')).active; return s.states[s.index].assisted; }), true);
   await page.locator(`[data-answer="${target}"]`).click(); await page.locator('#next').waitFor({state:'visible'});
   await page.locator('#home').click();
   await context.setOffline(true);
+  const ranges = await page.evaluate(async () => {
+    const result = [];
+    for (const range of ['bytes=0-1', 'bytes=2-', 'bytes=-2', 'bytes=999999999-']) {
+      const response = await fetch('./audio/word-ma.mp3', {headers:{Range:range}});
+      result.push({status:response.status, size:(await response.arrayBuffer()).byteLength});
+    }
+    return result;
+  });
+  assert.equal(ranges[0].status, 206); assert.equal(ranges[0].size, 2);
+  assert.equal(ranges[1].status, 206); assert.ok(ranges[1].size > 1000);
+  assert.equal(ranges[2].status, 206); assert.equal(ranges[2].size, 2);
+  assert.equal(ranges[3].status, 416);
   await page.reload(); await page.locator('#start').waitFor(); await page.locator('#start').click();
   await page.locator('#next').waitFor({state:'visible'}); await page.locator('#next').click();
   await page.waitForTimeout(600);

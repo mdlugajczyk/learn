@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { LESSONS, makeLesson, promptFor, sessionResult, emptyProgress, validateProgress } from '../public/mimi/course.js';
+import { COURSE_REVISION, LESSONS, makeLesson, promptFor, sessionResult, emptyProgress, validateProgress } from '../public/mimi/course.js';
 
 test('Mimi teaches vowel contrast and chunked words before independent reading', () => {
   const steps = makeLesson(0, () => .4);
@@ -36,7 +36,7 @@ test('help and corrected responses never count as independent reading', () => {
 });
 test('saved lesson reopens and invalid or future progress cannot be restored', () => {
   const progress = emptyProgress();
-  progress.active = { lesson:0, steps:makeLesson(0), index:5, states:{5:{mistakes:1, assisted:true}}, answers:[], started:1 };
+  progress.active = { revision:COURSE_REVISION, lesson:0, steps:makeLesson(0), index:5, states:{5:{mistakes:1, assisted:true}}, answers:[], started:1 };
   const loaded = validateProgress(JSON.parse(JSON.stringify(progress)));
   assert.equal(loaded.active.index, 5);
   assert.equal(loaded.active.states[5].assisted, true);
@@ -45,4 +45,25 @@ test('saved lesson reopens and invalid or future progress cannot be restored', (
   assert.throws(() => validateProgress({...progress, history:[{lesson:'<img>'}]}));
   progress.active.steps[0].target = '<img src=x>';
   assert.throws(() => validateProgress(progress));
+});
+
+test('opening has an immediate tap interaction and teaches one word before the next', () => {
+  const steps = makeLesson(0);
+  assert.deepEqual(steps.slice(0, 7).map(s => s.target), ['A', 'M', 'MA', 'MAMA', 'I', 'MI', 'MIMI']);
+  assert.equal(steps[0].type, 'letter');
+  assert.ok(steps.slice(0, 7).every(s => !s.characters));
+  assert.ok(steps.findIndex(s => s.type === 'read') > steps.findIndex(s => s.target === 'MIMI'));
+  for (let i = 0; i < LESSONS.length; i++) assert.ok(makeLesson(i).every(s => s.type !== 'meet'));
+});
+
+test('course update preserves completed history and settings, restarting only the unfinished booklet', () => {
+  const previous = { ...emptyProgress(), unlocked: 2, selected: 1, settings: { motion: false },
+    history: [{ lesson: 0, at: new Date().toISOString(), readingTrials: 6, independent: 6, supported: 0, passed: true }],
+    active: { lesson: 1, index: 0, steps: [{ type: 'meet' }], states: {}, answers: [] } };
+  const next = validateProgress(previous);
+  assert.equal(next.active, null);
+  assert.equal(next.unlocked, 2);
+  assert.equal(next.selected, 1);
+  assert.deepEqual(next.history, previous.history);
+  assert.deepEqual(next.settings, previous.settings);
 });

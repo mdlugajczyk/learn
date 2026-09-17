@@ -1,51 +1,47 @@
+// Reuse one media element on iOS's media playback route. No test sound and no
+// await before play(): Safari must receive the request directly from the tap.
 export class Narrator {
-  constructor() { this.context = null; this.buffers = new Map(); this.current = null; this.generation = 0; }
-  async unlock() {
-    this.context ??= new (window.AudioContext || window.webkitAudioContext)();
-    if (this.context.state !== 'running') await this.context.resume();
-  }
-  async load(id) {
-    if (!this.buffers.has(id)) this.buffers.set(id, (async () => {
-      const response = await fetch(new URL(`./audio/${id}.mp3`, import.meta.url));
-      if (!response.ok || !response.headers.get('content-type')?.includes('audio')) throw new Error(`Brakuje nagrania: ${id}`);
-      return this.context.decodeAudioData(await response.arrayBuffer());
-    })().catch(error => { this.buffers.delete(id); throw error; }));
-    return this.buffers.get(id);
+  constructor({ media = new Audio(), stallMs = 8000, pollMs = 250 } = {}) {
+    this.media = media;
+    this.media.preload = 'auto';
+    this.current = null;
+    this.stallMs = stallMs;
+    this.pollMs = pollMs;
   }
   stop() {
-    this.generation++;
-    if (this.current) { const playing = this.current; playing.finish(false); try { playing.source.stop(); } catch {} }
+    this.current?.finish(false);
+    this.media.pause();
   }
-  async play(id, { onProgress } = {}) {
+  play(id, { onProgress } = {}) {
     this.stop();
-    const generation = this.generation;
-    await this.unlock();
-    const buffer = await this.load(id);
-    if (generation !== this.generation) return false;
-    const source = this.context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(this.context.destination);
-    return new Promise(resolve => {
-      let frame = null, settled = false;
-      const finish = result => {
+    try { if (globalThis.navigator?.audioSession) navigator.audioSession.type = 'playback'; } catch { /* Older Safari uses the default media route. */ }
+    const media = this.media;
+    media.src = new URL(`./audio/${id}.mp3`, import.meta.url).href;
+    media.muted = false;
+    media.volume = 1;
+    return new Promise((resolve, reject) => {
+      let settled = false, timer, lastTime = 0, lastAdvance = Date.now();
+      const started = lastAdvance;
+      const finish = (result, error) => {
         if (settled) return;
         settled = true;
-        cancelAnimationFrame(frame);
-        source.onended = null;
-        if (this.current?.source === source) this.current = null;
-        source.disconnect();
-        resolve(result);
+        clearInterval(timer);
+        media.removeEventListener('ended', ended);
+        media.removeEventListener('error', failed);
+        if (this.current?.finish === finish) this.current = null;
+        if (error) { media.pause(); reject(error); } else resolve(result);
       };
-      this.current = { source, finish };
-      source.onended = () => { onProgress?.(1); finish(true); };
-      const started = this.context.currentTime;
-      const animate = () => {
-        if (settled) return;
-        onProgress?.(Math.min(1, (this.context.currentTime - started) / buffer.duration));
-        frame = requestAnimationFrame(animate);
-      };
-      source.start();
-      if (onProgress) animate();
+      const ended = () => { onProgress?.(1); finish(true); };
+      const failed = () => finish(false, new Error(`Nie można odtworzyć nagrania: ${id}`));
+      this.current = { finish };
+      media.addEventListener('ended', ended);
+      media.addEventListener('error', failed);
+      timer = setInterval(() => {
+        if (media.currentTime > lastTime + .01) { lastTime = media.currentTime; lastAdvance = Date.now(); }
+        if (Number.isFinite(media.duration) && media.duration > 0) onProgress?.(Math.min(1, media.currentTime / media.duration));
+        if (Date.now() - lastAdvance > this.stallMs || Date.now() - started > 45000) finish(false, new Error('Odtwarzanie zatrzymało się. Dotknij, aby spróbować ponownie.'));
+      }, this.pollMs);
+      try { media.play()?.catch(error => finish(false, error)); } catch (error) { finish(false, error); }
     });
   }
 }

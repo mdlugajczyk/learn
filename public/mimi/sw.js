@@ -1,4 +1,4 @@
-const VERSION = '32ea7f9c87cd';
+const VERSION = '7c3ad1e92082';
 const PREFIX = 'mimi-reading-';
 const CACHE = `${PREFIX}${VERSION}`;
 const base = new URL('./', self.location.href);
@@ -62,6 +62,21 @@ self.addEventListener('fetch', event => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const path = event.request.mode === 'navigate' ? absolute('index.html') : event.request;
-    return (await cache.match(path, { ignoreSearch: true })) || fetch(event.request);
+    const cached = await cache.match(path, { ignoreSearch: true });
+    if (!cached) return fetch(event.request);
+    // Safari's media element requests byte ranges, even for tiny local MP3s.
+    // Serve these from the full verified file so narration also works offline.
+    const range = event.request.headers.get('range');
+    if (!range || !url.pathname.endsWith('.mp3')) return cached;
+    const bytes = await cached.arrayBuffer();
+    const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+    if (!match || (!match[1] && !match[2])) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${bytes.byteLength}` } });
+    const start = match[1] ? Number(match[1]) : Math.max(0, bytes.byteLength - Number(match[2]));
+    const end = match[1] && match[2] ? Math.min(Number(match[2]), bytes.byteLength - 1) : bytes.byteLength - 1;
+    if (start > end || start >= bytes.byteLength) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${bytes.byteLength}` } });
+    return new Response(bytes.slice(start, end + 1), { status: 206, headers: {
+      'Content-Type': 'audio/mpeg', 'Accept-Ranges': 'bytes',
+      'Content-Range': `bytes ${start}-${end}/${bytes.byteLength}`, 'Content-Length': String(end - start + 1)
+    } });
   })());
 });

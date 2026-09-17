@@ -1,4 +1,5 @@
 export const CHARACTERS = ['MIMI', 'MAMA', 'TATA', 'LALA'];
+export const COURSE_REVISION = 2;
 export const WORDS = {
   MAMA: ['MA', 'MA'], MIMI: ['MI', 'MI'], LALA: ['LA', 'LA'],
   TATA: ['TA', 'TA'], OKO: ['O', 'KO'], NOS: ['NO', 'S'], NOGA: ['NO', 'GA']
@@ -38,19 +39,19 @@ export function makeLesson(index, random = Math.random) {
   const review = () => readingRound(['MAMA', 'MIMI']);
   let steps;
   if (index === 0) steps = [
-    { type: 'meet', characters: family, audio: 'meet-family' }, letter('A'), letter('M'), blend('MA'), word('MAMA'),
-    read('MAMA', shuffle(family, random)), letter('I'), blend('MI'),
+    letter('A'), letter('M'), blend('MA'), word('MAMA'),
+    letter('I'), blend('MI'), word('MIMI'),
     ...shuffle(['MA', 'MI', 'MI', 'MA'], random).map(target => match(target, shuffle(['MA', 'MI'], random))),
-    word('MIMI'), ...readingRound(['MAMA', 'MIMI', 'MAMA', 'MIMI', 'MAMA', 'MIMI'])
+    ...readingRound(['MAMA', 'MIMI', 'MAMA', 'MIMI', 'MAMA', 'MIMI'])
   ];
   if (index === 1) steps = [
-    ...review(), { type: 'meet', characters: ['LALA'], audio: 'meet-doll' }, letter('L'), blend('LA'),
+    ...review(), letter('L'), blend('LA'),
     ...shuffle(['LA', 'MA', 'LA'], random).map(target => match(target, shuffle(['LA', 'MA'], random))),
     word('LALA'), ...readingRound(['LALA', 'MAMA', 'MIMI', 'LALA']), blend('LI'),
     match('LI', shuffle(['LI', 'MI'], random)), ...readingRound(['MIMI', 'LALA'])
   ];
   if (index === 2) steps = [
-    ...review(), { type: 'meet', characters: ['TATA'], audio: 'meet-dad' }, blend('TA'),
+    ...review(), blend('TA'),
     ...shuffle(['TA', 'MA', 'TA'], random).map(target => match(target, shuffle(['TA', 'MA'], random))),
     word('TATA'), ...readingRound(['TATA', 'MAMA', 'MIMI', 'TATA', 'MAMA', 'TATA'])
   ];
@@ -86,6 +87,8 @@ export function validateProgress(value) {
   const progress = { ...emptyProgress(), unlocked: value.unlocked, selected: value.selected, history, settings: { motion: value.settings?.motion !== false } };
   if (!Number.isInteger(progress.selected) || progress.selected < 0 || progress.selected > progress.unlocked) progress.selected = progress.unlocked;
   const active = value.active;
+  // Course edits restart only the unfinished booklet, never earned progress.
+  if (active && active.revision !== COURSE_REVISION) return progress;
   if (active && Number.isInteger(active.lesson) && LESSONS[active.lesson] && Number.isInteger(active.index) && Array.isArray(active.steps) && active.index >= 0 && active.index < active.steps.length && Array.isArray(active.answers)) {
     const canonical = makeLesson(active.lesson, () => .5);
     const sameMembers = (a, b) => Array.isArray(a) && a.length === b?.length && [...a].sort().join('|') === [...b].sort().join('|');
@@ -97,7 +100,7 @@ export function validateProgress(value) {
     if (steps.length !== canonical.length) throw new Error('Niepełna książeczka.');
     const states = Object.fromEntries(steps.map((_, i) => [i, { mistakes: Math.min(100, Math.max(0, Number(active.states?.[i]?.mistakes) || 0)), assisted: Boolean(active.states?.[i]?.assisted), done: Boolean(active.states?.[i]?.done) }]));
     const answers = active.answers.filter((answer, i, list) => Number.isInteger(answer.step) && steps[answer.step] && ['read', 'contrast'].includes(steps[answer.step].type) && list.findIndex(a => a.step === answer.step) === i).map(answer => ({ step: answer.step, type: steps[answer.step].type, target: steps[answer.step].target, correct: Boolean(answer.correct), mistakes: states[answer.step].mistakes, assisted: states[answer.step].assisted }));
-    progress.active = { lesson: active.lesson, steps, index: active.index, states, answers, started: Number(active.started) || Date.now() };
+    progress.active = { revision: COURSE_REVISION, lesson: active.lesson, steps, index: active.index, states, answers, started: Number(active.started) || Date.now() };
   }
   return progress;
 }

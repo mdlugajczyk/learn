@@ -1,6 +1,5 @@
-import { LESSONS, WORDS, makeLesson, promptFor, unitAudio, emptyProgress, validateProgress, sessionResult, STORAGE_KEY } from './course.js';
+import { LESSONS, WORDS, CHARACTERS, COURSE_REVISION, makeLesson, promptFor, unitAudio, emptyProgress, validateProgress, sessionResult, STORAGE_KEY } from './course.js';
 import { Narrator } from './audio.js';
-import { AUDIO_IDS } from './audio-catalog.js';
 
 const app = document.querySelector('#app');
 const narrator = new Narrator();
@@ -32,7 +31,7 @@ function bindHeader() {
   document.querySelector('#home')?.addEventListener('click', () => { resetPlayback(); view = 'home'; renderHome(); });
   document.querySelector('#parent')?.addEventListener('click', openParentGate);
   document.querySelector('#speaker')?.addEventListener('click', () => {
-    if (busy || stepState().done) return;
+    if (busy) { renderStep(); return; }
     void guarded(() => present(current(), token));
   });
 }
@@ -51,10 +50,8 @@ function renderHome() {
   }));
   document.querySelector('#start').addEventListener('click', () => void guarded(async () => {
     document.querySelector('#start').disabled = true;
-    await narrator.unlock();
-    for (let i = 0; i < AUDIO_IDS.length; i += 4) await Promise.all(AUDIO_IDS.slice(i, i + 4).map(id => narrator.load(id)));
     if (!progress.active) {
-      progress.active = { lesson: progress.selected, steps: makeLesson(progress.selected), index: 0, states: {}, answers: [], started: Date.now() };
+      progress.active = { revision: COURSE_REVISION, lesson: progress.selected, steps: makeLesson(progress.selected), index: 0, states: {}, answers: [], started: Date.now() };
       save();
     }
     renderStep();
@@ -65,8 +62,9 @@ async function guarded(action) {
   try { await action(); } catch (error) {
     console.warn('Mimi audio unavailable:', error.message);
     resetPlayback();
-    showDialog(`<h2>Wróćmy do dźwięku</h2><p>Połącz się z internetem, aby pobrać brakujące nagranie. Potem dotknij strzałki.</p>${button('recover', 'play', 'Spróbuj ponownie', 'start')}`);
-    document.querySelector('#recover').onclick = () => { closeDialog(); void guarded(async () => { await narrator.unlock(); view === 'session' ? renderStep() : renderHome(); }); };
+    showDialog(`<h2>Wróćmy do dźwięku</h2><p>Dotknij strzałki, aby wznowić dźwięk. Jeśli nadal nic nie słychać, sprawdź wyjście dźwięku — słuchawki, Bluetooth lub AirPlay. Jeśli brakuje nagrania, otwórz książeczkę raz z internetem.</p>${button('recover', 'play', 'Spróbuj ponownie', 'start')}<button id="audioHome">Wróć do książeczek</button>`);
+    document.querySelector('#recover').onclick = () => { closeDialog(); void guarded(() => { view === 'session' ? renderStep() : renderHome(); }); };
+    document.querySelector('#audioHome').onclick = () => { closeDialog(); renderHome(); };
   }
 }
 
@@ -82,7 +80,8 @@ function renderStep() {
   document.querySelector('#help')?.addEventListener('click', () => {
     if (busy || state.done) return;
     state.assisted = true; save();
-    void guarded(async () => { busy = true; await narrator.play('help'); if (revision !== token) return; await modelTarget(step.target, revision, true); if (revision === token) busy = false; });
+    document.querySelector('#help').disabled = true;
+    void guarded(async () => { busy = true; await narrator.play('help'); if (revision !== token) return; await modelTarget(step.target, revision, true); if (revision === token) { busy = false; document.querySelector('#help').disabled = false; } });
   });
   document.querySelector('#modelPlay')?.addEventListener('click', () => void guarded(() => playModel(step, revision)));
   document.querySelector('#letter')?.addEventListener('click', () => void guarded(async () => {
@@ -99,7 +98,7 @@ function renderStep() {
 }
 
 function targetMarkup(target) {
-  return target.split(' ').map((word, index) => `<span data-target-word="${index}">${word}</span>`).join(' ');
+  return target.split(' ').map((word, index) => `<span data-target-word="${index}">${WORDS[word]?.length === 2 && WORDS[word].every(unit => unit.length === 2) ? WORDS[word].map((unit, i) => `<span class="syllable syllable-${i}">${unit}</span>`).join('') : word}</span>`).join(' ');
 }
 function characterCards(step, demo = false) {
   return `<div class="scene scene-${progress.active.index % 3} ${step.characters.length === 3 ? 'three' : ''}">${step.characters.map(name => step.parts ? `<div class="character-part-card">${image(name, 'art')}<div class="part-lenses">${step.parts.map(part => `<button class="part-lens" data-answer="${name} ${part}" aria-label="${name}, ${part}" ${demo ? 'disabled' : ''}><img src="assets/${name.toLowerCase()}-${part.toLowerCase()}.webp" alt="" draggable="false"></button>`).join('')}</div></div>` : `<button class="character" data-answer="${name}" aria-label="${name}" ${demo ? 'disabled' : ''}>${image(name)}</button>`).join('')}</div>`;
@@ -107,7 +106,7 @@ function characterCards(step, demo = false) {
 function stepMarkup(step) {
   if (step.type === 'meet') return `<p class="little-label">Poznajemy się</p><div class="meet-family">${step.characters.map(name => `<div>${image(name)}<span class="name-tag">${name}</span></div>`).join('')}</div>`;
   if (step.type === 'letter') return `<p class="little-label">Posłuchaj dźwięku</p><button class="big-letter" id="letter" aria-label="Posłuchaj dźwięku litery ${step.target}">${step.target}<span>${icon('speaker')}</span></button>`;
-  if (step.type === 'blend' || step.type === 'word') return `<p class="little-label">${step.type === 'blend' ? 'Łączymy dźwięki' : 'Z kawałków — całe słowo'}</p><div class="word-lab" id="wordLab"><div class="units">${step.units.map((unit, i) => `${i ? '<span class="join-sign" aria-hidden="true">+</span>' : ''}<span class="unit" data-unit="${i}">${unit}</span>`).join('')}</div><div class="stretch" aria-hidden="true">${step.type === 'blend' && ['M','L','N'].includes(step.units[0]) ? step.units[0].repeat(4) + step.units[1] : step.units.join('')}</div><strong class="whole" aria-hidden="true">${step.target}</strong><div class="blend-track"><span></span></div></div><div class="model-actions">${button('modelPlay', 'play', 'Pokaż, jak łączymy', 'model-play start')}</div>`;
+  if (step.type === 'blend' || step.type === 'word') return `<p class="little-label">${step.type === 'blend' ? 'Łączymy dźwięki' : 'Z kawałków — całe słowo'}</p>${step.type === 'word' && CHARACTERS.includes(step.target) ? image(step.target, 'art word-friend') : ''}<div class="word-lab" id="wordLab"><div class="units">${step.units.map((unit, i) => `${i ? `<span class="join-sign" aria-hidden="true">${step.type === 'word' ? '–' : '+'}</span>` : ''}<span class="unit ${step.type === 'word' ? `syllable-${i}` : ''}" data-unit="${i}">${unit}</span>`).join('')}</div><div class="stretch" aria-hidden="true">${step.type === 'blend' && ['M','L','N'].includes(step.units[0]) ? step.units[0].repeat(4) + step.units[1] : step.units.join('')}</div><strong class="whole" aria-hidden="true">${step.target}</strong><div class="blend-track"><span></span></div></div><div class="model-actions">${button('modelPlay', 'play', 'Pokaż, jak łączymy', 'model-play start')}</div>`;
   if (step.type === 'contrast') return `<p class="little-label">Posłuchaj i znajdź</p><div class="listen-mark">${icon('speaker')}</div><div class="contrast-options">${step.options.map(option => `<button class="syllable-choice" data-answer="${option}">${option}</button>`).join('')}</div>`;
   return `<div class="reading-card"><p class="little-label">${step.type === 'body-demo' ? 'Czytamy dwa słowa' : 'Przeczytaj i dotknij'}</p><h1 class="reading-target ${step.target.includes(' ') ? 'phrase' : ''}">${targetMarkup(step.target)}</h1></div>${characterCards(step, step.type === 'body-demo')}`;
 }
@@ -135,7 +134,7 @@ async function playModel(step, revision) {
   lab.className = 'word-lab'; play.disabled = true;
   lab.querySelector('.whole').setAttribute('aria-hidden', 'true');
   lab.querySelectorAll('.unit').forEach(el => el.classList.remove('active', 'heard'));
-  lab.querySelectorAll('.join-sign').forEach(el => el.textContent = '+');
+  lab.querySelectorAll('.join-sign').forEach(el => el.textContent = step.type === 'word' ? '–' : '+');
   if (step.type === 'blend') {
     await narrator.play(`blend-${step.target.toLowerCase()}`, { onProgress: fraction => {
       if (revision !== token) return;
@@ -289,7 +288,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) { resetPlayback(); save(); }
   else if (view === 'session') {
     showDialog(`<h2>Wracamy do zabawy</h2>${button('resume', 'play', 'Dokończ zadanie', 'start')}`);
-    document.querySelector('#resume').onclick = () => { closeDialog(); void guarded(async () => { await narrator.unlock(); renderStep(); }); };
+    document.querySelector('#resume').onclick = () => { closeDialog(); void guarded(() => renderStep()); };
   }
 });
 

@@ -74,6 +74,12 @@ h1, h2, p { margin-top: 0; }
 .unit { font-size: clamp(2.7rem, 11vw, 5.4rem); font-weight: 800; letter-spacing: .02em; padding: 7px 5px; border-radius: 18px; border-bottom: 5px solid #d7e0f5; transition: transform .25s ease, background .15s ease; }
 .unit.active { color: var(--ink); background: var(--yellow); transform: translateY(-7px); border-bottom-color: #e8b934; }
 .unit.heard { border-bottom-color: #66bea4; }
+.syllable-0 { color: #2755d9; }
+.syllable-1 { color: #a04160; }
+.reading-target .syllable + .syllable { margin-left: .06em; }
+.word-friend { max-height: min(23svh, 200px); width: auto; align-self: center; margin-bottom: 8px; }
+.word .word-lab { min-height: clamp(155px, 24svh, 230px); }
+.word .model-actions { margin-top: 23px; }
 .join-sign { font-size: 1.8rem; color: #7886a0; }
 .word-lab.hyphenated .units { gap: 0; }
 .word-lab.hyphenated .unit { padding-inline: 0; border-bottom-color: transparent; }

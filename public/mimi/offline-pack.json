@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "version": "32ea7f9c87cd",
+  "version": "7c3ad1e92082",
   "assets": [
     {
       "path": "app.js",
-      "bytes": 23555,
-      "sha256": "7d0a5d549222faacee93e41c4658a2c35151023c68660e750d7c231c701cb1eb"
+      "bytes": 24101,
+      "sha256": "ac0032047270db933ba388b60a2c879d74fb4583204be89df4c5d362ac17b3f5"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -84,8 +84,8 @@
     },
     {
       "path": "audio.js",
-      "bytes": 2073,
-      "sha256": "248bb78131038aff6ed922d03954741965269fbfce06e97a1acd32abb88afb4f"
+      "bytes": 2228,
+      "sha256": "4e451922b2e99008a9637eeb04009c8fbf61068a239a6644aa5e276b8382a1c4"
     },
     {
       "path": "audio/blend-ga.mp3",
@@ -329,8 +329,8 @@
     },
     {
       "path": "course.js",
-      "bytes": 8821,
-      "sha256": "47cc344c63c4580b7f14afbaf6ac08eacb8c64bfd516a7fffa3fc056a13badd1"
+      "bytes": 8812,
+      "sha256": "1ec2eeaa27d64fbf70dd7beea56aa3b9a541f6f0e32cbd12bbb491d8d2f57d6e"
     },
     {
       "path": "index.html",
@@ -344,9 +344,9 @@
     },
     {
       "path": "styles.css",
-      "bytes": 14799,
-      "sha256": "019bdb978118f015aa0934d4bc9cdd21df17fced0ea5a42a2cb06e176fce1a58"
+      "bytes": 15129,
+      "sha256": "6b54c7f050962fe2910a80fd73410c9f26a1a6a443153cbf5d9cfc558b99243f"
     }
   ],
-  "totalBytes": 2020719
+  "totalBytes": 2021741
 }
