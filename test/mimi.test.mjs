@@ -17,8 +17,10 @@ test('every reading task keeps the spoken prompt neutral and has the target and 
     assert.equal(promptFor(step), 'read-tap');
     const [who, what] = step.target.split(' ');
     assert.ok(step.characters.includes(who));
-    assert.ok(step.characters.length >= 2);
-    if (what) { assert.ok(step.parts.includes(what)); assert.ok(step.parts.length >= 2); }
+    if (what) {
+      assert.ok(step.parts.includes(what));
+      assert.ok(step.characters.length * step.parts.length >= 4);
+    } else assert.ok(step.characters.length >= 3);
   }
 });
 test('character positions change independently of the displayed word', () => {
@@ -66,4 +68,18 @@ test('course update preserves completed history and settings, restarting only th
   assert.equal(next.selected, 1);
   assert.deepEqual(next.history, previous.history);
   assert.deepEqual(next.settings, previous.settings);
+});
+
+test('every sound quiz has three options and preserves one correct answer', () => {
+  for (let lesson = 0; lesson < LESSONS.length; lesson++) for (const step of makeLesson(lesson)) {
+    if (step.type !== 'contrast') continue;
+    assert.ok(step.options.length >= 3);
+    assert.equal(new Set(step.options).size, step.options.length);
+    assert.equal(step.options.filter(option => option === step.target).length, 1);
+  }
+});
+
+test('a parent-selected booklet survives normal progress validation', () => {
+  const progress = { ...emptyProgress(), unlocked: 0, selected: LESSONS.length - 1 };
+  assert.equal(validateProgress(progress).selected, LESSONS.length - 1);
 });

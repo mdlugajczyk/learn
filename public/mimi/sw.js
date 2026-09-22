@@ -1,4 +1,4 @@
-const VERSION = '7c3ad1e92082';
+const VERSION = '7696df199679';
 const PREFIX = 'mimi-reading-';
 const CACHE = `${PREFIX}${VERSION}`;
 const base = new URL('./', self.location.href);

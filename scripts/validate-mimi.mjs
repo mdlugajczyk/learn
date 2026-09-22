@@ -15,6 +15,7 @@ export async function validateMimi() {
       if (!SPOKEN[promptFor(step)]) throw new Error(`Missing instruction ${promptFor(step)}`);
       const required = [];
       if (step.type === 'letter' || step.type === 'contrast') required.push(unitAudio(step.target));
+      if (step.type === 'contrast' && (step.options.length < 3 || new Set(step.options).size !== step.options.length || !step.options.includes(step.target))) throw new Error(`Invalid quiz options in lesson ${index}: ${step.target}`);
       if (step.type === 'blend') required.push(`blend-${step.target.toLowerCase()}`, `word-${step.target.toLowerCase()}`);
       if (step.type === 'word') required.push(...step.units.map(unitAudio), `word-${step.target.toLowerCase()}`);
       if (step.type === 'read' || step.type === 'body-demo') for (const word of step.target.split(' ')) required.push(`word-${word.toLowerCase()}`, ...(WORDS[word] || []).map(unitAudio));
@@ -30,6 +31,7 @@ export async function validateMimi() {
   for (const id of AUDIO_IDS) {
     const record = manifest.entries.find(e => e.id === id);
     if (record?.text !== SPOKEN[id]) throw new Error(`Outdated recording ${id}`);
+    if (!['ai', 'human'].includes(record?.source)) throw new Error(`Unknown recording source ${id}`);
     const bytes = await readFile(path.join(root, 'audio', `${id}.mp3`));
     if (bytes.length < 1000 || bytes.length > 2 * 1024 * 1024) throw new Error(`Invalid audio size ${id}`);
     if (createHash('sha256').update(bytes).digest('hex') !== record.sha256) throw new Error(`Audio hash mismatch ${id}`);

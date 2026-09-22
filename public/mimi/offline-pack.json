@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "version": "7c3ad1e92082",
+  "version": "7696df199679",
   "assets": [
     {
       "path": "app.js",
-      "bytes": 24101,
-      "sha256": "ac0032047270db933ba388b60a2c879d74fb4583204be89df4c5d362ac17b3f5"
+      "bytes": 24228,
+      "sha256": "d5523931bddf0495b68c18116ab24ab5b035ffd91ba4027e53766846c8791474"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -329,8 +329,8 @@
     },
     {
       "path": "course.js",
-      "bytes": 8812,
-      "sha256": "1ec2eeaa27d64fbf70dd7beea56aa3b9a541f6f0e32cbd12bbb491d8d2f57d6e"
+      "bytes": 9372,
+      "sha256": "514aced851019e98e54a4adef1c933d52ff8b03511b61b5a30cd2e00e09de61c"
     },
     {
       "path": "index.html",
@@ -348,5 +348,5 @@
       "sha256": "6b54c7f050962fe2910a80fd73410c9f26a1a6a443153cbf5d9cfc558b99243f"
     }
   ],
-  "totalBytes": 2021741
+  "totalBytes": 2022428
 }

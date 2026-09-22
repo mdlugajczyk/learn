@@ -1,5 +1,5 @@
 export const CHARACTERS = ['MIMI', 'MAMA', 'TATA', 'LALA'];
-export const COURSE_REVISION = 2;
+export const COURSE_REVISION = 3;
 export const WORDS = {
   MAMA: ['MA', 'MA'], MIMI: ['MI', 'MI'], LALA: ['LA', 'LA'],
   TATA: ['TA', 'TA'], OKO: ['O', 'KO'], NOS: ['NO', 'S'], NOGA: ['NO', 'GA']
@@ -34,29 +34,32 @@ const read = (target, characters, parts) => ({ type: 'read', target, characters,
 
 export function makeLesson(index, random = Math.random) {
   const family = LESSONS[index].characters;
-  const readingRound = targets => shuffle(targets, random).map(target => read(target, shuffle(family, random)));
+  // Three friendly faces make the question a genuine read-and-choose task
+  // without turning the early lessons into a crowded visual search.
+  const readingChoices = target => shuffle([target, ...CHARACTERS.filter(name => name !== target)].slice(0, 3), random);
+  const readingRound = targets => shuffle(targets, random).map(target => read(target, readingChoices(target)));
   const bodyRound = (targets, parts) => shuffle(targets, random).map(target => read(target, shuffle(family, random), parts));
   const review = () => readingRound(['MAMA', 'MIMI']);
   let steps;
   if (index === 0) steps = [
     letter('A'), letter('M'), blend('MA'), word('MAMA'),
     letter('I'), blend('MI'), word('MIMI'),
-    ...shuffle(['MA', 'MI', 'MI', 'MA'], random).map(target => match(target, shuffle(['MA', 'MI'], random))),
+    ...shuffle(['MA', 'MI', 'MI', 'MA'], random).map(target => match(target, shuffle(target === 'MA' ? ['MA', 'MI', 'A'] : ['MI', 'MA', 'I'], random))),
     ...readingRound(['MAMA', 'MIMI', 'MAMA', 'MIMI', 'MAMA', 'MIMI'])
   ];
   if (index === 1) steps = [
     ...review(), letter('L'), blend('LA'),
-    ...shuffle(['LA', 'MA', 'LA'], random).map(target => match(target, shuffle(['LA', 'MA'], random))),
+    ...shuffle(['LA', 'MA', 'LA'], random).map(target => match(target, shuffle(target === 'LA' ? ['LA', 'MA', 'MI'] : ['MA', 'LA', 'MI'], random))),
     word('LALA'), ...readingRound(['LALA', 'MAMA', 'MIMI', 'LALA']), blend('LI'),
-    match('LI', shuffle(['LI', 'MI'], random)), ...readingRound(['MIMI', 'LALA'])
+    match('LI', shuffle(['LI', 'MI', 'LA'], random)), ...readingRound(['MIMI', 'LALA'])
   ];
   if (index === 2) steps = [
     ...review(), blend('TA'),
-    ...shuffle(['TA', 'MA', 'TA'], random).map(target => match(target, shuffle(['TA', 'MA'], random))),
+    ...shuffle(['TA', 'MA', 'TA'], random).map(target => match(target, shuffle(target === 'TA' ? ['TA', 'MA', 'MI'] : ['MA', 'TA', 'MI'], random))),
     word('TATA'), ...readingRound(['TATA', 'MAMA', 'MIMI', 'TATA', 'MAMA', 'TATA'])
   ];
   if (index === 3) steps = [
-    ...review(), letter('O'), blend('TO'), blend('KO'), match('KO', shuffle(['KO', 'TO'], random)),
+    ...review(), letter('O'), blend('TO'), blend('KO'), match('KO', shuffle(['KO', 'TO', 'MA'], random)),
     word('OKO'), { type: 'body-demo', target: 'MIMI OKO', characters: family, parts: ['OKO', 'NOS'] },
     ...bodyRound(['MIMI OKO', 'MAMA OKO', 'MAMA OKO', 'MIMI OKO', 'MAMA OKO', 'MIMI OKO'], ['OKO', 'NOS'])
   ];
@@ -85,7 +88,9 @@ export function validateProgress(value) {
     return { lesson: result.lesson, readingTrials: result.readingTrials, independent: result.independent, supported: result.supported, at: new Date(result.at).toISOString(), passed: Boolean(result.passed) };
   }).slice(-100);
   const progress = { ...emptyProgress(), unlocked: value.unlocked, selected: value.selected, history, settings: { motion: value.settings?.motion !== false } };
-  if (!Number.isInteger(progress.selected) || progress.selected < 0 || progress.selected > progress.unlocked) progress.selected = progress.unlocked;
+  // A parent may deliberately choose any booklet, including after storage was
+  // cleared. Achievement unlocks remain separate from that saved choice.
+  if (!Number.isInteger(progress.selected) || progress.selected < 0 || progress.selected >= LESSONS.length) progress.selected = progress.unlocked;
   const active = value.active;
   // Course edits restart only the unfinished booklet, never earned progress.
   if (active && active.revision !== COURSE_REVISION) return progress;
