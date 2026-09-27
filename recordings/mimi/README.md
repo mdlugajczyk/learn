@@ -30,8 +30,9 @@ końcu. Mów spokojnie, naturalnie i po polsku. Przy głoskach nie dodawaj samog
 
 `ma.m4a` i `ma-blend.m4a` są celowo osobne: pierwszy plik to krótkie „ma”, a
 drugi ma pokazać drogę `mmmm-a → ma`. Jeśli nagrasz tylko `ma.m4a`, pozostała
-demonstracja `ma-blend` zostanie na razie z obecnego pakietu. Starsze techniczne
-nazwy z pełnej listy niżej (na przykład `word-ma.m4a`) są nadal akceptowane.
+demonstracja zostanie automatycznie zbudowana z Twoich `m.m4a` i `ma.m4a`.
+Osobne `ma-blend.m4a` nadal daje pełną kontrolę. Starsze techniczne nazwy z
+pełnej listy niżej (na przykład `word-ma.m4a`) są nadal akceptowane.
 
 | Nagraj jako | Powiedz / zrób dokładnie to |
 |---|---|

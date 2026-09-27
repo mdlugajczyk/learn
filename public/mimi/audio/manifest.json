@@ -230,91 +230,133 @@
       "id": "sound-a",
       "text": "a",
       "filename": "sound-a.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "7d7c947c5e385818895147217fde7a379564882801dfe0602fc3b866d58e194e",
-      "sha256": "4fe7eb803c99c524c8c2dc87a401f4427b1285ffb72dd6cea92545f1cf9a3878",
+      "sha256": "7b0f540336002aa6237d94e0b04050ff86caaf52384b2220b1338f6d23821ff4",
       "generatedAt": "2026-09-16T12:16:07.924Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "A.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.729Z"
     },
     {
       "id": "sound-i",
       "text": "i",
       "filename": "sound-i.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "e5253db895aab1e0acbcbfa86e9ebc4725e73641a489bd2cc90bdf2536b9dfc1",
-      "sha256": "52c7c37120f388fd300547a347261751aa53bfa629ed31635016ebefc1d95f78",
+      "sha256": "83d5aded5fd9978535500e4770db699e43235fd77c55711657d9eda7b85cce8a",
       "generatedAt": "2026-09-16T12:16:08.716Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "I.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.769Z"
     },
     {
       "id": "sound-m",
       "text": "mmm",
       "filename": "sound-m.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "4e034f98cb1960cee0d455cad93f4ec7081b5d7b263f3c97b7901071dc0e61c8",
-      "sha256": "ba5ee4d6682276b227aead4ad91a2d2a81939c2f43bfecd247be6dcafedd43b1",
+      "sha256": "d30746c146b9f3cd645f611bb36adb83394594b7950eeffa12c69145da864b41",
       "generatedAt": "2026-09-16T12:16:09.499Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "M.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.809Z"
     },
     {
       "id": "sound-l",
       "text": "lll",
       "filename": "sound-l.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "e422257181f5d9b5d84c408b4bda465c3fd8ae31f13bbfa35f42071941234fa0",
-      "sha256": "c6388dcd58785afc05244a76a8a30d1a50d93cb970b34091c3c98bb1d59e008d",
+      "sha256": "72d15bb7eee1dd4faa5a995bd37063cd402c96c6f2c870fbdd5ec8960f31c271",
       "generatedAt": "2026-09-16T12:16:10.288Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "L.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.849Z"
     },
     {
       "id": "sound-o",
       "text": "o",
       "filename": "sound-o.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "455db1afa6e2b9423fd91a101d4dfc2083776e3ede09b09f7cffb42b4ac144d7",
-      "sha256": "a24628f5be1f38f3bbe225050dda1a35e7cde18828316cb835e2c6ccd706c047",
+      "sha256": "cc63c9aa3a11c32c2db7e79904c12fca0d7fecb5802254ffcf84d298890bac93",
       "generatedAt": "2026-09-16T12:16:11.374Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "O.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.887Z"
     },
     {
       "id": "sound-n",
       "text": "nnn",
       "filename": "sound-n.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "6791c7f59e33b5c6131e334981718b3380c38ddd8ef186ac7a8bca7980d2a550",
-      "sha256": "a98ccc8245e267b982a0e84501a5277c982b3a9ed227e8383b4d06cce25b84db",
+      "sha256": "6c5c07d63226f2c08f0e3b5354e48a02c7faa89abdc7622425ebde66e11566c8",
       "generatedAt": "2026-09-16T12:16:12.192Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "N.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.927Z"
     },
     {
       "id": "sound-s",
@@ -335,301 +377,419 @@
       "id": "blend-ma",
       "text": "Mmmma.",
       "filename": "blend-ma.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "283fee92d4a9fb3dde645fd22f7595a6a324392e3db6b0f529384a990f41017b",
-      "sha256": "feb6f0690ee70ae5b638c5d891274ef18a01331054cde254e07b7e67aff53446",
+      "sha256": "36aa1cfd898408217970102ead58ef74bca3b8287ea75748677b3f398d51532c",
       "generatedAt": "2026-09-16T12:16:13.818Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "sound-m",
+        "word-ma"
+      ],
+      "importedAt": "2026-09-27T22:11:49.595Z"
     },
     {
       "id": "blend-mi",
       "text": "Mmmmi.",
       "filename": "blend-mi.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "d87870b863b036557266cabe63fcc06c97f2a48c2fb9bdd0d65926cfe6628b73",
-      "sha256": "31358bd50eb3229433316415f154dc4772cab452571a3d3fe778c72f9c303514",
+      "sha256": "94f70c4de1ae0c506590dc591dd7c78e6ee15de7499003f20ecebe23bd943c5e",
       "generatedAt": "2026-09-16T12:16:14.663Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "sound-m",
+        "word-mi"
+      ],
+      "importedAt": "2026-09-27T22:11:49.641Z"
     },
     {
       "id": "blend-la",
       "text": "Lllla.",
       "filename": "blend-la.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "57035184ca67208db5215ef7ab0bff6b95dfa231541f6f97df046bc9d855cbf3",
-      "sha256": "ad311f6c0108aac508d7595e7eb6e85cda2db9aaa40dcbaa2f55d0b65a26ad63",
+      "sha256": "bbe9bb62b5597fb477f9f52fd65defb6e42a77f40d612f9ffdfc944c6090773e",
       "generatedAt": "2026-09-16T12:16:15.777Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "sound-l",
+        "word-la"
+      ],
+      "importedAt": "2026-09-27T22:11:49.688Z"
     },
     {
       "id": "blend-li",
       "text": "Lllli.",
       "filename": "blend-li.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "316eb0aa4695b2158930aa36da5a3b15633aebffea72c0d949bac65d75cb54df",
-      "sha256": "cc82efc623db8106968a104d52b3b016a1d5dfc815bf5b7d92318014e6ae38ae",
+      "sha256": "885574517296b7eedcc5b9fa96e08cf4973cc35d9da41374c928e16186c317f5",
       "generatedAt": "2026-09-16T12:16:16.576Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "sound-l",
+        "word-li"
+      ],
+      "importedAt": "2026-09-27T22:11:49.735Z"
     },
     {
       "id": "blend-ta",
       "text": "ta",
       "filename": "blend-ta.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "9f95cad14d70dd39c54f4668a0b75aad3aa638462236410e0369583227907efd",
-      "sha256": "6a8d4d2b16386dc8f9a240d4d8c8013956f06feea77a0d7d758589133324c4e6",
+      "sha256": "9003a1d1661933f5d875e7c79b75e20c90ac4ecd73777ac513a93197874edf67",
       "generatedAt": "2026-09-16T12:16:17.379Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "word-ta"
+      ],
+      "importedAt": "2026-09-27T22:11:49.820Z"
     },
     {
       "id": "blend-to",
       "text": "to",
       "filename": "blend-to.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "4e952720e85b6db49d425b3b4e0d628ce816f9c34c84c3ae1ad0b728c3898b31",
-      "sha256": "38b0ec7903af663541ace711069fb766a21b62865e0ee4e7df10851a5dac4d5e",
+      "sha256": "afd7b17552b2bbacffe6a747f6efb694dfd8f2ac6657e72870e1997d1fdb3d31",
       "generatedAt": "2026-09-16T12:16:18.234Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "word-to"
+      ],
+      "importedAt": "2026-09-27T22:11:49.858Z"
     },
     {
       "id": "blend-ko",
       "text": "ko",
       "filename": "blend-ko.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "83e41692e024b6985aecaf9094131ec5d57ecd8cb69598cfc05e4f8fdc3916c4",
-      "sha256": "1ece0396116f965388a63cf827723c496d04af788630dcc90a5dc1978eb1065e",
+      "sha256": "782c2d1207bde1bca3f1bea41b624a252c7948e139b159e4e2a6ecb6bc523db9",
       "generatedAt": "2026-09-16T12:16:19.052Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "word-ko"
+      ],
+      "importedAt": "2026-09-27T22:11:49.897Z"
     },
     {
       "id": "blend-no",
       "text": "nnnno",
       "filename": "blend-no.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "335b81cb3dd0b37c2f553bec479955844532a632a6a87425da264aebe446fa3b",
-      "sha256": "3a7d00dcde2653b833ff0cb80c836a910a8bf71cac75b47d64311271dd26b0e3",
+      "sha256": "0b897035e5c5eb607beaaf09f602daa08bccc2d6a3f3bbef777400656a900f91",
       "generatedAt": "2026-09-16T12:16:19.850Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "sound-n",
+        "word-no"
+      ],
+      "importedAt": "2026-09-27T22:11:49.782Z"
     },
     {
       "id": "blend-ga",
       "text": "ga",
       "filename": "blend-ga.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "derived-local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "3156af9b1c5e6489773bea70259fe6093432b0163ddc73822f8226fa5059e41c",
-      "sha256": "6536ab99e34a6e7a9954889ee372385aa3a90b284fa75e189fb20da1aa36ffe7",
+      "sha256": "9dec885c0976fa528710cecad4adb3b84bd9e92914c70fbb5f995a274c3aae48",
       "generatedAt": "2026-09-16T12:16:20.640Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "derivedFrom": [
+        "word-ga"
+      ],
+      "importedAt": "2026-09-27T22:11:49.938Z"
     },
     {
       "id": "word-ma",
       "text": "ma",
       "filename": "word-ma.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "fa9e6b24856321cf43d5ff7b2b22338ff5ff15c53f2618cf64b6bf2da8107820",
-      "sha256": "4c083d3adc8d6f10dd93932153cec0fa7b871cf707b745307c04cea91eac217e",
+      "sha256": "9b507e88bfd290b9389f1308e8aa6b6ffd994bbc535ecb9d204fa8c804eea8ec",
       "generatedAt": "2026-09-16T12:16:21.429Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Ma.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:48.969Z"
     },
     {
       "id": "word-mi",
       "text": "mi",
       "filename": "word-mi.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "0e1574e2db81d0602605ef6f85fb378ebce5b7ba6d2deea39589c50c595b1146",
-      "sha256": "23034ff91db3c9fd58287f6bc3b3fb0363a12e70b8f84aa06f58b9073ab8ffea",
+      "sha256": "5f200acc60b98256497c10852b21350267f66387e4ea76765cb6de6c89d556dc",
       "generatedAt": "2026-09-16T12:16:22.228Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Mi.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.009Z"
     },
     {
       "id": "word-la",
       "text": "la",
       "filename": "word-la.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "030d034984688d9001ccfaa97ae1a0ba02eddeaded3d81a50edc1f38d5942d97",
-      "sha256": "e80a042f912fd4fe35c0729628a7bddcdab82124d21a22152ed60250abb45e61",
+      "sha256": "e57ab71a5d66153bc6bfb11e6d76a089636ce705c02333c3c58c7c0a6c9826bd",
       "generatedAt": "2026-09-16T12:16:23.046Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "La.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.050Z"
     },
     {
       "id": "word-li",
       "text": "li",
       "filename": "word-li.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "e959e90e159e6a02a73d61153763f356c0ce895b975b3350ec3e930ac2e5a5b1",
-      "sha256": "0d45ce5dcb7619d3fbdcf52594dd031b487daaf0afd6d5efd92516dc0a07f211",
+      "sha256": "6850ae1bf01842ae82e5e1621f1d4861dd4b85b2e35567b302008e5e13e828c1",
       "generatedAt": "2026-09-16T12:16:23.865Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Li.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.093Z"
     },
     {
       "id": "word-ta",
       "text": "ta",
       "filename": "word-ta.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "9f95cad14d70dd39c54f4668a0b75aad3aa638462236410e0369583227907efd",
-      "sha256": "a93efe6f4a57c86d5926b0945c6bab1effaac18a411315cad8816dc14c78b113",
+      "sha256": "6e2890e3b220d7268940e197b168f8a96a35174a371a61ccf3634bd541059c52",
       "generatedAt": "2026-09-16T12:16:24.647Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Ta.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.141Z"
     },
     {
       "id": "word-to",
       "text": "to",
       "filename": "word-to.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "4e952720e85b6db49d425b3b4e0d628ce816f9c34c84c3ae1ad0b728c3898b31",
-      "sha256": "e9d5a67b4f223da1cdc34c5e506b5b0eae1b02790ffe4d7fa32150b3e93fb615",
+      "sha256": "e7f2c92cf08409f219acf890697ea04fd68489a5aae2117e4368aaf49fd4c2ef",
       "generatedAt": "2026-09-16T12:16:25.429Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "To.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.179Z"
     },
     {
       "id": "word-ko",
       "text": "ko",
       "filename": "word-ko.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "83e41692e024b6985aecaf9094131ec5d57ecd8cb69598cfc05e4f8fdc3916c4",
-      "sha256": "f63c32083ad1cbd64700ea5b0dd21dbac8db4f89849cb18a2a6d669f415b6d57",
+      "sha256": "923e5c4b28c68ccfe3045949c8fcc24dbd3bb262e1cd5dd07ecaf0bcffaca934",
       "generatedAt": "2026-09-16T12:16:26.237Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Ko.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.218Z"
     },
     {
       "id": "word-no",
       "text": "no",
       "filename": "word-no.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "ce5c3fdb68702998485cc096f65cca715cb5c817e420ec2bde5e5d0a0349a0ed",
-      "sha256": "78cf4e2d5593be1a55735f3223d5fc2047bea7950cc12856f3730bc8a3887eb8",
+      "sha256": "479c4323e4fb093f6e97b83d17f5ec9368dd8140e58651ac6f5075c60741cab8",
       "generatedAt": "2026-09-16T12:16:27.144Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "No.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.259Z"
     },
     {
       "id": "word-ga",
       "text": "ga",
       "filename": "word-ga.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "3156af9b1c5e6489773bea70259fe6093432b0163ddc73822f8226fa5059e41c",
-      "sha256": "06e30fe1a35bef0b5aae6a6a75942ab63f10e53b9097e098664539a5c817a9a5",
+      "sha256": "ec90064eb365ccf25d093fe66a1435810b44472a097b009103ece04c914db2a0",
       "generatedAt": "2026-09-16T12:16:27.931Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Ga.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.299Z"
     },
     {
       "id": "word-mama",
       "text": "mama",
       "filename": "word-mama.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "073bac15326ddc09653e102ef385b43bd73fbe48ff7c20640f6c14491f2605db",
-      "sha256": "0b2a23d63c7e6747c39f0254764dbc4aae84e82b4261bbcd44b6f13407cbab88",
+      "sha256": "f00254b69b2c9ae7cac1a44f3a26f63989111566580c11eeb04cf7514fcb2781",
       "generatedAt": "2026-09-16T12:16:29.266Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Mama.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.340Z"
     },
     {
       "id": "word-mimi",
       "text": "Mimi",
       "filename": "word-mimi.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "7739f904dd0a850f45dcc79f3b909093db6dc394418e4bfb3028d581cacdc63d",
-      "sha256": "3a3c4746438686350c01442b8fb4809fed4cd3563cc8aefbed159ea951d4b379",
+      "sha256": "75d97748409ab4662696d8c72a9e3395d271d3653aed057986658112d2a75585",
       "generatedAt": "2026-09-16T12:16:30.062Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Mimi.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.382Z"
     },
     {
       "id": "word-lala",
@@ -650,61 +810,89 @@
       "id": "word-tata",
       "text": "tata",
       "filename": "word-tata.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "447ffd9d7bca9daf297c5ae3d32e424be8b3e107f883291ced2fa7f9aff0a3be",
-      "sha256": "b63d5a8021cb01586af375769b17f27e59b232b47954d666e268f910a5fabaab",
+      "sha256": "17e9260dfb46d6944ee09b7901f3911d7d9099c438c19fa815d8c66da464b946",
       "generatedAt": "2026-09-16T12:16:31.669Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Tata.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.422Z"
     },
     {
       "id": "word-oko",
       "text": "oko",
       "filename": "word-oko.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "16ffbec5a04f2692c7a42cc70f3933fa03cdf5bda7668eeb1534313b6924bf5b",
-      "sha256": "c3971dfcee3c5aa25b2b315f67937f163f32d54e0a81b96aa481400595dae312",
+      "sha256": "f0ffb5a968b7165601542595d4e179282fb56c0e50e9dbc1e2c711d650c8fe62",
       "generatedAt": "2026-09-16T12:16:32.490Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Oko.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.461Z"
     },
     {
       "id": "word-nos",
       "text": "nos",
       "filename": "word-nos.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "2bdd9e128a8310e58a17fc95d5f6c987c7fdd898c85471cf1447012aee4e5369",
-      "sha256": "c4fa00336d831d382a8201c69452a34fdec28f7613d29116423c171ce4be4cca",
+      "sha256": "fe842b867b18fa5268521ee6151d94a9c19150a58fd52ae924d26f09fc13396e",
       "generatedAt": "2026-09-16T12:16:33.280Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Nos.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.504Z"
     },
     {
       "id": "word-noga",
       "text": "noga",
       "filename": "word-noga.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "dbc949f7575f43d6e230485f6662380e048183720423da213d83f9947904f148",
-      "sha256": "76707f5c45bd2cfee723a4ddf840b59c5987dfdd1f00ecf56f51b3c943d52bb7",
+      "sha256": "d901e7b2dce14b36ef3c38510fefa68f14bf74eaf556b7e16572664d365d892f",
       "generatedAt": "2026-09-16T12:16:34.116Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "Noga.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-09-27T22:11:49.547Z"
     }
   ]
 }
