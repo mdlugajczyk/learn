@@ -1,9 +1,10 @@
 # MIMI — własne nagrania
 
-Każdy klip aplikacji ma stałą, czytelną nazwę. Nagraj tylko jedną linię na plik,
-zapisaną dokładnie podaną nazwą. iPhone Voice Memos (`.m4a`), WAV i MP3 są
-obsługiwane. Po nagraniu przenieś pliki do tego folderu i uruchom z głównego
-folderu projektu:
+Każdy klip aplikacji ma stałą, czytelną nazwę. Nagraj tylko jedną linię na plik.
+Najprostsze nazwy dla iPhone Voice Memos to `m.m4a`, `ma.m4a`, `mama.m4a` i
+`ma-blend.m4a`. Używaj `.m4a` — to format dźwięku z Voice Memos, nie `.mp4`.
+WAV, AAC i MP3 też są obsługiwane. Po nagraniu przenieś pliki do tego folderu
+i uruchom z głównego folderu projektu:
 
 ```sh
 npm run audio:mimi:import
@@ -17,6 +18,20 @@ Po imporcie uruchom `npm run build`, a następnie opublikuj zmiany.
 Nagrywaj w cichym pokoju, 15–20 cm od mikrofonu, z krótką ciszą na początku i
 końcu. Mów spokojnie, naturalnie i po polsku. Przy głoskach nie dodawaj samogłoski:
 `mmmm`, a nie `my`; `llll`, a nie `ly`.
+
+## Proste nazwy do pierwszych lekcji
+
+| Nagraj jako | Użycie |
+|---|---|
+| `a.m4a`, `i.m4a`, `m.m4a` | pojedynczy, długi dźwięk litery |
+| `ma.m4a`, `mi.m4a` | gotowa sylaba / krótki wyraz |
+| `ma-blend.m4a`, `mi-blend.m4a` | demonstracja płynnego połączenia dźwięków |
+| `mama.m4a`, `mimi.m4a` | całe słowo |
+
+`ma.m4a` i `ma-blend.m4a` są celowo osobne: pierwszy plik to krótkie „ma”, a
+drugi ma pokazać drogę `mmmm-a → ma`. Jeśli nagrasz tylko `ma.m4a`, pozostała
+demonstracja `ma-blend` zostanie na razie z obecnego pakietu. Starsze techniczne
+nazwy z pełnej listy niżej (na przykład `word-ma.m4a`) są nadal akceptowane.
 
 | Nagraj jako | Powiedz / zrób dokładnie to |
 |---|---|

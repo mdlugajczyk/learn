@@ -20,9 +20,19 @@ const manifestPath = path.join(root, 'manifest.json');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const records = new Map(manifest.entries.map(entry => [entry.id, entry]));
 const extensions = ['.m4a', '.wav', '.mp3', '.aac'];
+// Friendly names are intentionally short for Voice Memos. The technical names
+// remain accepted too, so existing recordings never need to be renamed.
+const friendlyNames = {
+  'sound-a': 'a', 'sound-i': 'i', 'sound-m': 'm', 'sound-l': 'l', 'sound-o': 'o', 'sound-n': 'n', 'sound-s': 's',
+  'blend-ma': 'ma-blend', 'blend-mi': 'mi-blend', 'blend-la': 'la-blend', 'blend-li': 'li-blend',
+  'blend-ta': 'ta-blend', 'blend-to': 'to-blend', 'blend-ko': 'ko-blend', 'blend-no': 'no-blend', 'blend-ga': 'ga-blend',
+  'word-ma': 'ma', 'word-mi': 'mi', 'word-la': 'la', 'word-li': 'li', 'word-ta': 'ta', 'word-to': 'to', 'word-ko': 'ko', 'word-no': 'no', 'word-ga': 'ga',
+  'word-mama': 'mama', 'word-mimi': 'mimi', 'word-lala': 'lala', 'word-tata': 'tata', 'word-oko': 'oko', 'word-nos': 'nos', 'word-noga': 'noga'
+};
 const imports = [];
 for (const id of ids) {
-  const sourceName = extensions.map(extension => `${id}${extension}`).find(name => files.includes(name));
+  const candidates = [friendlyNames[id], id].filter(Boolean);
+  const sourceName = candidates.flatMap(name => extensions.map(extension => `${name}${extension}`)).find(name => files.includes(name));
   if (!sourceName) continue;
   imports.push({ id, source: path.join(dropFolder, sourceName), output: path.join(root, `${id}.mp3`) });
 }
