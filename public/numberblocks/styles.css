@@ -59,7 +59,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
 .friend-arms::before, .friend-arms::after { content: ""; width: calc(var(--unit) * .48); height: 7px; position: absolute; top: 45%; border-radius: 99px; background: var(--unit-color); }
 .friend-arms::before { right: 95%; transform: rotate(-17deg); }
 .friend-arms::after { left: 95%; transform: rotate(17deg); }
-.ten-friend { --unit: 27px; --cols: 5; --rows: 2; --unit-color: var(--red); }
+.ten-friend, .number-10 { --unit-color: #fff; }
+.number-10 .friend-number { border-color: #f3f5f6; background: #fff; color: #d63d51; }
 
 /* Home */
 .home-utility { height: calc(74px + var(--safe-top)); display: flex; align-items: flex-end; justify-content: space-between; padding: var(--safe-top) max(14px, var(--safe-right)) 5px max(14px, var(--safe-left)); }
@@ -172,6 +173,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
 .segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 7px; }
 .segmented button { min-height: 52px; border: 3px solid #d4e0e3; border-radius: 15px; background: #fff; font-weight: 900; }
 .segmented button.selected { border-color: var(--green); background: #e5f7ea; color: #236a3d; }
+#rangeButtons { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row; }
 .toggle-row { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
 .toggle-row span { display: flex; flex-direction: column; }
 .toggle-row small { margin-top: 3px; color: var(--ink-soft); font-size: .8rem; }

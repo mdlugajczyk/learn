@@ -18,7 +18,7 @@ import {
 
 const STORAGE_KEY = 'tens-playground-v3';
 const WELCOME_KEY = 'tens-playground-welcomed-v1';
-const COLORS = ['#ef5362', '#f28d3a', '#f0c93e', '#48b96a', '#2c9fdb', '#7163c7', '#e861a5', '#78919f', '#35aaa0', '#ef5362'];
+const COLORS = ['#ef5362', '#f28d3a', '#f0c93e', '#48b96a', '#2c9fdb', '#7163c7', '#e861a5', '#78919f', '#35aaa0', '#ffffff'];
 const TOY_ICONS = { teddies: '🧸', cars: '🚗', ducks: '🦆' };
 const PLAYGROUND_ASSETS = {
   slide: { src: 'art/playground/slide.webp', label: 'slide' },
@@ -1153,11 +1153,12 @@ function renderParentSettings() {
     const row = make('div', 'summary-row'); row.append(make('span', '', item.label), make('strong', '', item.value)); elements.learningSummary.appendChild(row);
   });
   elements.rangeButtons.replaceChildren();
-  [{ min: 2, max: 5, label: '1–5' }, { min: 2, max: 7, label: '1–7' }, { min: 2, max: 10, label: '1–10' }, { min: 5, max: 10, label: '5–10' }].forEach(range => {
-    const selected = profile.settings.joinMin === range.min && profile.settings.joinMax === range.max;
-    const button = make('button', selected ? 'selected' : '', range.label);
+  [5, 6, 7, 8, 9, 10].forEach(maximum => {
+    const selected = profile.settings.joinMin === 2 && profile.settings.joinMax === maximum;
+    const button = make('button', selected ? 'selected' : '', maximum);
     button.type = 'button';
-    button.addEventListener('click', () => { profile.settings.joinMin = range.min; profile.settings.joinMax = range.max; saveProfile(); renderParentSettings(); });
+    button.setAttribute('aria-label', `Practice joining up to ${maximum}`);
+    button.addEventListener('click', () => { profile.settings.joinMin = 2; profile.settings.joinMax = maximum; saveProfile(); renderParentSettings(); });
     elements.rangeButtons.appendChild(button);
   });
   elements.lengthButtons.replaceChildren();

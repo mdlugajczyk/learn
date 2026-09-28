@@ -250,3 +250,12 @@ test('tablet landscape lays the stage and four-answer panel side by side', async
   assert.match(shellCss, /grid-template-columns: 118px minmax\(280px, 1\.15fr\) minmax\(276px, \.85fr\)/);
   assert.match(missionCss, /grid-template-rows: repeat\(2, minmax\(84px, 1fr\)\)/);
 });
+
+test('parent can choose every joining maximum from five to ten and Ten is white', async () => {
+  const appSource = await readFile(new URL('../public/numberblocks/app.js', import.meta.url), 'utf8');
+  const styles = await readFile(new URL('../public/numberblocks/styles.css', import.meta.url), 'utf8');
+  assert.match(appSource, /\[5, 6, 7, 8, 9, 10\]\.forEach\(maximum/);
+  assert.match(appSource, /'#35aaa0', '#ffffff'/);
+  assert.match(styles, /\.ten-friend, \.number-10 \{ --unit-color: #fff; \}/);
+  assert.match(styles, /\.number-10 \.friend-number \{[^}]*background: #fff;/);
+});
