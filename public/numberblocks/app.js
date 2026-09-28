@@ -324,6 +324,7 @@ function createTaskState(task) {
     firstAttemptCorrect: null,
     assistance: task.teachingDemo ? ['demo'] : [],
     transferLocked: false,
+    transferId: 0,
     lastMoved: null,
     feedback: null,
     resolutionId: null
@@ -611,10 +612,10 @@ function renderShareControls(task) {
   controls.appendChild(shareGoalVisual(task));
   const row = make('div', 'share-action-row');
   const undo = make('button', 'round-action', '↶');
-  undo.type = 'button'; undo.disabled = !state.taskState.toys.history.length || state.taskState.transferLocked;
+  undo.type = 'button'; undo.disabled = !state.taskState.toys.history.length || state.phase !== 'question';
   undo.setAttribute('aria-label', 'Undo the last toy'); undo.addEventListener('click', undoToy);
   const check = make('button', 'check-button', ui().check);
-  check.type = 'button'; check.disabled = !shareCanCheck(task) || state.taskState.transferLocked || state.phase !== 'question';
+  check.type = 'button'; check.disabled = !shareCanCheck(task) || state.phase !== 'question';
   check.addEventListener('click', checkShare);
   const help = make('button', 'help-button', '☝');
   help.type = 'button'; help.setAttribute('aria-label', 'Help'); help.addEventListener('click', openHelp);
@@ -650,12 +651,15 @@ function sendToy(recipient) {
   state.taskState.toys = next;
   state.taskState.lastMoved = next.history.at(-1)?.toyId;
   state.taskState.transferLocked = true;
+  state.taskState.transferId = Number(state.taskState.transferId || 0) + 1;
+  const transferId = state.taskState.transferId;
+  const taskToken = state.token;
   state.taskState.feedback = null;
   audio.effect('hop');
   renderShareTaskOnly();
   saveCheckpoint();
   setTimeout(() => {
-    if (!state.taskState) return;
+    if (!state.taskState || state.phase !== 'question' || state.token !== taskToken || state.taskState.transferId !== transferId) return;
     state.taskState.transferLocked = false;
     state.taskState.lastMoved = null;
     renderShareTaskOnly();
@@ -673,9 +677,12 @@ function returnToy(recipient) {
 }
 
 function undoToy() {
-  if (state.taskState.transferLocked || state.phase !== 'question') return;
+  if (state.phase !== 'question') return;
   const next = undoToyMove(state.taskState.toys);
   if (next === state.taskState.toys) return;
+  state.taskState.transferId = Number(state.taskState.transferId || 0) + 1;
+  state.taskState.transferLocked = false;
+  state.taskState.lastMoved = null;
   state.taskState.toys = next;
   audio.effect('undo');
   renderShareTaskOnly();
@@ -689,7 +696,10 @@ function renderShareTaskOnly() {
 }
 
 function checkShare() {
-  if (state.phase !== 'question' || state.taskState.transferLocked) return;
+  if (state.phase !== 'question') return;
+  state.taskState.transferId = Number(state.taskState.transferId || 0) + 1;
+  state.taskState.transferLocked = false;
+  state.taskState.lastMoved = null;
   state.phase = 'evaluating';
   audio.stop();
   const task = currentTask();

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-b72bdaf16c21",
+  "version": "number-magic-62850cf638b3",
   "assetCount": 313,
-  "totalBytes": 11139880,
+  "totalBytes": 11140364,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 51383,
-      "sha256": "4467bf03ef168746dc864b896f4ae88ac64172487c394ae90700a4ed8e4e9f63"
+      "bytes": 51866,
+      "sha256": "81398cebf6e68387a61f8796db2b8f9bc65e9505d7d536ae05c68d91808cfb51"
     },
     {
       "path": "art/playground-stage.webp",
@@ -1556,8 +1556,8 @@
     },
     {
       "path": "missions.css",
-      "bytes": 13586,
-      "sha256": "1ca4dc8404c5ebfc73348dfc9918f91ce4cb047bbb0593db774a8dcbf0d197c0"
+      "bytes": 13587,
+      "sha256": "c8ca4484dbc922757d450fc9ac526e1319abc0fd89ad1e8a581091ded7b260ef"
     },
     {
       "path": "missions.js",

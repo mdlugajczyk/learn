@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 
 import {
   canAdvance,
@@ -205,4 +206,12 @@ test('a session has at most one transfer probe and never stacks it with numeral-
     assert.ok(plan.filter(task => task.answerSupport === 'numeralOnly').length <= 1);
     assert.equal(plan.some(task => task.representation === 'toys' && task.answerSupport === 'numeralOnly'), false);
   }
+});
+
+test('Undo and Check remain actionable while the last committed toy is still hopping', async () => {
+  const appSource = await readFile(new URL('../public/numberblocks/app.js', import.meta.url), 'utf8');
+  assert.match(appSource, /undo\.disabled = !state\.taskState\.toys\.history\.length \|\| state\.phase !== 'question'/);
+  assert.match(appSource, /check\.disabled = !shareCanCheck\(task\) \|\| state\.phase !== 'question'/);
+  assert.match(appSource, /state\.taskState\.transferId !== transferId/);
+  assert.doesNotMatch(appSource, /function checkShare\(\) \{\s+if \(state\.phase !== 'question' \|\| state\.taskState\.transferLocked\)/);
 });
