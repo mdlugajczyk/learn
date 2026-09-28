@@ -242,3 +242,11 @@ test('Undo and Check remain actionable while the last committed toy is still hop
   assert.match(appSource, /state\.taskState\.transferId !== transferId/);
   assert.doesNotMatch(appSource, /function checkShare\(\) \{\s+if \(state\.phase !== 'question' \|\| state\.taskState\.transferLocked\)/);
 });
+
+test('tablet landscape lays the stage and four-answer panel side by side', async () => {
+  const shellCss = await readFile(new URL('../public/numberblocks/styles.css', import.meta.url), 'utf8');
+  const missionCss = await readFile(new URL('../public/numberblocks/missions.css', import.meta.url), 'utf8');
+  assert.match(shellCss, /min-width: 700px\) and \(max-height: 820px\) and \(orientation: landscape\)/);
+  assert.match(shellCss, /grid-template-columns: 118px minmax\(280px, 1\.15fr\) minmax\(276px, \.85fr\)/);
+  assert.match(missionCss, /grid-template-rows: repeat\(2, minmax\(84px, 1fr\)\)/);
+});

@@ -139,3 +139,18 @@
   .share-stage { height: 100%; grid-template-columns: .8fr 1.4fr; grid-template-rows: 1fr; }
   .toy-tray { align-content: center; }
 }
+
+@media (min-width: 700px) and (max-height: 820px) and (orientation: landscape) {
+  .join-stage { grid-template-columns: 1fr 52px 1fr; padding: 10px 6px 18px; }
+  .join-group .number-friend, .result-formation .number-friend { --unit: clamp(40px, 6vh, 48px); }
+  .join-plus { padding-bottom: 48px; }
+  .join-task-controls { height: 100%; min-height: 0; grid-template-rows: minmax(0, 1fr) 64px; gap: 8px; }
+  .join-task-controls .answer-panel { min-height: 0; grid-template-rows: repeat(2, minmax(84px, 1fr)); gap: 10px; }
+  .answer-card { min-width: 0; min-height: 84px; grid-template-columns: auto minmax(62px, 1fr); padding: 7px 10px; }
+  .answer-numeral { min-width: 44px; font-size: 2.7rem; }
+  .quantity-frame { grid-template-columns: repeat(var(--frame-cols), 15px); grid-auto-rows: 15px; gap: 3px; }
+  .quantity-frame i { width: 15px; height: 15px; }
+  .share-stage, .share-controls { height: 100%; min-height: 0; }
+  .share-stage { grid-template-rows: minmax(92px, .7fr) minmax(190px, 1.3fr); }
+  .share-controls { grid-template-rows: minmax(0, 1fr) 64px; }
+}

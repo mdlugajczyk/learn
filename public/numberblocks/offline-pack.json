@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-8e9dfda7bffc",
+  "version": "number-magic-2c4a48d1457c",
   "assetCount": 325,
-  "totalBytes": 11550518,
+  "totalBytes": 11553010,
   "assets": [
     {
       "path": "app.js",
@@ -1616,8 +1616,8 @@
     },
     {
       "path": "missions.css",
-      "bytes": 13830,
-      "sha256": "3fc73c992b31e79ddd93a6645481bf41582329e67ad841b8ba2e0de276c1f2fe"
+      "bytes": 14897,
+      "sha256": "6e7ba172efd418cc91a15dabc651858bc6cf8bc457c84a4d0d0f790af931be9c"
     },
     {
       "path": "missions.js",
@@ -1626,8 +1626,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 22310,
-      "sha256": "668703931eb75eec6b4d3fb902025e1ba18d3f4694d8b6200e48a4ef15ab87a2"
+      "bytes": 23735,
+      "sha256": "4c6441d3853c55b43b29bb6abf68974c6dfa594a5a5a58a9f1167e6eac6888cf"
     }
   ]
 }
