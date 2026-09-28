@@ -96,7 +96,8 @@
 
 /* Playground feedback between tasks */
 .playground-update { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 15px; background: url("art/playground-stage.webp") center / cover no-repeat; }
-.new-playground-piece { font-size: clamp(4.5rem, 24vw, 8rem); animation: playground-drop .8s var(--spring); }
+.new-playground-piece { width: clamp(150px, 48vw, 260px); height: clamp(150px, 48vw, 260px); display: grid; place-items: center; animation: playground-drop .8s var(--spring); }
+.new-playground-piece img { width: 100%; height: 100%; object-fit: contain; filter: hue-rotate(var(--equipment-hue)) saturate(1.12) drop-shadow(0 8px 5px rgba(48,72,74,.2)); }
 @keyframes playground-drop { from { transform: translateY(-120px) scale(.35) rotate(-14deg); opacity: 0; } 70% { transform: translateY(8px) scale(1.08); opacity: 1; } }
 .playground-update strong { padding: 8px 15px; border: 3px solid #fff; border-radius: 99px; background: rgba(255,255,255,.88); font-size: 1.25rem; }
 

@@ -1,18 +1,78 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-62850cf638b3",
-  "assetCount": 313,
-  "totalBytes": 11140364,
+  "version": "number-magic-8e9dfda7bffc",
+  "assetCount": 325,
+  "totalBytes": 11550518,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 51866,
-      "sha256": "81398cebf6e68387a61f8796db2b8f9bc65e9505d7d536ae05c68d91808cfb51"
+      "bytes": 57623,
+      "sha256": "c990cc9d59fcb17014eba01af8ef3127f4d9184156f35078c771dc595b196819"
     },
     {
       "path": "art/playground-stage.webp",
       "bytes": 34386,
       "sha256": "65318e0b350af748c2930a13d91ef8ef62979af77e3cc9e6b052805e43d6bbe3"
+    },
+    {
+      "path": "art/playground/climbing-dome.webp",
+      "bytes": 47654,
+      "sha256": "ceafe7ce9bc70428b42f1b7ffd68e113c3b656d5b3317ccc5e19229505461f20"
+    },
+    {
+      "path": "art/playground/merry-go-round.webp",
+      "bytes": 29704,
+      "sha256": "297e8e6a4abb6c72759a7cc7ca1e5e9fbe1fad1106a4101903b57fbbd31ecb6e"
+    },
+    {
+      "path": "art/playground/playhouse.webp",
+      "bytes": 38042,
+      "sha256": "894c706dd2f8797e5a10a9a49c6a55c637a9340d0d2cb738c895a306e864dd3c"
+    },
+    {
+      "path": "art/playground/sandbox.webp",
+      "bytes": 25010,
+      "sha256": "553d9feb6e656c2d4c223c7d9b8ab5e87d6627441bd3b6d3dbc63edba18b1568"
+    },
+    {
+      "path": "art/playground/seesaw.webp",
+      "bytes": 22450,
+      "sha256": "c1fd32575e0ff956d34359b0178168b9f35d8a6089a545de0f27e4ac720cf3af"
+    },
+    {
+      "path": "art/playground/slide.webp",
+      "bytes": 37416,
+      "sha256": "7fb46dd41bb445445d274e54c3988163c5e0c7233fafbb19e6f74930e026547f"
+    },
+    {
+      "path": "art/playground/spring-rider.webp",
+      "bytes": 51214,
+      "sha256": "5eeb52a3b7982d31deef3cc7602a4a6c005eb4b061a24202bbbb7390fa12d48d"
+    },
+    {
+      "path": "art/playground/stepping-pods.webp",
+      "bytes": 21370,
+      "sha256": "535474b5aa7805435e02b50950f6700379c0e91da59aa21015039ad973b40104"
+    },
+    {
+      "path": "art/playground/swing.webp",
+      "bytes": 37534,
+      "sha256": "2bbc81bb837379a7f04060782481bee4cb2abf71d21d2ceeb2b155a79abb1d41"
+    },
+    {
+      "path": "art/playground/trampoline.webp",
+      "bytes": 22572,
+      "sha256": "003cdf286e30ee6bc356260cef8e4fbf9ef5ed4517b77572e7b4b21449c7a407"
+    },
+    {
+      "path": "art/playground/tunnel.webp",
+      "bytes": 20496,
+      "sha256": "13a3fbf9d2ba25385d939a33c4e91387a545f97ef9326831f30f22b11c59bd9a"
+    },
+    {
+      "path": "art/playground/water-table.webp",
+      "bytes": 48172,
+      "sha256": "d116d8b5765f7440f707464ad4635f881da8e6c1e8bfccaf9e232f67015ffb7c"
     },
     {
       "path": "audio/v1-count-1-en.mp3",
@@ -1526,8 +1586,8 @@
     },
     {
       "path": "game-model.js",
-      "bytes": 15737,
-      "sha256": "65365aed2196eb008072c7156f7b6eb6f82082d6cbc64e742f88a95919a370dd"
+      "bytes": 16967,
+      "sha256": "5bae42324087e72465011c1238ab79e11487ebc47b649a7b8b73a8749acf5db7"
     },
     {
       "path": "icons/icon-192.png",
@@ -1556,8 +1616,8 @@
     },
     {
       "path": "missions.css",
-      "bytes": 13587,
-      "sha256": "c8ca4484dbc922757d450fc9ac526e1319abc0fd89ad1e8a581091ded7b260ef"
+      "bytes": 13830,
+      "sha256": "3fc73c992b31e79ddd93a6645481bf41582329e67ad841b8ba2e0de276c1f2fe"
     },
     {
       "path": "missions.js",
@@ -1566,8 +1626,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 21020,
-      "sha256": "c726886f32ed71d85244a4baa178b27c8e487159767e96fb56b0422364e7560e"
+      "bytes": 22310,
+      "sha256": "668703931eb75eec6b4d3fb902025e1ba18d3f4694d8b6200e48a4ef15ab87a2"
     }
   ]
 }

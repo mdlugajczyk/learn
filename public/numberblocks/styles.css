@@ -106,9 +106,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
 .job-progress { display: flex; gap: 7px; }
 .job-progress i { width: 24px; height: 12px; display: block; border: 3px solid rgba(255,255,255,.78); border-radius: 99px; background: rgba(255,255,255,.28); transition: transform .3s var(--spring), background .2s ease; }
 .job-progress i.done { transform: scale(1.12); background: var(--yellow); }
-.playground-strip { display: flex; align-items: flex-end; justify-content: center; gap: 7px; margin: 0 max(12px, var(--safe-right)); padding: 6px 12px; border: 3px solid rgba(255,255,255,.75); border-radius: 20px; background: rgba(255,255,255,.48); overflow: hidden; }
-.playground-piece { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: rgba(255,255,255,.72); font-size: 1.55rem; filter: grayscale(1); opacity: .28; }
-.playground-piece.built { filter: none; opacity: 1; animation: piece-arrive .55s var(--spring); }
+.playground-strip { display: flex; align-items: flex-end; justify-content: center; gap: clamp(3px, 1.5vw, 7px); margin: 0 max(12px, var(--safe-right)); padding: 6px clamp(5px, 2vw, 12px); border: 3px solid rgba(255,255,255,.75); border-radius: 20px; background: rgba(255,255,255,.48); overflow: hidden; }
+.playground-piece { width: clamp(28px, 9vw, 42px); height: clamp(28px, 9vw, 42px); flex: 0 0 auto; display: grid; place-items: center; overflow: hidden; border-radius: 13px; background: rgba(255,255,255,.72); opacity: .28; }
+.playground-piece img { width: 95%; height: 95%; object-fit: contain; filter: grayscale(1); }
+.playground-piece.built { opacity: 1; animation: piece-arrive .55s var(--spring); }
+.playground-piece.built img { filter: hue-rotate(var(--equipment-hue)) saturate(1.12); }
 @keyframes piece-arrive { from { transform: translateY(30px) scale(.3) rotate(-12deg); } 70% { transform: translateY(-4px) scale(1.08); } }
 .task-shell { min-height: 0; display: grid; grid-template-rows: 68px minmax(250px, 1fr) minmax(180px, auto); gap: 8px; padding: 7px max(10px, var(--safe-right)) 8px max(10px, var(--safe-left)); }
 .narrator-row { display: flex; align-items: center; gap: 5px; }
@@ -142,16 +144,22 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
 .cosmetic-choice { min-height: 150px; display: grid; place-items: center; gap: 7px; padding: 14px; border: 5px solid #fff; border-radius: 25px; box-shadow: 0 7px 0 rgba(33,72,92,.16); font-size: 3.5rem; }
 .cosmetic-choice span { font-size: 1rem; font-weight: 1000; }
 .finale-overlay { background: rgba(26,70,93,.35); }
-.finale-card { width: min(100%, 520px); min-height: min(88svh, 760px); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; overflow: hidden; padding: 20px; border: 5px solid #fff; border-radius: 34px; background: url("art/playground-stage.webp") center / cover no-repeat; box-shadow: 0 16px 45px rgba(22,52,77,.28); }
-.finale-playground { width: 100%; min-height: 190px; display: flex; align-items: flex-end; justify-content: space-evenly; gap: 5px; font-size: clamp(2.2rem, 12vw, 4.5rem); }
-.finale-playground button { min-width: 68px; min-height: 68px; border: 3px solid rgba(255,255,255,.82); border-radius: 20px; background: rgba(255,255,255,.32); font-size: inherit; cursor: pointer; }
-.finale-ten { height: 200px; display: flex; align-items: flex-end; justify-content: center; }
-.finale-ten .number-friend { transform: scale(.78); transform-origin: bottom; animation: finale-hop 1.5s ease-in-out infinite; }
-@keyframes finale-hop { 50% { transform: scale(.78) translateY(-18px) rotate(3deg); } }
-.finale-card h2 { margin: 5px 0 15px; padding: 7px 15px; border-radius: 999px; background: rgba(255,255,255,.88); font-size: 2rem; }
-.finale-actions { width: 100%; display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; }
+.finale-card { width: min(100%, 680px); min-height: min(91svh, 780px); position: relative; overflow: hidden; padding: 20px; border: 5px solid #fff; border-radius: 34px; background: url("art/playground-stage.webp") center / cover no-repeat; box-shadow: 0 16px 45px rgba(22,52,77,.28); }
+.finale-playground { position: absolute; inset: 58px 0 94px; overflow: hidden; }
+.playground-equipment { width: var(--equipment-width); aspect-ratio: 1; display: grid; place-items: center; position: absolute; left: var(--equipment-x); top: var(--equipment-y); transform: translate(-50%, -50%) rotate(var(--equipment-rotation)); margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; animation: equipment-arrive .58s var(--spring) backwards; animation-delay: var(--equipment-delay); }
+.playground-equipment img { width: 100%; height: 100%; object-fit: contain; filter: hue-rotate(var(--equipment-hue)) saturate(1.12) drop-shadow(0 5px 3px rgba(48,72,74,.18)); transform-origin: 50% 75%; user-select: none; pointer-events: none; }
+.playground-equipment:focus-visible { outline-color: #fff36d; outline-offset: -4px; border-radius: 22px; }
+.playground-equipment:active img { transform: scale(.94); }
+@keyframes equipment-arrive { from { opacity: 0; transform: translate(-50%, calc(-50% - 35px)) rotate(calc(var(--equipment-rotation) - 7deg)) scale(.55); } }
+.finale-ten { width: 86px; height: 86px; display: flex; align-items: flex-end; justify-content: center; position: absolute; z-index: 95; left: 4px; top: 0; overflow: hidden; pointer-events: none; }
+.finale-ten .number-friend { transform: scale(.34); transform-origin: bottom; animation: finale-hop 1.5s ease-in-out infinite; }
+@keyframes finale-hop { 50% { transform: scale(.34) translateY(-18px) rotate(3deg); } }
+.finale-card h2 { position: absolute; z-index: 96; top: 10px; left: 50%; transform: translateX(-50%); margin: 0; padding: 7px 15px; border-radius: 999px; background: rgba(255,255,255,.9); box-shadow: 0 4px 0 rgba(44,91,95,.12); font-size: clamp(1.35rem, 6vw, 2rem); white-space: nowrap; }
+.finale-actions { width: calc(100% - 26px); display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; position: absolute; z-index: 96; left: 13px; bottom: 13px; }
 .saved-playgrounds { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.saved-playground { min-height: 150px; display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: center; gap: 3px; padding: 12px; border: 3px solid #fff; border-radius: 22px; background: url("art/playground-stage.webp") center / cover no-repeat; box-shadow: 0 5px 0 rgba(31,72,88,.13); font-size: 2rem; }
+.saved-playground { min-height: 180px; position: relative; overflow: hidden; padding: 0; border: 3px solid #fff; border-radius: 22px; background: url("art/playground-stage.webp") center / cover no-repeat; box-shadow: 0 5px 0 rgba(31,72,88,.13); cursor: pointer; }
+.saved-playground .playground-equipment { pointer-events: none; }
+.saved-playground .playground-equipment img { filter: hue-rotate(var(--equipment-hue)) saturate(1.08) drop-shadow(0 2px 2px rgba(48,72,74,.15)); }
 .empty-playgrounds { grid-column: 1 / -1; padding: 30px 15px; color: var(--ink-soft); text-align: center; }
 .parent-overlay { align-items: flex-start; overflow-y: auto; }
 .parent-card { width: min(100%, 580px); margin: auto 0; padding: 23px; border: 5px solid #fff; border-radius: 30px; background: var(--cream); box-shadow: 0 14px 40px rgba(20,47,73,.25); }
@@ -195,7 +203,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
   .adventure-button { min-height: 88px; }
   .playgrounds-button { margin-top: 7px; }
   .game-screen { grid-template-rows: calc(70px + var(--safe-top)) 50px minmax(0, 1fr); }
-  .playground-piece { width: 34px; height: 34px; font-size: 1.2rem; }
+  .playground-piece { width: clamp(28px, 9vw, 34px); height: clamp(28px, 9vw, 34px); }
   .task-shell { grid-template-rows: 58px minmax(178px, 1fr) minmax(205px, auto); gap: 5px; padding-top: 4px; }
   .play-ten { width: 68px; height: 58px; }
   .prompt-bubble { min-height: 50px; }

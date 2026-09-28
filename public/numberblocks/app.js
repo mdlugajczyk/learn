@@ -1,9 +1,9 @@
 import {
   GAME_VERSION,
-  PLAYGROUND_SEQUENCE,
   NUMBER_WORDS,
   commitResolution,
   createDefaultProfile,
+  createPlaygroundPlan,
   createSessionPlan,
   createToyState,
   easierReplacement,
@@ -20,7 +20,21 @@ const STORAGE_KEY = 'tens-playground-v3';
 const WELCOME_KEY = 'tens-playground-welcomed-v1';
 const COLORS = ['#ef5362', '#f28d3a', '#f0c93e', '#48b96a', '#2c9fdb', '#7163c7', '#e861a5', '#78919f', '#35aaa0', '#ef5362'];
 const TOY_ICONS = { teddies: '🧸', cars: '🚗', ducks: '🦆' };
-const PLAYGROUND_ICONS = { ground: '🟩', slide: '🛝', swing: '🎠', seesaw: '⚖️', tunnel: '🌈', flag: '🚩', flowers: '🌼', kite: '🪁' };
+const PLAYGROUND_ASSETS = {
+  slide: { src: 'art/playground/slide.webp', label: 'slide' },
+  swing: { src: 'art/playground/swing.webp', label: 'swing' },
+  seesaw: { src: 'art/playground/seesaw.webp', label: 'seesaw' },
+  tunnel: { src: 'art/playground/tunnel.webp', label: 'rainbow tunnel' },
+  sandbox: { src: 'art/playground/sandbox.webp', label: 'sandbox' },
+  'climbing-dome': { src: 'art/playground/climbing-dome.webp', label: 'climbing dome' },
+  'merry-go-round': { src: 'art/playground/merry-go-round.webp', label: 'merry-go-round' },
+  'spring-rider': { src: 'art/playground/spring-rider.webp', label: 'spring rider' },
+  trampoline: { src: 'art/playground/trampoline.webp', label: 'trampoline' },
+  playhouse: { src: 'art/playground/playhouse.webp', label: 'playhouse' },
+  'stepping-pods': { src: 'art/playground/stepping-pods.webp', label: 'stepping pods' },
+  'water-table': { src: 'art/playground/water-table.webp', label: 'water table' }
+};
+const LEGACY_EQUIPMENT = { ground: 'sandbox', flag: 'spring-rider', flowers: 'stepping-pods', kite: 'trampoline' };
 
 const COPY = {
   en: {
@@ -118,6 +132,84 @@ function make(tag, className, text) {
   if (text !== undefined) node.textContent = text;
   return node;
 }
+
+function normalizePlayground(playground = {}, count = 6) {
+  const base = createPlaygroundPlan(playground.seed || playground.id || Date.now(), count);
+  const storedItems = Array.isArray(playground.items) ? playground.items
+    : Array.isArray(playground.built) && playground.built.every(item => typeof item === 'object') ? playground.built
+      : null;
+  if (storedItems?.length) return { ...base, ...playground, items: storedItems.slice(0, count) };
+  const legacyKinds = Array.isArray(playground.built)
+    ? playground.built.map(kind => LEGACY_EQUIPMENT[kind] || kind).filter(kind => PLAYGROUND_ASSETS[kind])
+    : [];
+  return {
+    ...base,
+    ...playground,
+    items: base.items.slice(0, Math.max(legacyKinds.length, count)).map((item, index) => ({
+      ...item,
+      kind: legacyKinds[index] || item.kind,
+      id: `${legacyKinds[index] || item.kind}-${index + 1}`
+    }))
+  };
+}
+
+function equipmentImage(item, className = '') {
+  const asset = PLAYGROUND_ASSETS[item.kind] || PLAYGROUND_ASSETS.slide;
+  const image = make('img', className);
+  image.src = asset.src;
+  image.alt = '';
+  image.draggable = false;
+  image.style.setProperty('--equipment-hue', `${Number(item.hue) || 0}deg`);
+  return image;
+}
+
+function playWithEquipment(button, item) {
+  const image = button.querySelector('img');
+  if (!image) return;
+  const gentle = useReducedMotion();
+  const motions = {
+    swing: [{ transform: 'rotate(0)' }, { transform: 'rotate(-7deg)' }, { transform: 'rotate(7deg)' }, { transform: 'rotate(0)' }],
+    seesaw: [{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)' }, { transform: 'rotate(6deg)' }, { transform: 'rotate(0)' }],
+    'merry-go-round': [{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }],
+    'spring-rider': [{ transform: 'rotate(0)' }, { transform: 'rotate(-8deg) translateY(-5px)' }, { transform: 'rotate(7deg)' }, { transform: 'rotate(0)' }],
+    trampoline: [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(8px) scale(1.05,.9)' }, { transform: 'translateY(-16px) scale(.98,1.08)' }, { transform: 'translateY(0) scale(1)' }],
+    slide: [{ transform: 'translateY(0)' }, { transform: 'translateY(-9px) rotate(-2deg)' }, { transform: 'translateY(0)' }],
+    tunnel: [{ transform: 'scale(1)' }, { transform: 'scale(1.09)' }, { transform: 'scale(1)' }],
+    'water-table': [{ transform: 'rotate(0)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(3deg)' }, { transform: 'rotate(0)' }]
+  };
+  const keyframes = gentle
+    ? [{ opacity: 1 }, { opacity: 0.72 }, { opacity: 1 }]
+    : motions[item.kind] || [{ transform: 'translateY(0)' }, { transform: 'translateY(-15px) rotate(4deg)' }, { transform: 'translateY(0)' }];
+  image.getAnimations().forEach(animation => animation.cancel());
+  image.animate(keyframes, { duration: item.kind === 'merry-go-round' ? 850 : 620, easing: 'cubic-bezier(.25,.75,.25,1)' });
+  audio.effect(item.kind === 'water-table' ? 'boop' : 'hop');
+}
+
+function renderPlayground(container, playgroundValue, { interactive = true, limit } = {}) {
+  const playground = normalizePlayground(playgroundValue, limit || playgroundValue?.items?.length || 6);
+  container.replaceChildren();
+  const items = Number.isInteger(limit) ? playground.items.slice(0, limit) : playground.items;
+  items.forEach((item, index) => {
+    const node = make(interactive ? 'button' : 'span', 'playground-equipment');
+    if (interactive) {
+      node.type = 'button';
+      node.setAttribute('aria-label', `Play with the ${PLAYGROUND_ASSETS[item.kind]?.label || 'playground toy'}`);
+      node.addEventListener('click', () => playWithEquipment(node, item));
+    } else {
+      node.setAttribute('aria-hidden', 'true');
+    }
+    node.style.setProperty('--equipment-x', `${item.x}%`);
+    node.style.setProperty('--equipment-y', `${item.y}%`);
+    node.style.setProperty('--equipment-width', `${item.width || 25}%`);
+    node.style.setProperty('--equipment-rotation', `${item.rotation || 0}deg`);
+    node.style.setProperty('--equipment-delay', `${index * 70}ms`);
+    node.style.zIndex = String(item.z || Math.round(item.y));
+    node.appendChild(equipmentImage(item));
+    container.appendChild(node);
+  });
+  return playground;
+}
+
 function delay(milliseconds, token = state.token) {
   return new Promise(resolve => setTimeout(() => resolve(token === state.token && !state.paused), milliseconds));
 }
@@ -226,7 +318,7 @@ function cacheElements() {
     'playgroundStrip', 'playTen', 'promptText', 'audioRetryButton', 'taskStage', 'taskControls',
     'resultAnnouncement', 'leaveButton', 'replayButton', 'firstVisitOverlay', 'welcomeTen', 'firstPlayButton',
     'helpOverlay', 'showHelpButton', 'resetTaskButton', 'skipTaskButton', 'cosmeticOverlay', 'choiceTen',
-    'cosmeticChoices', 'finaleOverlay', 'finalePlayground', 'finaleTen', 'allDoneButton', 'anotherButton',
+    'cosmeticChoices', 'finaleOverlay', 'finalePlayground', 'finaleTen', 'finaleTitle', 'allDoneButton', 'anotherButton',
     'playgroundsOverlay', 'savedPlaygrounds', 'parentOverlay', 'learningSummary', 'rangeButtons',
     'lengthButtons', 'autoAdvanceToggle', 'remaindersToggle', 'narrationVolume', 'effectsVolume',
     'reducedMotionToggle', 'resetProgressButton', 'resumeOverlay', 'resumeButton', 'toast'
@@ -334,11 +426,13 @@ function createTaskState(task) {
 function startSession(mode) {
   audio.unlock();
   const seed = Date.now();
+  const tasks = createSessionPlan(mode, profile, seed);
   session = {
     id: `session-${seed}`,
     seed,
     mode,
-    tasks: createSessionPlan(mode, profile, seed),
+    tasks,
+    playground: createPlaygroundPlan(seed, tasks.length),
     index: 0,
     completed: 0,
     built: [],
@@ -362,8 +456,10 @@ function renderGameShell() {
   for (let index = 0; index < session.tasks.length; index += 1) elements.jobProgress.appendChild(make('i', index < session.completed ? 'done' : ''));
   elements.playgroundStrip.replaceChildren();
   for (let index = 0; index < session.tasks.length; index += 1) {
-    const kind = PLAYGROUND_SEQUENCE[index];
-    elements.playgroundStrip.appendChild(make('span', `playground-piece${index < session.built.length ? ' built' : ''}`, PLAYGROUND_ICONS[kind]));
+    const item = session.playground.items[index];
+    const piece = make('span', `playground-piece${index < session.built.length ? ' built' : ''}`);
+    piece.appendChild(equipmentImage(item));
+    elements.playgroundStrip.appendChild(piece);
   }
 }
 
@@ -776,7 +872,7 @@ function finishCurrentTask() {
   profile = result.profile;
   if (result.awarded) {
     session.completed += 1;
-    session.built.push(PLAYGROUND_SEQUENCE[session.completed - 1]);
+    session.built.push({ ...session.playground.items[session.completed - 1] });
   }
   state.phase = 'playground-update';
   renderGameShell();
@@ -786,10 +882,12 @@ function finishCurrentTask() {
 }
 
 function renderPlaygroundUpdate() {
-  const kind = session.built.at(-1);
+  const item = session.built.at(-1);
   elements.taskStage.className = 'task-stage';
   const update = make('div', 'playground-update');
-  update.append(make('span', 'new-playground-piece', PLAYGROUND_ICONS[kind]), make('strong', '', `${session.completed} of ${session.tasks.length}`));
+  const reveal = make('span', 'new-playground-piece');
+  reveal.appendChild(equipmentImage(item));
+  update.append(reveal, make('strong', '', `${session.completed} of ${session.tasks.length}`));
   elements.taskStage.replaceChildren(update);
   elements.taskControls.replaceChildren();
   elements.taskControls.className = 'task-controls';
@@ -844,14 +942,16 @@ function nextTask() {
 function showCosmeticChoice(slot) {
   elements.cosmeticChoices.replaceChildren();
   const choices = slot === 2
-    ? [{ id: 'sunny-slide', icon: '🛝', label: 'Sunny', color: '#ffd94f' }, { id: 'berry-slide', icon: '🛝', label: 'Berry', color: '#ef5362' }]
-    : [{ id: 'star-flag', icon: '🚩⭐', label: 'Stars', color: '#7163c7' }, { id: 'rainbow-flag', icon: '🚩🌈', label: 'Rainbow', color: '#43b96a' }];
+    ? [{ id: 'sunny', icon: '☀️', label: 'Sunny', color: '#ffd94f', hue: 24 }, { id: 'berry', icon: '🫐', label: 'Berry', color: '#ef5362', hue: 318 }]
+    : [{ id: 'starlight', icon: '⭐', label: 'Stars', color: '#7163c7', hue: 260 }, { id: 'garden', icon: '🌈', label: 'Rainbow', color: '#43b96a', hue: 105 }];
   choices.forEach(choice => {
     const button = make('button', 'cosmetic-choice');
     button.type = 'button'; button.style.background = choice.color;
     button.append(make('b', '', choice.icon), make('span', '', choice.label));
     button.addEventListener('click', () => {
-      session.cosmetics[slot === 2 ? 'slide' : 'flag'] = choice.id;
+      session.cosmetics[`slot-${slot}`] = choice.id;
+      session.playground.items[slot - 1].hue = choice.hue;
+      session.built[slot - 1].hue = choice.hue;
       elements.cosmeticOverlay.hidden = true;
       nextTask();
     });
@@ -863,19 +963,30 @@ function showCosmeticChoice(slot) {
 function showFinale() {
   state.phase = 'finale';
   profile.sessionsCompleted += 1;
-  profile.playgrounds.push({ id: session.id, built: [...session.built], cosmetics: { ...session.cosmetics }, completedAt: Date.now() });
+  const playground = {
+    id: session.id,
+    seed: session.seed,
+    items: session.built.map(item => ({ ...item })),
+    cosmetics: { ...session.cosmetics },
+    completedAt: Date.now()
+  };
+  profile.playgrounds.push(playground);
   profile.playgrounds = profile.playgrounds.slice(-12);
   profile.checkpoint = null;
   saveProfile();
-  elements.finalePlayground.replaceChildren();
-  session.built.forEach(kind => {
-    const button = make('button', '', PLAYGROUND_ICONS[kind]);
-    button.type = 'button'; button.setAttribute('aria-label', `Play with the ${kind}`);
-    button.addEventListener('click', () => { button.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-18px) rotate(5deg)' }, { transform: 'translateY(0)' }], { duration: 500, easing: 'ease-out' }); audio.effect('hop'); });
-    elements.finalePlayground.appendChild(button);
-  });
+  renderPlayground(elements.finalePlayground, playground);
+  elements.finaleTitle.textContent = profile.settings.locale === 'pl' ? 'Zbudowaliśmy go!' : 'We built it!';
   elements.finaleOverlay.hidden = false;
   showPrompt(copy().finale, v1Audio('session-end'));
+}
+
+function openSavedPlayground(playgroundValue) {
+  state.phase = 'playground-view';
+  audio.stop();
+  elements.playgroundsOverlay.hidden = true;
+  renderPlayground(elements.finalePlayground, playgroundValue);
+  elements.finaleTitle.textContent = profile.settings.locale === 'pl' ? 'Twój plac zabaw' : 'Your playground';
+  elements.finaleOverlay.hidden = false;
 }
 
 function goHome() {
@@ -957,6 +1068,8 @@ function restoreCheckpoint() {
   const checkpoint = profile.checkpoint;
   if (!checkpoint?.session || !checkpoint.taskState) return false;
   session = checkpoint.session;
+  session.playground = normalizePlayground(session.playground || { id: session.id, seed: session.seed, built: session.built }, session.tasks.length);
+  session.built = session.playground.items.slice(0, session.completed).map(item => ({ ...item }));
   state.phase = checkpoint.phase;
   state.taskState = checkpoint.taskState;
   elements.homeScreen.hidden = true;
@@ -1016,8 +1129,8 @@ function renderSavedPlaygrounds() {
   [...profile.playgrounds].reverse().forEach(playground => {
     const card = make('button', 'saved-playground');
     card.type = 'button'; card.setAttribute('aria-label', 'Replay this completed playground');
-    playground.built.forEach(kind => card.appendChild(make('span', '', PLAYGROUND_ICONS[kind])));
-    card.addEventListener('click', () => { card.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.04)' }, { transform: 'scale(1)' }], { duration: 450 }); audio.effect('build'); });
+    const normalized = renderPlayground(card, playground, { interactive: false, limit: Math.min(playground.items?.length || playground.built?.length || 6, 8) });
+    card.addEventListener('click', () => { audio.effect('build'); openSavedPlayground(normalized); });
     elements.savedPlaygrounds.appendChild(card);
   });
 }

@@ -3,8 +3,16 @@ export const NUMBER_WORDS = Object.freeze([
   'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'
 ]);
 
-export const PLAYGROUND_SEQUENCE = Object.freeze([
-  'ground', 'slide', 'swing', 'seesaw', 'tunnel', 'flag', 'flowers', 'kite'
+export const PLAYGROUND_EQUIPMENT = Object.freeze([
+  'slide', 'swing', 'seesaw', 'tunnel', 'sandbox', 'climbing-dome',
+  'merry-go-round', 'spring-rider', 'trampoline', 'playhouse',
+  'stepping-pods', 'water-table'
+]);
+
+const PLAYGROUND_SLOTS = Object.freeze([
+  { x: 17, y: 29 }, { x: 50, y: 29 }, { x: 83, y: 29 },
+  { x: 17, y: 54 }, { x: 50, y: 54 }, { x: 83, y: 54 },
+  { x: 17, y: 79 }, { x: 50, y: 79 }, { x: 83, y: 79 }
 ]);
 
 export const JOIN_FACTS = Object.freeze([
@@ -54,6 +62,28 @@ export function shuffle(values, random = Math.random) {
     [result[index], result[swap]] = [result[swap], result[index]];
   }
   return result;
+}
+
+export function createPlaygroundPlan(seed = Date.now(), count = 6) {
+  const itemCount = Math.max(1, Math.min(Number(count) || 6, PLAYGROUND_SLOTS.length, PLAYGROUND_EQUIPMENT.length));
+  const random = createSeededRandom(`playground:${seed}`);
+  const kinds = shuffle(PLAYGROUND_EQUIPMENT, random).slice(0, itemCount);
+  const slots = shuffle(PLAYGROUND_SLOTS, random).slice(0, itemCount);
+  const baseHue = Math.floor(random() * 360);
+  return {
+    id: `playground-${seed}`,
+    seed: String(seed),
+    items: kinds.map((kind, index) => ({
+      id: `${kind}-${index + 1}`,
+      kind,
+      x: Number((slots[index].x + (random() - 0.5) * 2.4).toFixed(2)),
+      y: Number((slots[index].y + (random() - 0.5) * 1.6).toFixed(2)),
+      width: 22,
+      rotation: Number(((random() - 0.5) * 5).toFixed(2)),
+      hue: Math.round((baseHue + index * 43 + random() * 22) % 360),
+      z: Math.round(slots[index].y)
+    }))
+  };
 }
 
 export function generateJoinOptions({ a, b }, {

@@ -6,6 +6,7 @@ import {
   canAdvance,
   commitResolution,
   createDefaultProfile,
+  createPlaygroundPlan,
   createSessionPlan,
   createToyState,
   generateJoinOptions,
@@ -172,6 +173,32 @@ test('resolution IDs make playground awards idempotent', () => {
   assert.equal(first.awarded, true);
   assert.equal(duplicate.awarded, false);
   assert.equal(duplicate.profile.outcomes.length, 1);
+});
+
+test('playground plans are deterministic, varied, and never repeat equipment in a session', () => {
+  const first = createPlaygroundPlan('lesson-1', 8);
+  const repeat = createPlaygroundPlan('lesson-1', 8);
+  const next = createPlaygroundPlan('lesson-2', 8);
+  assert.deepEqual(first, repeat);
+  assert.equal(first.items.length, 8);
+  assert.equal(new Set(first.items.map(item => item.kind)).size, 8);
+  assert.equal(new Set(first.items.map(item => item.hue)).size, 8);
+  assert.notDeepEqual(first.items, next.items);
+});
+
+test('playground equipment slots keep their tap-sized boxes apart', () => {
+  for (let seed = 0; seed < 50; seed += 1) {
+    const items = createPlaygroundPlan(seed, 8).items;
+    for (let left = 0; left < items.length; left += 1) {
+      for (let right = left + 1; right < items.length; right += 1) {
+        const a = items[left];
+        const b = items[right];
+        const overlapsX = Math.abs(a.x - b.x) < (a.width + b.width) / 2;
+        const overlapsY = Math.abs(a.y - b.y) < 22;
+        assert.equal(overlapsX && overlapsY, false, `${a.kind} overlaps ${b.kind} for seed ${seed}`);
+      }
+    }
+  }
 });
 
 test('first adventure follows the six-job join and sharing structure', () => {
