@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Ten's Number Magic",
-  "short_name": "Ten's Magic",
-  "description": "A playful, offline number-making world guided by Ten.",
+  "name": "Ten's Number Playground",
+  "short_name": "Ten's Playground",
+  "description": "A tap-first, offline arithmetic playground guided by Ten.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",

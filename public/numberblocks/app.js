@@ -1,1150 +1,1146 @@
 import {
-  RANGE_PRESETS,
-  advanceLearning,
-  answerChoices,
-  createMissionPlan,
-  learningStatus,
-  nextSplitStep,
-  normalizeLearningSettings,
-  rangeForLearning,
-  recordFactResult,
-  missionAudioName
-} from './missions.js';
+  GAME_VERSION,
+  PLAYGROUND_SEQUENCE,
+  NUMBER_WORDS,
+  commitResolution,
+  createDefaultProfile,
+  createSessionPlan,
+  createToyState,
+  easierReplacement,
+  factFamily,
+  returnOneToy,
+  sendNextToy,
+  toyCounts,
+  toyStateIsValid,
+  undoToyMove,
+  validateShare
+} from './game-model.js';
 
-const STORAGE_KEY = 'tens-number-missions-v2';
-const LEGACY_STORAGE_KEY = 'tens-number-magic-v1';
-const NUMBER_NAMES = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-const CHARACTER_DATA = {
-  1: { columns: 1, color: '#ef4e55' },
-  2: { columns: 1, color: '#f28b35' },
-  3: { columns: 1, color: '#f1c92f' },
-  4: { columns: 2, color: '#55b764' },
-  5: { columns: 1, color: '#28a7df' },
-  6: { columns: 2, color: '#6561bf' },
-  7: { columns: 1, color: '#62a7ce' },
-  8: { columns: 2, color: '#eb5da4' },
-  9: { columns: 3, color: '#98a1aa' },
-  10: { columns: 2, color: '#ef4e55' }
+const STORAGE_KEY = 'tens-playground-v3';
+const WELCOME_KEY = 'tens-playground-welcomed-v1';
+const COLORS = ['#ef5362', '#f28d3a', '#f0c93e', '#48b96a', '#2c9fdb', '#7163c7', '#e861a5', '#78919f', '#35aaa0', '#ef5362'];
+const TOY_ICONS = { teddies: '🧸', cars: '🚗', ducks: '🦆' };
+const PLAYGROUND_ICONS = { ground: '🟩', slide: '🛝', swing: '🎠', seesaw: '⚖️', tunnel: '🌈', flag: '🚩', flowers: '🌼', kite: '🪁' };
+
+const COPY = {
+  en: {
+    welcome: "Hi! Let's build a playground together!",
+    joinAsk: task => `${cap(task.a)} and ${NUMBER_WORDS[task.b]}. How many altogether?`,
+    joinResult: task => `${cap(task.a)} and ${NUMBER_WORDS[task.b]} make ${NUMBER_WORDS[task.sum]}!`,
+    joinLook: "Let's look at the blocks.",
+    joinCount: "Let's count together.",
+    joinTap: task => `${cap(task.sum)} blocks altogether. Tap ${NUMBER_WORDS[task.sum]}.`,
+    shareTarget: task => `${cap(task.total)} toys. Give your sister ${NUMBER_WORDS[task.target.count]}. The rest are for you.`,
+    shareFree: task => `Share these ${NUMBER_WORDS[task.total]} toys between both baskets.`,
+    shareEqual: task => `${cap(task.total)} toys. Give each of you the same number. Use all the toys.`,
+    shareRemainder: task => `${cap(task.total)} whole toys. Give each of you the same number. Leave the extra toy on the tray.`,
+    shareParts: counts => `${cap(counts.left)} and ${NUMBER_WORDS[counts.right]}. ${cap(counts.left + counts.right)} altogether.`,
+    shareEqualResult: counts => `${cap(counts.left)} each. The same number!`,
+    shareRemainderResult: counts => `${cap(counts.left)} each, and one left over.`,
+    useAll: 'Use all the toys.',
+    bothGroups: 'Put at least one toy in each basket.',
+    target: task => `Your sister needs ${NUMBER_WORDS[task.target.count]}. Let's count hers.`,
+    unmatched: "These don't have a partner. Can you make the groups the same?",
+    morePairs: 'There are enough for one more each.',
+    putBack: 'One basket has more. Put one back.',
+    next: 'Next playground job!',
+    finale: 'We built it! All done, or play again?'
+  },
+  pl: {
+    welcome: 'Cześć! Zbudujmy razem plac zabaw!',
+    joinAsk: task => `${capPl(task.a)} i ${plWord(task.b)}. Ile jest razem?`,
+    joinResult: task => `${capPl(task.a)} i ${plWord(task.b)} to razem ${plWord(task.sum)}!`,
+    joinLook: 'Spójrzmy na klocki.',
+    joinCount: 'Policzmy razem.',
+    joinTap: task => `Razem jest ${plWord(task.sum)} klocków. Dotknij ${plWord(task.sum)}.`,
+    shareTarget: task => `Jest ${plWord(task.total)} zabawek. Daj siostrze ${plWord(task.target.count)}. Reszta jest dla ciebie.`,
+    shareFree: task => `Rozdziel ${plWord(task.total)} zabawek do dwóch koszyków.`,
+    shareEqual: task => `${capPl(task.total)} zabawki. Daj każdemu tyle samo. Użyj wszystkich zabawek.`,
+    shareRemainder: task => `${capPl(task.total)} zabawek. Daj każdemu tyle samo. Zostaw dodatkową zabawkę na tacy.`,
+    shareParts: counts => `${capPl(counts.left)} i ${plWord(counts.right)}. Razem ${plWord(counts.left + counts.right)}.`,
+    shareEqualResult: counts => `Każdy ma ${plWord(counts.left)}. Tyle samo!`,
+    shareRemainderResult: counts => `Każdy ma ${plWord(counts.left)}, a jedna została.`,
+    useAll: 'Użyj wszystkich zabawek.',
+    bothGroups: 'Włóż co najmniej jedną zabawkę do każdego koszyka.',
+    target: task => `Siostra potrzebuje ${plWord(task.target.count)}. Policzmy jej zabawki.`,
+    unmatched: 'Te zabawki nie mają pary. Czy grupy mogą być takie same?',
+    morePairs: 'Wystarczy zabawek, żeby dać każdemu jeszcze jedną.',
+    putBack: 'W jednym koszyku jest więcej. Odłóż jedną zabawkę.',
+    next: 'Następne zadanie!',
+    finale: 'Zbudowaliśmy plac zabaw! Koniec czy gramy jeszcze raz?'
+  }
 };
 
+const UI_COPY = {
+  en: {
+    homeTitle: 'What shall we play?', adventure: 'Adventure', adventureHint: 'Build a playground',
+    join: 'Bump Together', joinHint: 'How many altogether?', share: 'Share the Toys', shareHint: 'One toy at a time',
+    playgrounds: 'My playgrounds', play: 'Play', you: 'You', sister: 'Sister', help: 'Help', check: 'Check ✓',
+    titles: { adventure: 'ADVENTURE', join: 'BUMP TOGETHER', share: 'SHARE THE TOYS' }
+  },
+  pl: {
+    homeTitle: 'W co się pobawimy?', adventure: 'Przygoda', adventureHint: 'Zbuduj plac zabaw',
+    join: 'Połącz razem', joinHint: 'Ile jest razem?', share: 'Podziel zabawki', shareHint: 'Po jednej zabawce',
+    playgrounds: 'Moje place zabaw', play: 'Graj', you: 'Ty', sister: 'Siostra', help: 'Pomoc', check: 'Sprawdź ✓',
+    titles: { adventure: 'PRZYGODA', join: 'POŁĄCZ RAZEM', share: 'PODZIEL ZABAWKI' }
+  }
+};
+
+const PL_WORDS = ['zero', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć', 'sześć', 'siedem', 'osiem', 'dziewięć', 'dziesięć'];
 const elements = {};
+let profile = loadProfile();
+let session = null;
+let toastTimer = null;
+let parentHoldTimer = null;
+let helpPulseTimer = null;
+let idleTimer = null;
+
 const state = {
-  sound: true,
-  gentleMotion: false,
-  audioUnlocked: false,
-  offlineReady: false,
-  progress: { sessionsCompleted: 0, factWins: {}, mistakes: 0 },
-  learning: normalizeLearningSettings(),
-  session: [],
-  missionIndex: 0,
   phase: 'home',
-  counts: [0, 0],
-  splitParts: [],
-  splitCount: 0,
-  choices: [],
-  missionMistake: false,
-  newLevel: null,
-  prompt: { file: 'welcome.mp3', text: '' },
-  phaseToken: 0,
-  celebrationTimer: null,
-  transitionTimer: null,
-  toastTimer: null,
-  resetArmedUntil: 0
+  token: 0,
+  taskState: null,
+  prompt: { text: '', file: null },
+  paused: false,
+  audioFailed: false
 };
 
-class SoundStudio {
+function cap(number) {
+  const word = NUMBER_WORDS[number] || String(number);
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+function plWord(number) { return PL_WORDS[number] || String(number); }
+function capPl(number) { const word = plWord(number); return word.charAt(0).toUpperCase() + word.slice(1); }
+function copy() { return COPY[profile.settings.locale] || COPY.en; }
+function ui() { return UI_COPY[profile.settings.locale] || UI_COPY.en; }
+function make(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+function delay(milliseconds, token = state.token) {
+  return new Promise(resolve => setTimeout(() => resolve(token === state.token && !state.paused), milliseconds));
+}
+
+class AudioDirector {
   constructor() {
-    this.context = null;
     this.voice = new Audio();
     this.voice.preload = 'auto';
-    this.voice.volume = .94;
-    this.voiceToken = 0;
+    this.context = null;
+    this.token = 0;
+    this.voice.addEventListener('error', () => {
+      if (!this.voice.src) return;
+      state.audioFailed = true;
+      elements.audioRetryButton.hidden = false;
+    });
   }
-
   unlock() {
-    if (!state.sound) return;
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (AudioContextClass && !this.context) this.context = new AudioContextClass();
     if (this.context?.state === 'suspended') this.context.resume().catch(() => {});
-    state.audioUnlocked = true;
     this.effect('tap');
   }
-
-  stopVoice() {
-    this.voiceToken += 1;
+  stop() {
+    this.token += 1;
     this.voice.pause();
     this.voice.removeAttribute('src');
   }
-
-  speak(filename) {
-    if (!state.sound || !state.audioUnlocked || !filename) return;
-    const token = ++this.voiceToken;
-    this.voice.pause();
-    this.voice.src = `audio/${filename}`;
+  speak(file) {
+    this.stop();
+    elements.audioRetryButton.hidden = true;
+    state.audioFailed = false;
+    if (!file || profile.settings.narrationVolume <= 0) return;
+    const token = this.token;
+    this.voice.volume = profile.settings.narrationVolume;
+    this.voice.src = `audio/${file}`;
     this.voice.currentTime = 0;
     this.voice.play().catch(() => {
-      if (token !== this.voiceToken) return;
-      showToast('Voice file unavailable. Please ask a grown-up to reopen the app online.');
+      if (token !== this.token) return;
+      state.audioFailed = true;
+      elements.audioRetryButton.hidden = false;
     });
   }
-
   effect(kind) {
-    if (!state.sound || !state.audioUnlocked || !this.context) return;
+    if (!this.context || profile.settings.effectsVolume <= 0) return;
     if (this.context.state === 'suspended') this.context.resume().catch(() => {});
-    const now = this.context.currentTime;
     const patterns = {
-      tap: [[420, 610, 0, .065, .05]],
-      block: [[310, 470, 0, .11, .055]],
-      snap: [[360, 650, 0, .15, .06], [620, 790, .08, .18, .04]],
-      join: [[280, 390, 0, .18, .06], [390, 620, .07, .26, .055]],
-      wrong: [[330, 260, 0, .13, .04]],
-      discover: [[523, 660, 0, .2, .055], [659, 830, .1, .26, .05], [784, 990, .2, .32, .045]],
-      back: [[460, 330, 0, .09, .045]]
+      tap: [[430, 570, .055]],
+      hop: [[330, 520, .09]],
+      boop: [[420, 680, .12]],
+      build: [[392, 650, .14], [520, 830, .2]],
+      undo: [[500, 350, .09]]
     };
-    (patterns[kind] || patterns.tap).forEach(([from, to, delay, duration, volume]) => {
+    const now = this.context.currentTime;
+    const duck = this.voice.paused ? 1 : 0.32;
+    (patterns[kind] || patterns.tap).forEach(([from, to, duration], index) => {
       const oscillator = this.context.createOscillator();
       const gain = this.context.createGain();
-      oscillator.type = kind === 'discover' ? 'sine' : 'triangle';
-      oscillator.frequency.setValueAtTime(from, now + delay);
-      oscillator.frequency.exponentialRampToValueAtTime(to, now + delay + duration);
-      gain.gain.setValueAtTime(.0001, now + delay);
-      gain.gain.exponentialRampToValueAtTime(volume, now + delay + .018);
-      gain.gain.exponentialRampToValueAtTime(.0001, now + delay + duration);
+      oscillator.type = 'triangle';
+      oscillator.frequency.setValueAtTime(from, now + index * .07);
+      oscillator.frequency.exponentialRampToValueAtTime(to, now + index * .07 + duration);
+      gain.gain.setValueAtTime(.0001, now + index * .07);
+      gain.gain.exponentialRampToValueAtTime(.045 * profile.settings.effectsVolume * duck, now + index * .07 + .018);
+      gain.gain.exponentialRampToValueAtTime(.0001, now + index * .07 + duration);
       oscillator.connect(gain).connect(this.context.destination);
-      oscillator.start(now + delay);
-      oscillator.stop(now + delay + duration + .02);
+      oscillator.start(now + index * .07);
+      oscillator.stop(now + index * .07 + duration + .03);
     });
   }
 }
 
-const sounds = new SoundStudio();
+const audio = new AudioDirector();
 
-function loadState() {
+function loadProfile() {
   try {
-    const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || '{}');
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    state.sound = stored.sound ?? legacy.sound ?? true;
-    state.gentleMotion = stored.gentleMotion ?? legacy.gentleMotion ?? false;
-    state.learning = normalizeLearningSettings(stored.learning || {});
-    if (stored.progress && typeof stored.progress === 'object') {
-      state.progress = {
-        sessionsCompleted: Number(stored.progress.sessionsCompleted || 0),
-        factWins: stored.progress.factWins || {},
-        factStats: stored.progress.factStats || {},
-        mistakes: Number(stored.progress.mistakes || 0)
-      };
-    }
+    if (Number(stored.version || 0) > GAME_VERSION) return createDefaultProfile({ settings: stored.settings });
+    const loaded = createDefaultProfile(stored);
+    if (loaded.checkpoint && !checkpointIsValid(loaded.checkpoint)) loaded.checkpoint = null;
+    return loaded;
   } catch {
-    // A fresh session still works if local storage is unavailable.
+    return createDefaultProfile();
   }
 }
 
-function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      sound: state.sound,
-      gentleMotion: state.gentleMotion,
-      learning: state.learning,
-      progress: state.progress
-    }));
-  } catch {
-    // Device-local persistence is helpful but never blocks play.
-  }
+function checkpointIsValid(checkpoint) {
+  const savedSession = checkpoint?.session;
+  if (!savedSession || !Array.isArray(savedSession.tasks) || !savedSession.tasks.length) return false;
+  if (!Number.isInteger(savedSession.index) || savedSession.index < 0 || savedSession.index >= savedSession.tasks.length) return false;
+  if (!Number.isInteger(savedSession.completed) || savedSession.completed < 0 || savedSession.completed > savedSession.tasks.length) return false;
+  if (!Array.isArray(savedSession.built) || savedSession.built.length !== savedSession.completed) return false;
+  const task = savedSession.tasks[savedSession.index];
+  if (!task || !['join', 'share'].includes(task.kind) || !checkpoint.taskState) return false;
+  if (task.kind === 'share' && (!toyStateIsValid(checkpoint.taskState.toys) || checkpoint.taskState.toys.total !== task.total)) return false;
+  return ['question', 'evaluating', 'help', 'resolving', 'playground-update'].includes(checkpoint.phase);
+}
+
+function saveProfile() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); } catch { showToast('Progress may not stay on this device.'); }
 }
 
 function cacheElements() {
   [
-    'homeScreen', 'playScreen', 'homeMentor', 'playMentor', 'welcomeMentor',
-    'missionButton', 'homeProgress', 'offlinePill', 'offlineLabel', 'playTitle',
-    'backButton', 'mentorText', 'replayButton', 'missionStage', 'missionProgress',
-    'equation', 'welcomeOverlay', 'startButton', 'settingsButton', 'settingsOverlay',
-    'closeSettingsButton', 'soundToggle', 'motionToggle', 'settingsOfflineDot',
-    'settingsOfflineTitle', 'settingsOfflineCopy', 'installInstructions',
-    'installedMessage', 'learningSummary', 'masteryCount', 'settingsRangeChoices',
-    'autoAdvanceToggle', 'rangeOverlay', 'setupRangeChoices', 'setupAutoAdvance',
-    'saveRangeButton', 'restartRangeButton', 'resetProgressButton', 'toast', 'celebration'
+    'app', 'homeScreen', 'gameScreen', 'offlineStatus', 'parentHoldButton', 'homeTen', 'homeTitle', 'adventureButton',
+    'adventureLabel', 'adventureHint', 'joinLabel', 'joinHint', 'shareLabel', 'shareHint', 'playgroundsLabel', 'firstPlayLabel',
+    'joinButton', 'shareButton', 'playgroundsButton', 'playgroundCount', 'gameTitle', 'jobProgress',
+    'playgroundStrip', 'playTen', 'promptText', 'audioRetryButton', 'taskStage', 'taskControls',
+    'resultAnnouncement', 'leaveButton', 'replayButton', 'firstVisitOverlay', 'welcomeTen', 'firstPlayButton',
+    'helpOverlay', 'showHelpButton', 'resetTaskButton', 'skipTaskButton', 'cosmeticOverlay', 'choiceTen',
+    'cosmeticChoices', 'finaleOverlay', 'finalePlayground', 'finaleTen', 'allDoneButton', 'anotherButton',
+    'playgroundsOverlay', 'savedPlaygrounds', 'parentOverlay', 'learningSummary', 'rangeButtons',
+    'lengthButtons', 'autoAdvanceToggle', 'remaindersToggle', 'narrationVolume', 'effectsVolume',
+    'reducedMotionToggle', 'resetProgressButton', 'resumeOverlay', 'resumeButton', 'toast'
   ].forEach(id => { elements[id] = document.getElementById(id); });
-  elements.soundButtons = [...document.querySelectorAll('[data-sound-button]')];
 }
 
-function numberName(number, capitalized = false) {
-  const value = NUMBER_NAMES[number] || String(number);
-  return capitalized ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+function layoutColumns(number) {
+  if (number === 10) return 5;
+  if (number >= 8) return 4;
+  if (number >= 4) return 2;
+  return 1;
 }
 
-function blockNoun(number) {
-  return number === 1 ? 'block' : 'blocks';
-}
-
-function characterColor(number) {
-  return CHARACTER_DATA[number]?.color || '#526080';
-}
-
-function makeElement(tag, className, text) {
-  const element = document.createElement(tag);
-  if (className) element.className = className;
-  if (text !== undefined) element.textContent = text;
-  return element;
-}
-
-function createCharacter(number) {
-  const data = CHARACTER_DATA[number];
-  const rows = Math.ceil(number / data.columns);
-  const character = makeElement('div', `number-character n${number}`);
-  character.style.setProperty('--cols', data.columns);
-  character.style.setProperty('--rows', rows);
-  character.style.setProperty('--character-color', data.color);
-  character.setAttribute('aria-hidden', 'true');
-
-  const numberling = makeElement('span', 'numberling', number);
-  const body = makeElement('div', 'body-wrap');
-  const grid = makeElement('div', 'cube-grid');
+function createNumberFriend(number, { prefix = 'unit', color = COLORS[number - 1], slots = false } = {}) {
+  const cols = layoutColumns(number);
+  const friend = make('div', `number-friend number-${number}`);
+  friend.style.setProperty('--cols', cols);
+  friend.style.setProperty('--rows', Math.ceil(number / cols));
+  friend.style.setProperty('--unit-color', color);
+  const numeral = make('span', 'friend-number', number);
+  const body = make('div', 'friend-body');
+  const grid = make('div', 'friend-grid');
   for (let index = 0; index < number; index += 1) {
-    const cube = makeElement('span', 'cube');
-    cube.dataset.cubeIndex = String(index);
-    grid.appendChild(cube);
+    const unit = make('span', slots ? 'result-slot' : 'quantity-unit');
+    if (!slots) unit.dataset.unitId = `${prefix}-${index + 1}`;
+    grid.appendChild(unit);
   }
+  const face = make('span', 'friend-face');
+  face.append(make('i'), make('i'));
+  body.append(grid, face, make('span', 'friend-arms'));
+  friend.append(numeral, body);
+  return friend;
+}
 
-  const face = makeElement('span', `character-face${number === 5 || number === 10 ? ' star-eyes' : ''}`);
-  face.append(makeElement('span', 'eye'), makeElement('span', 'eye'));
-  const mouth = makeElement('span', 'mouth');
+function createToyQuantity(number, { prefix = 'toy-unit', slots = false } = {}) {
+  const cols = layoutColumns(number);
+  const friend = make('div', 'number-friend toy-quantity-friend');
+  friend.style.setProperty('--cols', cols);
+  friend.style.setProperty('--rows', Math.ceil(number / cols));
+  const numeral = make('span', 'friend-number', number);
+  const body = make('div', 'friend-body');
+  const grid = make('div', 'friend-grid');
+  for (let index = 0; index < number; index += 1) {
+    const unit = make('span', slots ? 'result-slot' : 'quantity-unit join-toy-unit', slots ? undefined : '🧸');
+    if (!slots) unit.dataset.unitId = `${prefix}-${index + 1}`;
+    grid.appendChild(unit);
+  }
   body.appendChild(grid);
-  if (number === 8) body.appendChild(makeElement('span', 'mask'));
-  if (number === 4) body.append(makeElement('span', 'brow brow-left'), makeElement('span', 'brow brow-right'));
-  if (number === 6) {
-    const spots = makeElement('span', 'six-spots');
-    for (let index = 0; index < 6; index += 1) spots.appendChild(makeElement('span'));
-    body.appendChild(spots);
-  }
-  if (number === 7) body.appendChild(makeElement('span', 'rainbow-hair'));
-  body.append(face, mouth);
-
-  ['left', 'right'].forEach(side => {
-    const arm = makeElement('span', `arm arm-${side}`);
-    arm.appendChild(makeElement('span', 'hand'));
-    body.appendChild(arm);
-    const leg = makeElement('span', `leg leg-${side}`);
-    leg.appendChild(makeElement('span', 'foot'));
-    body.appendChild(leg);
-  });
-  character.append(numberling, body);
-  return character;
+  friend.append(numeral, body);
+  return friend;
 }
 
-function characterHost(number, className = 'mission-character') {
-  const host = makeElement('span', `character-host ${className}`);
-  host.appendChild(createCharacter(number));
-  return host;
-}
-
-function renderMentors() {
-  [elements.homeMentor, elements.playMentor, elements.welcomeMentor].forEach(host => {
-    host.replaceChildren(createCharacter(10));
+function renderTens() {
+  ['homeTen', 'welcomeTen', 'playTen', 'choiceTen', 'finaleTen'].forEach(id => {
+    elements[id].replaceChildren(createNumberFriend(10, { prefix: `${id}-ten`, color: COLORS[9] }));
   });
 }
 
-function updatePreferenceUi() {
-  document.documentElement.classList.toggle('sound-muted', !state.sound);
-  document.documentElement.classList.toggle('gentle', state.gentleMotion);
-  elements.soundToggle.checked = state.sound;
-  elements.motionToggle.checked = state.gentleMotion;
-  elements.autoAdvanceToggle.checked = state.learning.autoAdvance;
-  elements.setupAutoAdvance.checked = state.learning.autoAdvance;
-  document.querySelectorAll('input[data-range-preset]').forEach(input => {
-    input.checked = input.value === state.learning.preset;
-  });
-  elements.soundButtons.forEach(button => {
-    button.setAttribute('aria-label', state.sound ? 'Turn sound off' : 'Turn sound on');
-  });
-  updateLearningSummary();
+function showPrompt(text, file = null, speak = true) {
+  state.prompt = { text, file };
+  elements.promptText.textContent = text;
+  if (speak) audio.speak(file);
 }
 
-function renderRangeChoices(container, name) {
-  container.replaceChildren();
-  RANGE_PRESETS.forEach(preset => {
-    const label = makeElement('label', 'range-choice');
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.name = name;
-    input.value = preset.id;
-    input.dataset.rangePreset = preset.id;
-    input.checked = preset.id === state.learning.preset;
-    const copy = makeElement('span', 'range-choice-copy');
-    copy.append(makeElement('strong', '', preset.label), makeElement('small', '', preset.description));
-    label.append(input, copy, makeElement('i', '', '✓'));
-    container.appendChild(label);
-  });
+function joinAudio(task, kind) {
+  return v1Audio(`join-${kind}-${task.a}-${task.b}`);
 }
 
-function updateLearningSummary() {
-  const status = learningStatus(state.progress, state.learning);
-  const range = rangeForLearning(state.learning);
-  const displayedMin = range.minSum <= 2 ? 1 : range.minSum;
-  const remaining = Math.max(0, status.needed - status.frontierMastered);
-  if (state.learning.autoAdvance && status.maxSum < 10) {
-    elements.learningSummary.textContent = `Working with ${displayedMin}–${status.maxSum}. ${remaining} more strong ${remaining === 1 ? 'fact' : 'facts'} to unlock ${status.maxSum + 1}.`;
-  } else if (state.learning.autoAdvance) {
-    elements.learningSummary.textContent = `Working with ${displayedMin}–10. The full range is unlocked.`;
-  } else {
-    elements.learningSummary.textContent = `Working with ${displayedMin}–${status.maxSum}. The range is fixed here.`;
-  }
-  elements.masteryCount.textContent = `${status.frontierMastered}/${status.frontierTotal} strong`;
+function v1Audio(id) {
+  return profile.settings.locale === 'en' ? `v1-${id}-en.mp3` : `v1-${id}-pl.mp3`;
 }
 
-function setLearningPreset(preset, autoAdvance = state.learning.autoAdvance) {
-  state.learning = normalizeLearningSettings({ configured: true, preset, autoAdvance });
-  saveState();
-  updatePreferenceUi();
-  renderHomeProgress();
+function taskPrompt(task) {
+  if (task.kind === 'join') return { text: copy().joinAsk(task), file: joinAudio(task, 'ask') };
+  if (task.goal === 'targetRecipient') return { text: copy().shareTarget(task), file: v1Audio(`share-target-${task.total}-${task.target.recipient}-${task.target.count}`) };
+  if (task.goal === 'freeGroups') return { text: copy().shareFree(task), file: v1Audio(`share-free-${task.total}`) };
+  if (task.goal === 'equalAll') return { text: copy().shareEqual(task), file: v1Audio(`share-equal-${task.total}`) };
+  return { text: copy().shareRemainder(task), file: v1Audio(`share-remainder-${task.total}`) };
 }
 
-function renderHomeProgress() {
-  elements.homeProgress.replaceChildren();
-  const completed = state.progress.sessionsCompleted;
-  const range = rangeForLearning(state.learning);
-  const label = makeElement('span', 'home-progress-label', completed
-    ? `${completed} ${completed === 1 ? 'mission set' : 'mission sets'} · working up to ${range.maxSum}`
-    : `Your first mission is ready · starting up to ${range.maxSum}`);
-  const stars = makeElement('span', 'home-progress-stars');
-  for (let index = 0; index < 3; index += 1) stars.appendChild(makeElement('i', index < Math.min(3, completed) ? 'earned' : '', '★'));
-  elements.homeProgress.append(stars, label);
+function currentTask() { return session?.tasks[session.index]; }
+
+function createTaskState(task) {
+  return task.kind === 'join' ? {
+    wrongSubmissions: 0,
+    firstAttemptCorrect: null,
+    assistance: task.teachingDemo ? ['demo'] : [],
+    disabledAnswers: [],
+    guided: false,
+    modelAnswer: false,
+    resolutionId: null
+  } : {
+    toys: createToyState(task.total),
+    wrongSubmissions: 0,
+    firstAttemptCorrect: null,
+    assistance: task.teachingDemo ? ['demo'] : [],
+    transferLocked: false,
+    lastMoved: null,
+    feedback: null,
+    resolutionId: null
+  };
 }
 
-function clearPhaseTimers() {
-  state.phaseToken += 1;
-  clearTimeout(state.celebrationTimer);
-  clearTimeout(state.transitionTimer);
-  state.celebrationTimer = null;
-  state.transitionTimer = null;
-}
-
-function setPrompt(file, text, repeatAfter = true) {
-  state.prompt = { file, text };
-  elements.mentorText.textContent = text;
-  sounds.speak(file, text);
-  if (!repeatAfter) return;
-  const token = state.phaseToken;
-  setTimeout(() => {
-    if (state.phaseToken === token && !document.hidden && state.phase !== 'success') sounds.speak(file, text);
-  }, 7200);
-}
-
-function currentMission() {
-  return state.session[state.missionIndex];
-}
-
-function startSession() {
-  clearPhaseTimers();
-  sounds.unlock();
-  state.session = createMissionPlan(state.progress, Math.random, state.learning);
-  state.missionIndex = 0;
-  state.newLevel = null;
+function startSession(mode) {
+  audio.unlock();
+  const seed = Date.now();
+  session = {
+    id: `session-${seed}`,
+    seed,
+    mode,
+    tasks: createSessionPlan(mode, profile, seed),
+    index: 0,
+    completed: 0,
+    built: [],
+    cosmetics: {},
+    startedAt: Date.now()
+  };
+  state.phase = 'question';
+  state.taskState = createTaskState(currentTask());
+  state.token += 1;
   elements.homeScreen.hidden = true;
-  elements.playScreen.hidden = false;
-  startMission();
+  elements.gameScreen.hidden = false;
+  renderGameShell();
+  renderTask();
+  saveCheckpoint();
 }
 
-function startMission() {
-  clearPhaseTimers();
-  const mission = currentMission();
-  state.counts = [0, 0];
-  state.splitParts = [];
-  state.splitCount = 0;
-  state.choices = answerChoices(mission.fact.sum);
-  state.missionMistake = false;
-  state.phase = mission.mode === 'forward' ? 'build-first' : 'split';
-  renderMission();
-  if (mission.mode === 'forward') {
-    setPrompt(`mission-build-first-${mission.fact.a}.mp3`, `First, build ${numberName(mission.fact.a)}! Drag blocks into the glowing spot.`);
-  } else {
-    setPrompt(missionAudioName('split', mission.fact), `Here is ${numberName(mission.fact.sum)}. Pull one block at a time to make ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}!`);
+function renderGameShell() {
+  if (!session) return;
+  elements.gameTitle.textContent = ui().titles[session.mode];
+  elements.jobProgress.replaceChildren();
+  for (let index = 0; index < session.tasks.length; index += 1) elements.jobProgress.appendChild(make('i', index < session.completed ? 'done' : ''));
+  elements.playgroundStrip.replaceChildren();
+  for (let index = 0; index < session.tasks.length; index += 1) {
+    const kind = PLAYGROUND_SEQUENCE[index];
+    elements.playgroundStrip.appendChild(make('span', `playground-piece${index < session.built.length ? ' built' : ''}`, PLAYGROUND_ICONS[kind]));
   }
+}
+
+function clearTaskTimers() {
+  clearTimeout(helpPulseTimer);
+  clearTimeout(idleTimer);
+}
+
+function armInactivity() {
+  clearTaskTimers();
+  helpPulseTimer = setTimeout(() => elements.taskControls.querySelector('.help-button')?.classList.add('pulse'), 10000);
+  idleTimer = setTimeout(() => elements.taskStage.classList.add('quiet-idle'), 30000);
+}
+
+function renderTask({ speak = true } = {}) {
+  const task = currentTask();
+  if (!task) return;
+  clearTaskTimers();
+  elements.taskStage.className = `task-stage task-${task.kind}`;
+  elements.taskStage.replaceChildren();
+  elements.taskControls.replaceChildren();
+  if (task.kind === 'join') renderJoinTask(task);
+  else renderShareTask(task);
+  const prompt = taskPrompt(task);
+  showPrompt(prompt.text, prompt.file, speak);
+  armInactivity();
+  saveCheckpoint();
+}
+
+function renderJoinTask(task) {
+  const stage = make('div', 'join-stage');
+  const left = make('div', 'join-group join-group-left');
+  const leftQuantity = task.representation === 'toys'
+    ? createToyQuantity(task.a, { prefix: `${task.id}-a` })
+    : createNumberFriend(task.a, { prefix: `${task.id}-a`, color: COLORS[task.a - 1] });
+  left.append(make('span', 'source-outline'), leftQuantity);
+  const right = make('div', 'join-group join-group-right');
+  const rightQuantity = task.representation === 'toys'
+    ? createToyQuantity(task.b, { prefix: `${task.id}-b` })
+    : createNumberFriend(task.b, { prefix: `${task.id}-b`, color: COLORS[task.b - 1] });
+  right.append(make('span', 'source-outline'), rightQuantity);
+  stage.append(left, make('span', 'join-plus', '+'), right, make('span', 'join-spark', '✦'));
+  elements.taskStage.appendChild(stage);
+  renderJoinControls(task);
+}
+
+function renderJoinControls(task) {
+  elements.taskControls.replaceChildren();
+  elements.taskControls.className = 'task-controls join-task-controls';
+  const panel = make('div', 'answer-panel');
+  const taskState = state.taskState;
+  const options = taskState.guided
+    ? [task.sum, ...task.options.filter(value => value !== task.sum && !taskState.disabledAnswers.includes(value)).slice(0, 1)]
+    : task.options;
+  options.forEach(value => {
+    const button = make('button', `answer-card${taskState.disabledAnswers.includes(value) ? ' wrong' : ''}${taskState.modelAnswer && value === task.sum ? ' guided' : ''}`);
+    button.type = 'button';
+    button.dataset.answer = String(value);
+    button.disabled = taskState.disabledAnswers.includes(value) || state.phase !== 'question';
+    button.setAttribute('aria-label', `${cap(value)} blocks`);
+    button.appendChild(make('span', 'answer-numeral', value));
+    if (task.answerSupport !== 'numeralOnly') button.appendChild(quantityFrame(value));
+    else button.classList.add('numeral-only');
+    button.addEventListener('click', () => chooseJoinAnswer(value, button));
+    panel.appendChild(button);
+  });
+  if (options.length === 2) panel.classList.add('two-choices');
+  const actionRow = make('div', 'task-action-row');
+  const repeat = make('button', 'round-action', '🔊');
+  repeat.type = 'button'; repeat.setAttribute('aria-label', 'Hear the question again'); repeat.addEventListener('click', replayPrompt);
+  const help = make('button', 'help-button', `☝ ${ui().help}`);
+  help.type = 'button'; help.addEventListener('click', openHelp);
+  const menu = make('button', 'round-action', '•••');
+  menu.type = 'button'; menu.setAttribute('aria-label', 'More choices'); menu.addEventListener('click', openHelp);
+  actionRow.append(repeat, help, menu);
+  elements.taskControls.append(panel, actionRow);
+}
+
+function quantityFrame(value) {
+  const frame = make('span', 'quantity-frame');
+  const totalCells = value <= 5 ? 5 : 10;
+  frame.style.setProperty('--frame-cols', 5);
+  frame.setAttribute('aria-hidden', 'true');
+  for (let index = 0; index < totalCells; index += 1) frame.appendChild(make('i', index < value ? 'filled' : ''));
+  return frame;
+}
+
+function lockAnswerButtons() {
+  elements.taskControls.querySelectorAll('.answer-card').forEach(button => { button.disabled = true; });
+}
+
+function chooseJoinAnswer(value, button) {
+  if (state.phase !== 'question') return;
+  state.phase = 'evaluating';
+  audio.unlock();
+  audio.stop();
+  clearTaskTimers();
+  lockAnswerButtons();
+  const task = currentTask();
+  const taskState = state.taskState;
+  button.classList.add('selected');
+  if (value === task.sum) {
+    if (taskState.firstAttemptCorrect === null) taskState.firstAttemptCorrect = true;
+    taskState.resolutionId ||= `${session.id}-${task.id}-${crypto.randomUUID?.() || Date.now()}`;
+    state.phase = 'resolving';
+    saveCheckpoint();
+    animateJoin(task, button);
+    return;
+  }
+  if (taskState.firstAttemptCorrect === null) taskState.firstAttemptCorrect = false;
+  taskState.wrongSubmissions += 1;
+  taskState.disabledAnswers.push(value);
+  button.classList.add('wrong');
+  showPrompt(copy().joinLook, v1Audio('join-look'));
+  if (taskState.guided) taskState.modelAnswer = true;
+  state.phase = 'question';
+  setTimeout(() => {
+    if (taskState.wrongSubmissions >= 2 && !taskState.guided) startJoinHelp();
+    else renderJoinControls(task);
+  }, 500);
+}
+
+async function animateJoin(task) {
+  const token = ++state.token;
+  const stage = elements.taskStage.querySelector('.join-stage');
+  if (!await delay(150, token)) return;
+  if (useReducedMotion()) {
+    await formJoinResult(task, stage, token, true);
+    return;
+  }
+  stage.classList.add('anticipate');
+  if (!await delay(250, token)) return;
+  stage.classList.remove('anticipate'); stage.classList.add('approach');
+  if (!await delay(350, token)) return;
+  stage.classList.add('contact'); audio.effect('boop');
+  if (!await delay(150, token)) return;
+  await formJoinResult(task, stage, token, false);
+}
+
+async function formJoinResult(task, stage, token, reduced) {
+  const units = [...stage.querySelectorAll('.quantity-unit')];
+  const formation = make('div', 'result-formation forming');
+  const resultFriend = task.representation === 'toys'
+    ? createToyQuantity(task.sum, { slots: true })
+    : createNumberFriend(task.sum, { slots: true, color: COLORS[task.sum - 1] });
+  formation.appendChild(resultFriend);
+  elements.taskStage.appendChild(formation);
+  const slots = [...formation.querySelectorAll('.result-slot')];
+  if (!reduced) {
+    stage.classList.add('reorganizing');
+    units.forEach((unit, index) => {
+      const from = unit.getBoundingClientRect();
+      const to = slots[index].getBoundingClientRect();
+      unit.style.setProperty('--move-x', `${to.left + to.width / 2 - (from.left + from.width / 2)}px`);
+      unit.style.setProperty('--move-y', `${to.top + to.height / 2 - (from.top + from.height / 2)}px`);
+    });
+    requestAnimationFrame(() => units.forEach(unit => unit.classList.add('unit-moving')));
+    if (!await delay(650, token)) return;
+  } else if (!await delay(200, token)) return;
+  units.forEach((unit, index) => {
+    unit.classList.remove('unit-moving');
+    unit.style.removeProperty('--move-x'); unit.style.removeProperty('--move-y');
+    slots[index].appendChild(unit);
+  });
+  stage.classList.add('finished');
+  formation.classList.add('revealed');
+  const equation = make('div', 'join-equation visible');
+  equation.append(make('span', '', task.a), make('b', '', '+'), make('span', '', task.b), make('b', '', '='), make('span', '', task.sum));
+  elements.taskStage.appendChild(equation);
+  showPrompt(copy().joinResult(task), joinAudio(task, 'result'));
+  elements.resultAnnouncement.textContent = copy().joinResult(task);
+  if (!await delay(reduced ? 250 : 700, token)) return;
+  finishCurrentTask();
+}
+
+async function startJoinHelp() {
+  const task = currentTask();
+  const taskState = state.taskState;
+  taskState.guided = true;
+  if (!taskState.assistance.includes('count')) taskState.assistance.push('count');
+  state.phase = 'help';
+  renderTask({ speak: false });
+  const token = ++state.token;
+  const units = [...elements.taskStage.querySelectorAll('.quantity-unit')];
+  elements.taskStage.classList.add('counting');
+  showPrompt(copy().joinCount, v1Audio('join-count'));
+  for (let index = 0; index < units.length; index += 1) {
+    units.forEach(unit => unit.classList.remove('count-highlight'));
+    units[index].classList.add('count-highlight');
+    audio.speak(v1Audio(`count-${index + 1}`));
+    if (!await delay(620, token)) return;
+  }
+  units.forEach(unit => unit.classList.remove('count-highlight'));
+  state.phase = 'question';
+  renderJoinControls(task);
+  showPrompt(copy().joinTap(task), v1Audio(`join-tap-${task.sum}`));
+  saveCheckpoint();
+}
+
+function renderShareTask(task) {
+  const taskState = state.taskState;
+  const counts = toyCounts(taskState.toys);
+  const stage = make('div', 'share-stage');
+  const tray = make('div', 'toy-tray');
+  tray.appendChild(make('span', 'tray-label', counts.tray));
+  taskState.toys.toys.filter(toy => toy.location === 'tray').forEach(toy => tray.appendChild(toyNode(toy, task)));
+  const baskets = make('div', 'basket-row');
+  baskets.append(basketNode('left', ui().you, '🧒', task), basketNode('right', ui().sister, '👧', task));
+  stage.append(tray, baskets);
+  elements.taskStage.appendChild(stage);
+  renderShareControls(task);
+}
+
+function toyNode(toy, task) {
+  const node = make('span', `toy${state.taskState.lastMoved === toy.id ? ' toy-hop' : ''}`, TOY_ICONS[task.toySet] || '🧸');
+  node.dataset.toyId = toy.id;
+  node.setAttribute('aria-hidden', 'true');
+  return node;
+}
+
+function basketNode(recipient, label, portraitIcon, task) {
+  const wrapper = make('div', `basket-wrap basket-wrap-${recipient}`);
+  const button = make('button', `basket${state.taskState.feedback === recipient ? ' needs-help' : ''}`);
+  button.type = 'button';
+  button.dataset.recipient = recipient;
+  button.disabled = state.taskState.transferLocked || state.phase !== 'question';
+  button.setAttribute('aria-label', `Send the next toy to ${label}. ${toyCounts(state.taskState.toys)[recipient]} toys here.`);
+  const recipientLabel = make('span', 'recipient');
+  recipientLabel.append(make('span', 'portrait', portraitIcon), make('span', '', label));
+  const contents = make('span', 'basket-toys');
+  state.taskState.toys.toys.filter(toy => toy.location === recipient).forEach(toy => contents.appendChild(toyNode(toy, task)));
+  button.append(recipientLabel, contents, make('span', 'basket-count', toyCounts(state.taskState.toys)[recipient]));
+  button.addEventListener('click', () => sendToy(recipient));
+  const returnButton = make('button', 'return-one', '↩');
+  returnButton.type = 'button';
+  returnButton.disabled = state.taskState.transferLocked || toyCounts(state.taskState.toys)[recipient] === 0 || state.phase !== 'question';
+  returnButton.setAttribute('aria-label', `Return one toy from ${label}'s basket`);
+  returnButton.addEventListener('click', () => returnToy(recipient));
+  wrapper.append(button, returnButton);
+  return wrapper;
+}
+
+function renderShareControls(task) {
+  elements.taskControls.className = 'task-controls share-task-controls';
+  const controls = make('div', 'share-controls');
+  controls.appendChild(shareGoalVisual(task));
+  const row = make('div', 'share-action-row');
+  const undo = make('button', 'round-action', '↶');
+  undo.type = 'button'; undo.disabled = !state.taskState.toys.history.length || state.taskState.transferLocked;
+  undo.setAttribute('aria-label', 'Undo the last toy'); undo.addEventListener('click', undoToy);
+  const check = make('button', 'check-button', ui().check);
+  check.type = 'button'; check.disabled = !shareCanCheck(task) || state.taskState.transferLocked || state.phase !== 'question';
+  check.addEventListener('click', checkShare);
+  const help = make('button', 'help-button', '☝');
+  help.type = 'button'; help.setAttribute('aria-label', 'Help'); help.addEventListener('click', openHelp);
+  row.append(undo, check, help);
+  controls.appendChild(row);
+  elements.taskControls.appendChild(controls);
+}
+
+function shareGoalVisual(task) {
+  const visual = make('div', 'share-prompt-visual');
+  if (task.goal === 'targetRecipient') {
+    const total = make('span', 'goal-card'); total.append(make('b', '', task.total), make('span', '', 'toys'));
+    const target = make('span', 'goal-card'); target.append(make('b', '', `👧 ${task.target.count}`), make('span', '', 'Sister'));
+    visual.append(total, make('span', 'goal-symbol', '→'), target);
+  } else if (task.goal === 'freeGroups') visual.append(make('span', 'goal-card', '🧺'), make('span', 'goal-symbol', '+'), make('span', 'goal-card', '🧺'));
+  else {
+    visual.append(make('span', 'goal-card', '🧺'), make('span', 'goal-symbol', '='), make('span', 'goal-card', '🧺'));
+    if (task.goal === 'equalRemainder') visual.append(make('span', 'goal-symbol', '+'), make('span', 'goal-card', '🧸'));
+  }
+  return visual;
+}
+
+function shareCanCheck(task) {
+  const counts = toyCounts(state.taskState.toys);
+  return task.goal === 'equalRemainder' || counts.tray === 0;
+}
+
+function sendToy(recipient) {
+  if (state.taskState.transferLocked || state.phase !== 'question') return;
+  const before = state.taskState.toys;
+  const next = sendNextToy(before, recipient);
+  if (next === before) return;
+  state.taskState.toys = next;
+  state.taskState.lastMoved = next.history.at(-1)?.toyId;
+  state.taskState.transferLocked = true;
+  state.taskState.feedback = null;
+  audio.effect('hop');
+  renderShareTaskOnly();
+  saveCheckpoint();
+  setTimeout(() => {
+    if (!state.taskState) return;
+    state.taskState.transferLocked = false;
+    state.taskState.lastMoved = null;
+    renderShareTaskOnly();
+  }, useReducedMotion() ? 20 : 230);
+}
+
+function returnToy(recipient) {
+  if (state.taskState.transferLocked || state.phase !== 'question') return;
+  const next = returnOneToy(state.taskState.toys, recipient);
+  if (next === state.taskState.toys) return;
+  state.taskState.toys = next;
+  audio.effect('undo');
+  renderShareTaskOnly();
+  saveCheckpoint();
+}
+
+function undoToy() {
+  if (state.taskState.transferLocked || state.phase !== 'question') return;
+  const next = undoToyMove(state.taskState.toys);
+  if (next === state.taskState.toys) return;
+  state.taskState.toys = next;
+  audio.effect('undo');
+  renderShareTaskOnly();
+  saveCheckpoint();
+}
+
+function renderShareTaskOnly() {
+  elements.taskStage.replaceChildren();
+  elements.taskControls.replaceChildren();
+  renderShareTask(currentTask());
+}
+
+function checkShare() {
+  if (state.phase !== 'question' || state.taskState.transferLocked) return;
+  state.phase = 'evaluating';
+  audio.stop();
+  const task = currentTask();
+  const result = validateShare(task, state.taskState.toys);
+  if (result.success) {
+    if (state.taskState.firstAttemptCorrect === null) state.taskState.firstAttemptCorrect = true;
+    state.taskState.resolutionId ||= `${session.id}-${task.id}-${crypto.randomUUID?.() || Date.now()}`;
+    state.phase = 'resolving';
+    saveCheckpoint();
+    resolveShare(task);
+    return;
+  }
+  if (state.taskState.firstAttemptCorrect === null) state.taskState.firstAttemptCorrect = false;
+  state.taskState.wrongSubmissions += 1;
+  if (!state.taskState.assistance.includes('feedback')) state.taskState.assistance.push('feedback');
+  state.taskState.feedback = result.recipient || (result.reason === 'put-back' ? largerBasket() : null);
+  const messages = { 'use-all': copy().useAll, target: copy().target(task), unmatched: copy().unmatched, 'more-pairs': copy().morePairs, 'put-back': copy().putBack, 'both-groups': copy().bothGroups };
+  const feedbackAudio = result.reason === 'target' ? v1Audio(`share-target-${task.target.count}`) : v1Audio(`share-${result.reason}`);
+  showPrompt(messages[result.reason] || copy().useAll, feedbackAudio);
+  state.phase = 'question';
+  renderShareTaskOnly();
+  saveCheckpoint();
+}
+
+function largerBasket() {
+  const counts = toyCounts(state.taskState.toys);
+  return counts.left > counts.right ? 'left' : 'right';
+}
+
+async function resolveShare(task) {
+  const token = ++state.token;
+  renderShareTaskOnly();
+  const counts = toyCounts(state.taskState.toys);
+  if (task.goal === 'equalAll' || task.goal === 'equalRemainder') {
+    elements.taskStage.querySelectorAll('.basket-toys').forEach(node => node.classList.add('pair-line'));
+    if (task.goal === 'equalRemainder') elements.taskStage.querySelector('.toy-tray .toy')?.classList.add('spare-spotlight');
+  }
+  const text = task.goal === 'equalAll' ? copy().shareEqualResult(counts)
+    : task.goal === 'equalRemainder' ? copy().shareRemainderResult(counts)
+      : copy().shareParts(counts);
+  const file = task.goal === 'equalAll' ? v1Audio(`share-equal-result-${counts.left}`)
+    : task.goal === 'equalRemainder' ? v1Audio(`share-remainder-result-${counts.left}`)
+      : v1Audio(`share-parts-${counts.left}-${counts.right}`);
+  showPrompt(text, file);
+  elements.resultAnnouncement.textContent = text;
+  audio.effect('build');
+  if (!await delay(useReducedMotion() ? 250 : 1100, token)) return;
+  finishCurrentTask();
+}
+
+function outcomeForCurrentTask() {
+  const task = currentTask();
+  const taskState = state.taskState;
+  return {
+    taskId: task.id,
+    skillId: task.skillId,
+    sessionId: session.id,
+    family: task.kind === 'join' ? factFamily(task.a, task.b) : `${task.goal}:${task.total}`,
+    completed: true,
+    skipped: false,
+    teachingDemo: task.teachingDemo,
+    freePlay: task.goal === 'freeGroups',
+    firstAttemptCorrect: taskState.firstAttemptCorrect,
+    assistance: [...taskState.assistance],
+    wrongSubmissions: taskState.wrongSubmissions,
+    representation: task.representation || 'toys',
+    answerSupport: task.answerSupport || 'construction'
+  };
+}
+
+function finishCurrentTask() {
+  const taskState = state.taskState;
+  const result = commitResolution(profile, outcomeForCurrentTask(), taskState.resolutionId);
+  profile = result.profile;
+  if (result.awarded) {
+    session.completed += 1;
+    session.built.push(PLAYGROUND_SEQUENCE[session.completed - 1]);
+  }
+  state.phase = 'playground-update';
+  renderGameShell();
+  renderPlaygroundUpdate();
+  saveCheckpoint();
+  saveProfile();
+}
+
+function renderPlaygroundUpdate() {
+  const kind = session.built.at(-1);
+  elements.taskStage.className = 'task-stage';
+  const update = make('div', 'playground-update');
+  update.append(make('span', 'new-playground-piece', PLAYGROUND_ICONS[kind]), make('strong', '', `${session.completed} of ${session.tasks.length}`));
+  elements.taskStage.replaceChildren(update);
+  elements.taskControls.replaceChildren();
+  elements.taskControls.className = 'task-controls';
+  const row = make('div', 'task-action-row');
+  const replay = make('button', 'round-action', '↻');
+  replay.type = 'button'; replay.setAttribute('aria-label', 'Replay the result animation'); replay.addEventListener('click', replayResult);
+  const next = make('button', 'next-button');
+  next.type = 'button'; next.append(make('span', '', copy().next), make('span', '', '→'));
+  next.addEventListener('click', continueSession);
+  row.append(replay, next);
+  elements.taskControls.appendChild(row);
+  audio.effect('build');
+}
+
+function replayResult() {
+  const task = currentTask();
+  if (task.kind === 'join') {
+    state.phase = 'question';
+    const saved = state.taskState;
+    elements.taskStage.replaceChildren();
+    renderJoinTask(task);
+    state.taskState = saved;
+    state.phase = 'resolving';
+    animateJoin(task);
+  } else {
+    renderShareTaskOnly();
+    resolveShare(task);
+  }
+}
+
+function continueSession() {
+  if (session.completed >= session.tasks.length) {
+    showFinale();
+    return;
+  }
+  if (session.completed === 2 || session.completed === 4) {
+    showCosmeticChoice(session.completed);
+    return;
+  }
+  nextTask();
+}
+
+function nextTask() {
+  session.index += 1;
+  state.phase = 'question';
+  state.taskState = createTaskState(currentTask());
+  state.token += 1;
+  renderGameShell();
+  renderTask();
+}
+
+function showCosmeticChoice(slot) {
+  elements.cosmeticChoices.replaceChildren();
+  const choices = slot === 2
+    ? [{ id: 'sunny-slide', icon: '🛝', label: 'Sunny', color: '#ffd94f' }, { id: 'berry-slide', icon: '🛝', label: 'Berry', color: '#ef5362' }]
+    : [{ id: 'star-flag', icon: '🚩⭐', label: 'Stars', color: '#7163c7' }, { id: 'rainbow-flag', icon: '🚩🌈', label: 'Rainbow', color: '#43b96a' }];
+  choices.forEach(choice => {
+    const button = make('button', 'cosmetic-choice');
+    button.type = 'button'; button.style.background = choice.color;
+    button.append(make('b', '', choice.icon), make('span', '', choice.label));
+    button.addEventListener('click', () => {
+      session.cosmetics[slot === 2 ? 'slide' : 'flag'] = choice.id;
+      elements.cosmeticOverlay.hidden = true;
+      nextTask();
+    });
+    elements.cosmeticChoices.appendChild(button);
+  });
+  elements.cosmeticOverlay.hidden = false;
+}
+
+function showFinale() {
+  state.phase = 'finale';
+  profile.sessionsCompleted += 1;
+  profile.playgrounds.push({ id: session.id, built: [...session.built], cosmetics: { ...session.cosmetics }, completedAt: Date.now() });
+  profile.playgrounds = profile.playgrounds.slice(-12);
+  profile.checkpoint = null;
+  saveProfile();
+  elements.finalePlayground.replaceChildren();
+  session.built.forEach(kind => {
+    const button = make('button', '', PLAYGROUND_ICONS[kind]);
+    button.type = 'button'; button.setAttribute('aria-label', `Play with the ${kind}`);
+    button.addEventListener('click', () => { button.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-18px) rotate(5deg)' }, { transform: 'translateY(0)' }], { duration: 500, easing: 'ease-out' }); audio.effect('hop'); });
+    elements.finalePlayground.appendChild(button);
+  });
+  elements.finaleOverlay.hidden = false;
+  showPrompt(copy().finale, v1Audio('session-end'));
 }
 
 function goHome() {
-  clearPhaseTimers();
-  sounds.stopVoice();
-  sounds.effect('back');
+  state.token += 1;
   state.phase = 'home';
-  elements.playScreen.hidden = true;
+  audio.stop();
+  clearTaskTimers();
+  session = null;
+  profile.checkpoint = null;
+  saveProfile();
+  elements.gameScreen.hidden = true;
   elements.homeScreen.hidden = false;
-  renderHomeProgress();
+  elements.finaleOverlay.hidden = true;
+  updateHome();
 }
 
-function renderMission() {
-  const mission = currentMission();
-  if (!mission) return;
-  elements.playTitle.textContent = `MISSION ${state.missionIndex + 1} OF 3`;
-  renderMissionProgress();
-  renderEquation();
-  elements.missionStage.replaceChildren();
-  elements.missionStage.className = `mission-stage phase-${state.phase} mode-${mission.mode}`;
+function openHelp() { elements.helpOverlay.hidden = false; }
+function closeOverlay(id) { elements[id].hidden = true; }
 
-  if (state.phase === 'build-first' || state.phase === 'build-second') renderBuildStage(mission.fact);
-  else if (state.phase === 'split') renderSplitStage(mission.fact);
-  else if (state.phase === 'split-reveal') renderSplitRevealStage(mission.fact);
-  else if (state.phase === 'choose') renderChoiceStage(mission.fact);
-  else if (state.phase === 'combine') renderCombineStage(mission.fact);
-  else if (state.phase === 'success') renderSuccessStage(mission.fact);
-  else if (state.phase === 'session-complete') renderSessionComplete();
+function showTaskHelp() {
+  elements.helpOverlay.hidden = true;
+  if (currentTask().kind === 'join') startJoinHelp();
+  else demonstrateShareHelp();
 }
 
-function renderMissionProgress() {
-  elements.missionProgress.replaceChildren();
-  const sessionComplete = state.phase === 'session-complete';
-  for (let index = 0; index < 3; index += 1) {
-    const done = sessionComplete || index < state.missionIndex;
-    const active = !sessionComplete && index === state.missionIndex;
-    const pip = makeElement('span', `mission-pip${done ? ' done' : ''}${active ? ' active' : ''}`);
-    pip.appendChild(makeElement('i', '', done ? '★' : index + 1));
-    elements.missionProgress.appendChild(pip);
+async function demonstrateShareHelp() {
+  const task = currentTask();
+  if (!state.taskState.assistance.includes('demo')) state.taskState.assistance.push('demo');
+  state.phase = 'help';
+  state.taskState.toys = createToyState(task.total);
+  renderShareTaskOnly();
+  const token = ++state.token;
+  const moves = task.goal === 'targetRecipient'
+    ? Array(task.target.count).fill(task.target.recipient)
+    : ['left', 'right'];
+  for (const recipient of moves) {
+    state.taskState.toys = sendNextToy(state.taskState.toys, recipient);
+    state.taskState.lastMoved = state.taskState.toys.history.at(-1)?.toyId;
+    renderShareTaskOnly();
+    audio.effect('hop');
+    if (!await delay(450, token)) return;
   }
+  if (task.goal === 'equalAll' && task.total === 2) state.taskState.toys = createToyState(2);
+  state.taskState.lastMoved = null;
+  state.phase = 'question';
+  renderShareTaskOnly();
+  saveCheckpoint();
 }
 
-function equationToken(value, status = '') {
-  const numeric = Number.isInteger(value);
-  const token = makeElement('span', `${numeric ? 'equation-token' : 'equation-symbol'}${status ? ` ${status}` : ''}`, value);
-  if (numeric) token.style.setProperty('--token-color', characterColor(value));
-  return token;
+function resetCurrentTask() {
+  closeOverlay('helpOverlay');
+  state.token += 1;
+  state.phase = 'question';
+  state.taskState = createTaskState(currentTask());
+  renderTask();
 }
 
-function renderEquation() {
-  elements.equation.replaceChildren();
-  const mission = currentMission();
-  if (!mission) return;
-  const { a, b, sum } = mission.fact;
-  let values;
-  if (mission.mode === 'reverse' && state.phase === 'split') {
-    values = state.splitCount > 0
-      ? [sum, '=', state.splitCount, '+', sum - state.splitCount]
-      : [sum, '=', '?', '+', '?'];
-  } else if (mission.mode === 'reverse' && state.phase === 'split-reveal') values = [sum, '=', a, '+', b];
-  else if (state.phase === 'build-first') values = [a, '+', '?', '=', '?'];
-  else if (state.phase === 'build-second') values = [a, '+', b, '=', '?'];
-  else if (state.phase === 'success') values = [a, '+', b, '=', sum];
-  else values = [a, '+', b, '=', '?'];
-  values.forEach((value, index) => {
-    const pending = value === '?' ? 'pending' : '';
-    const token = equationToken(value, pending);
-    token.style.animationDelay = `${index * 35}ms`;
-    elements.equation.appendChild(token);
-  });
-  elements.equation.setAttribute('aria-label', values.join(' '));
+function skipToEasier() {
+  closeOverlay('helpOverlay');
+  session.tasks[session.index] = easierReplacement(currentTask(), profile, Date.now());
+  state.token += 1;
+  state.phase = 'question';
+  state.taskState = createTaskState(currentTask());
+  renderTask();
 }
 
-function buildZone(index, target, count, active) {
-  const zone = makeElement('div', `build-zone${active ? ' active' : ''}${count === target ? ' complete' : ''}`);
-  zone.dataset.zoneIndex = String(index);
-  zone.setAttribute('aria-label', `${numberName(target)} building spot. ${count} blocks placed.`);
-  zone.appendChild(makeElement('span', 'zone-number', target));
-  const content = makeElement('div', 'zone-content');
-  if (count > 0) content.appendChild(characterHost(count, 'mission-character build-character'));
-  else {
-    const ghost = makeElement('span', 'target-ghost');
-    const data = CHARACTER_DATA[target];
-    ghost.style.setProperty('--ghost-cols', data.columns);
-    for (let cube = 0; cube < target; cube += 1) ghost.appendChild(makeElement('i'));
-    content.appendChild(ghost);
-  }
-  zone.appendChild(content);
-  if (active) zone.appendChild(makeElement('span', 'zone-pulse', '✦'));
-  return zone;
-}
-
-function renderBuildStage(fact) {
-  const activeIndex = state.phase === 'build-first' ? 0 : 1;
-  const arena = makeElement('div', 'build-arena');
-  arena.append(
-    buildZone(0, fact.a, state.counts[0], activeIndex === 0),
-    makeElement('span', 'arena-operator', '+'),
-    buildZone(1, fact.b, state.counts[1], activeIndex === 1)
-  );
-  const tray = makeElement('div', 'block-tray');
-  tray.setAttribute('aria-label', 'Loose blocks');
-  const used = state.counts[0] + state.counts[1];
-  for (let index = used; index < fact.sum; index += 1) {
-    const block = makeElement('button', 'loose-block');
-    block.type = 'button';
-    block.setAttribute('aria-label', 'Loose number block. Drag it into the glowing spot.');
-    block.append(makeElement('span', 'loose-eye'), makeElement('span', 'loose-eye'));
-    attachLooseBlockGesture(block, activeIndex);
-    tray.appendChild(block);
-  }
-  const hint = makeElement('div', 'drag-coach');
-  hint.setAttribute('aria-hidden', 'true');
-  hint.append(makeElement('span', 'coach-mini-block'), makeElement('span', 'coach-finger', '☝'));
-  elements.missionStage.append(arena, hint, tray);
-}
-
-function pointInside(element, x, y, padding = 18) {
-  const rect = element.getBoundingClientRect();
-  return x >= rect.left - padding && x <= rect.right + padding && y >= rect.top - padding && y <= rect.bottom + padding;
-}
-
-function attachLooseBlockGesture(block, zoneIndex) {
-  let pointerId = null;
-  let startX = 0;
-  let startY = 0;
-  let moved = false;
-  let armed = false;
-  let acceptTimer = null;
-  let completed = false;
-
-  const cleanup = () => {
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', finish);
-    document.removeEventListener('pointercancel', finish);
-    clearTimeout(acceptTimer);
+function saveCheckpoint() {
+  if (!session || state.phase === 'home' || state.phase === 'finale') return;
+  profile.checkpoint = {
+    session,
+    phase: state.phase,
+    taskState: state.taskState,
+    savedAt: Date.now()
   };
-
-  const accept = () => {
-    if (completed) return;
-    completed = true;
-    cleanup();
-    block.classList.add('block-accepted');
-    setTimeout(() => placeLooseBlock(zoneIndex), state.gentleMotion ? 10 : 110);
-  };
-
-  const move = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    event.preventDefault();
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (!moved && Math.hypot(dx, dy) < 7) return;
-    moved = true;
-    block.classList.add('dragging');
-    block.style.setProperty('--drag-x', `${dx}px`);
-    block.style.setProperty('--drag-y', `${dy}px`);
-    const zone = elements.missionStage.querySelector(`.build-zone[data-zone-index="${zoneIndex}"]`);
-    armed = pointInside(zone, event.clientX, event.clientY, 26);
-    zone?.classList.toggle('drop-ready', armed);
-    if (armed && !acceptTimer) acceptTimer = setTimeout(accept, 150);
-    if (!armed && acceptTimer) {
-      clearTimeout(acceptTimer);
-      acceptTimer = null;
-    }
-  };
-
-  const finish = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    cleanup();
-    if (event.type !== 'pointercancel' && armed) accept();
-    else {
-      block.classList.remove('dragging');
-      block.classList.add('block-return');
-      setTimeout(() => block.classList.remove('block-return'), 260);
-    }
-    pointerId = null;
-  };
-
-  block.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    event.preventDefault();
-    sounds.unlock();
-    pointerId = event.pointerId;
-    startX = event.clientX;
-    startY = event.clientY;
-    document.addEventListener('pointermove', move, { passive: false });
-    document.addEventListener('pointerup', finish);
-    document.addEventListener('pointercancel', finish);
-  });
-  block.addEventListener('click', event => {
-    if (event.detail === 0) accept();
-  });
+  saveProfile();
 }
 
-function placeLooseBlock(zoneIndex) {
-  const mission = currentMission();
-  const target = zoneIndex === 0 ? mission.fact.a : mission.fact.b;
-  if (state.counts[zoneIndex] >= target) return;
-  state.counts[zoneIndex] += 1;
-  sounds.effect(state.counts[zoneIndex] === target ? 'snap' : 'block');
-  renderMission();
-  if (state.counts[zoneIndex] !== target) return;
-  const token = state.phaseToken;
-  setTimeout(() => {
-    if (state.phaseToken !== token) return;
-    clearPhaseTimers();
-    if (zoneIndex === 0) {
-      state.phase = 'build-second';
-      renderMission();
-      setPrompt(`mission-build-next-${mission.fact.b}.mp3`, `You built ${numberName(mission.fact.a)}! Now build ${numberName(mission.fact.b)}.`);
+function restoreCheckpoint() {
+  const checkpoint = profile.checkpoint;
+  if (!checkpoint?.session || !checkpoint.taskState) return false;
+  session = checkpoint.session;
+  state.phase = checkpoint.phase;
+  state.taskState = checkpoint.taskState;
+  elements.homeScreen.hidden = true;
+  elements.gameScreen.hidden = false;
+  renderGameShell();
+  if (state.phase === 'playground-update') renderPlaygroundUpdate();
+  else if (state.phase === 'resolving') {
+    renderTask({ speak: false });
+    const task = currentTask();
+    if (task.kind === 'join') {
+      const stage = elements.taskStage.querySelector('.join-stage');
+      void formJoinResult(task, stage, ++state.token, true);
     } else {
-      state.phase = 'choose';
-      renderMission();
-      setPrompt(missionAudioName('predict', mission.fact), `What do ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} make? Choose a number friend!`);
+      state.taskState.transferLocked = false;
+      void resolveShare(task);
     }
-  }, state.gentleMotion ? 20 : 520);
-}
-
-function partsPreview(fact) {
-  const preview = makeElement('div', 'parts-preview');
-  [fact.a, fact.b].forEach((value, index) => {
-    const friend = makeElement('div', `preview-friend preview-friend-${index + 1}`);
-    friend.append(characterHost(value, 'mission-character preview-character'), makeElement('span', 'friend-badge', value));
-    preview.appendChild(friend);
-    if (index === 0) preview.appendChild(makeElement('span', 'preview-plus', '+'));
-  });
-  return preview;
-}
-
-function renderChoiceStage(fact) {
-  elements.missionStage.appendChild(partsPreview(fact));
-  const question = makeElement('div', 'choice-question', '?');
-  const grid = makeElement('div', 'answer-grid');
-  state.choices.forEach(value => {
-    const button = makeElement('button', 'answer-card');
-    button.type = 'button';
-    button.dataset.answer = String(value);
-    button.style.setProperty('--answer-color', characterColor(value));
-    button.setAttribute('aria-label', numberName(value, true));
-    button.append(characterHost(value, 'mission-character answer-character'), makeElement('span', 'answer-number', value));
-    button.addEventListener('click', () => chooseAnswer(button, value));
-    grid.appendChild(button);
-  });
-  elements.missionStage.append(question, grid);
-}
-
-function chooseAnswer(button, value) {
-  if (state.phase !== 'choose') return;
-  const mission = currentMission();
-  sounds.unlock();
-  if (value !== mission.fact.sum) {
-    state.missionMistake = true;
-    state.progress.mistakes += 1;
-    saveState();
-    sounds.effect('wrong');
-    button.classList.remove('wrong-answer');
-    requestAnimationFrame(() => button.classList.add('wrong-answer'));
-    setPrompt('mission-try-again.mp3', `Nearly! Count ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}, then try again.`, false);
-    return;
-  }
-  clearPhaseTimers();
-  sounds.effect('snap');
-  button.classList.add('correct-answer');
-  setTimeout(() => {
-    state.phase = 'combine';
-    renderMission();
-    setPrompt(missionAudioName('combine', mission.fact), `Yes! Now push ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} together!`);
-  }, state.gentleMotion ? 20 : 520);
-}
-
-function renderCombineStage(fact) {
-  const arena = makeElement('div', 'combine-arena');
-  [fact.a, fact.b].forEach((value, index) => {
-    const button = makeElement('button', `built-friend built-friend-${index + 1}`);
-    button.type = 'button';
-    button.dataset.friendIndex = String(index);
-    button.setAttribute('aria-label', `Number ${numberName(value)}. Push it into the other number friend.`);
-    button.append(characterHost(value, 'mission-character combine-character'), makeElement('span', 'friend-badge', value));
-    attachCombineGesture(button, index);
-    arena.appendChild(button);
-  });
-  const coach = makeElement('div', 'combine-coach');
-  coach.setAttribute('aria-hidden', 'true');
-  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '→'));
-  arena.appendChild(coach);
-  elements.missionStage.appendChild(arena);
-}
-
-function attachCombineGesture(button, index) {
-  let pointerId = null;
-  let startX = 0;
-  let startY = 0;
-  let moved = false;
-  let touching = false;
-  let joinTimer = null;
-  let completed = false;
-
-  const target = () => elements.missionStage.querySelector(`.built-friend[data-friend-index="${index === 0 ? 1 : 0}"]`);
-  const cleanup = () => {
-    clearTimeout(joinTimer);
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', finish);
-    document.removeEventListener('pointercancel', finish);
-  };
-  const complete = () => {
-    if (completed) return;
-    completed = true;
-    cleanup();
-    button.classList.add('magnet-join');
-    target()?.classList.add('magnet-target');
-    setTimeout(completeMission, state.gentleMotion ? 20 : 260);
-  };
-  const move = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    event.preventDefault();
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (!moved && Math.hypot(dx, dy) < 7) return;
-    moved = true;
-    button.classList.add('dragging');
-    button.style.setProperty('--drag-x', `${dx}px`);
-    button.style.setProperty('--drag-y', `${dy}px`);
-    touching = pointInside(target(), event.clientX, event.clientY, 32);
-    target()?.classList.toggle('drop-ready', touching);
-    if (touching && !joinTimer) joinTimer = setTimeout(complete, 150);
-    if (!touching && joinTimer) {
-      clearTimeout(joinTimer);
-      joinTimer = null;
-    }
-  };
-  const finish = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    cleanup();
-    if (event.type !== 'pointercancel' && touching) complete();
-    else {
-      button.classList.remove('dragging');
-      button.classList.add('friend-hop');
-      setTimeout(() => button.classList.remove('friend-hop'), 520);
-    }
-  };
-  button.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    event.preventDefault();
-    sounds.unlock();
-    pointerId = event.pointerId;
-    startX = event.clientX;
-    startY = event.clientY;
-    document.addEventListener('pointermove', move, { passive: false });
-    document.addEventListener('pointerup', finish);
-    document.addEventListener('pointercancel', finish);
-  });
-}
-
-function renderSplitStage(fact) {
-  const pulled = state.splitCount;
-  const remaining = fact.sum - pulled;
-  const splitArena = makeElement('div', 'split-arena');
-  const collected = makeElement('div', `split-progress-side${pulled ? ' has-blocks' : ''}`);
-  collected.setAttribute('aria-label', pulled
-    ? `${numberName(pulled, true)} ${blockNoun(pulled)} pulled away. Make ${numberName(fact.a)}.`
-    : `Empty building spot. Make ${numberName(fact.a)}.`);
-  if (pulled > 0) {
-    collected.appendChild(characterHost(pulled, 'mission-character split-progress-character'));
   } else {
-    const ghost = makeElement('span', 'split-progress-ghost');
-    ghost.style.setProperty('--ghost-cols', CHARACTER_DATA[fact.a].columns);
-    for (let index = 0; index < fact.a; index += 1) ghost.appendChild(makeElement('i'));
-    collected.appendChild(ghost);
+    state.phase = 'question';
+    if (state.taskState.toys) state.taskState.transferLocked = false;
+    renderTask({ speak: false });
   }
-  collected.appendChild(makeElement('span', 'split-target-badge', fact.a));
-
-  const plus = makeElement('span', 'split-progress-plus', '+');
-  const whole = makeElement('button', 'reverse-whole');
-  whole.type = 'button';
-  whole.setAttribute('aria-label', `Number ${numberName(remaining)}. Pull one block away.`);
-  whole.append(characterHost(remaining, 'mission-character reverse-character'), makeElement('span', 'friend-badge', remaining));
-  attachSplitGesture(whole, fact);
-
-  const progress = makeElement('div', 'split-pull-progress');
-  progress.setAttribute('aria-label', `${pulled} of ${fact.a} blocks pulled away`);
-  for (let index = 0; index < fact.a; index += 1) {
-    progress.appendChild(makeElement('i', index < pulled ? 'filled' : '', index < pulled ? '★' : ''));
-  }
-  const coach = makeElement('div', 'reverse-coach');
-  coach.setAttribute('aria-hidden', 'true');
-  coach.append(makeElement('span', '', '☝'), makeElement('i', '', '←'));
-  splitArena.append(collected, plus, whole, progress, coach);
-  elements.missionStage.appendChild(splitArena);
+  return true;
 }
 
-function attachSplitGesture(button, fact) {
-  let pointerId = null;
-  let startX = 0;
-  let startY = 0;
-  let moved = false;
-  let armed = false;
-  let splitTimer = null;
-  let selected = null;
-  let selectedCenter = null;
-  let completed = false;
-
-  const cleanup = () => {
-    clearTimeout(splitTimer);
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', finish);
-    document.removeEventListener('pointercancel', finish);
-  };
-  const resolve = () => {
-    if (completed) return;
-    completed = true;
-    cleanup();
-    elements.missionStage.querySelector('.mission-split-preview')?.remove();
-    const target = elements.missionStage.querySelector('.split-progress-side');
-    if (target && selected && selectedCenter) {
-      const targetRect = target.getBoundingClientRect();
-      selected.style.setProperty('--peel-x', `${targetRect.left + targetRect.width / 2 - selectedCenter.x}px`);
-      selected.style.setProperty('--peel-y', `${targetRect.top + targetRect.height * .62 - selectedCenter.y}px`);
-    }
-    sounds.effect('snap');
-    button.classList.add('split-success');
-    setTimeout(() => acceptPulledBlock(fact), state.gentleMotion ? 20 : 360);
-  };
-  const move = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    event.preventDefault();
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (!moved && Math.hypot(dx, dy) < 7) return;
-    moved = true;
-    selected.style.setProperty('--peel-x', `${dx}px`);
-    selected.style.setProperty('--peel-y', `${dy}px`);
-    armed = Math.hypot(dx, dy) > 42;
-    button.classList.toggle('split-armed', armed);
-    const preview = elements.missionStage.querySelector('.mission-split-preview');
-    if (preview) {
-      preview.textContent = `${state.splitCount + 1} + ${fact.sum - state.splitCount - 1}`;
-      preview.classList.toggle('armed', armed);
-      const arena = elements.missionStage.getBoundingClientRect();
-      preview.style.left = `${Math.min(arena.width - 44, Math.max(44, event.clientX - arena.left + 20))}px`;
-      preview.style.top = `${Math.min(arena.height - 30, Math.max(28, event.clientY - arena.top - 24))}px`;
-    }
-    if (armed && !splitTimer) splitTimer = setTimeout(resolve, 170);
-    if (!armed && splitTimer) {
-      clearTimeout(splitTimer);
-      splitTimer = null;
-    }
-  };
-  const finish = event => {
-    if (event.pointerId !== pointerId || completed) return;
-    cleanup();
-    elements.missionStage.querySelector('.mission-split-preview')?.remove();
-    if (event.type !== 'pointercancel' && moved && armed) resolve();
-    else {
-      selected?.style.removeProperty('--peel-x');
-      selected?.style.removeProperty('--peel-y');
-      button.classList.add('split-return');
-      setTimeout(() => button.classList.remove('split-return', 'split-armed'), 280);
-    }
-  };
-  button.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    const cubes = [...button.querySelectorAll('.cube')];
-    const touchedCube = event.target.closest?.('.cube');
-    const cube = touchedCube || cubes.reduce((nearest, candidate) => {
-      const rect = candidate.getBoundingClientRect();
-      const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
-      return !nearest || distance < nearest.distance ? { candidate, distance } : nearest;
-    }, null)?.candidate;
-    if (!cube) return;
-    event.preventDefault();
-    sounds.unlock();
-    pointerId = event.pointerId;
-    startX = event.clientX;
-    startY = event.clientY;
-    selected = cube;
-    const selectedRect = cube.getBoundingClientRect();
-    selectedCenter = { x: selectedRect.left + selectedRect.width / 2, y: selectedRect.top + selectedRect.height / 2 };
-    selected.classList.add('peel-cube');
-    cubes.filter(item => item !== selected).forEach(item => item.classList.add('stay-cube'));
-    const preview = makeElement('span', 'mission-split-preview', `${state.splitCount + 1} + ${fact.sum - state.splitCount - 1}`);
-    elements.missionStage.appendChild(preview);
-    document.addEventListener('pointermove', move, { passive: false });
-    document.addEventListener('pointerup', finish);
-    document.addEventListener('pointercancel', finish);
-  });
+function useReducedMotion() {
+  return profile.settings.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function acceptPulledBlock(fact) {
-  if (state.phase !== 'split') return;
-  const step = nextSplitStep(fact, state.splitCount);
-  state.splitCount = step.pulled;
-  if (step.complete) {
-    completeSplit();
-    return;
-  }
-  clearPhaseTimers();
-  renderMission();
-  setPrompt('mission-pull-next.mp3', 'Great! Pull one more block.', false);
-}
-
-function renderSplitRevealStage(fact) {
-  const reveal = makeElement('div', 'split-reveal');
-  reveal.setAttribute('aria-label', `${numberName(fact.a, true)} and ${numberName(fact.b)}`);
-  reveal.append(makeElement('span', 'split-reveal-spark split-reveal-spark-1', '✦'));
-  [fact.a, fact.b].forEach((value, index) => {
-    const friend = makeElement('div', `split-reveal-friend split-reveal-friend-${index + 1}`);
-    friend.append(characterHost(value, 'mission-character split-reveal-character'), makeElement('span', 'friend-badge', value));
-    reveal.appendChild(friend);
-    if (index === 0) reveal.appendChild(makeElement('span', 'split-reveal-plus', '+'));
-  });
-  reveal.append(makeElement('span', 'split-reveal-spark split-reveal-spark-2', '★'));
-  elements.missionStage.appendChild(reveal);
-}
-
-function completeSplit() {
-  clearPhaseTimers();
-  const mission = currentMission();
-  state.splitParts = [mission.fact.a, mission.fact.b];
-  state.phase = 'split-reveal';
-  renderMission();
-  setPrompt(missionAudioName('split-made', mission.fact), `You made ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)}! Look at the two number friends.`, false);
-  state.transitionTimer = setTimeout(() => {
-    if (state.phase !== 'split-reveal') return;
-    clearPhaseTimers();
-    state.phase = 'choose';
-    renderMission();
-    setPrompt(missionAudioName('predict', mission.fact), `What do ${numberName(mission.fact.a)} and ${numberName(mission.fact.b)} make? Choose a number friend!`);
-  }, 3550);
-}
-
-function completeMission() {
-  if (state.phase !== 'combine') return;
-  clearPhaseTimers();
-  const mission = currentMission();
-  state.phase = 'success';
-  state.progress = recordFactResult(state.progress, mission.fact, { firstTry: !state.missionMistake });
-  saveState();
-  sounds.effect('join');
-  renderMission();
-  setPrompt(missionAudioName('success', mission.fact), `${numberName(mission.fact.a, true)} and ${numberName(mission.fact.b)} make ${numberName(mission.fact.sum)}!`, false);
-  celebrate();
-  state.celebrationTimer = setTimeout(nextMission, state.gentleMotion ? 900 : 3200);
-}
-
-function renderSuccessStage(fact) {
-  const success = makeElement('div', 'mission-success');
-  success.append(
-    makeElement('span', 'success-spark success-spark-1', '✦'),
-    characterHost(fact.sum, 'mission-character success-character'),
-    makeElement('span', 'success-number', fact.sum),
-    makeElement('span', 'success-spark success-spark-2', '★')
-  );
-  elements.missionStage.appendChild(success);
-}
-
-function nextMission() {
-  clearPhaseTimers();
-  state.missionIndex += 1;
-  if (state.missionIndex < state.session.length) {
-    startMission();
-    return;
-  }
-  state.progress.sessionsCompleted += 1;
-  const advancement = advanceLearning(state.progress, state.learning);
-  state.learning = advancement.learning;
-  state.newLevel = advancement.unlocked;
-  saveState();
-  state.missionIndex = 2;
-  state.phase = 'session-complete';
-  renderMission();
-  if (state.newLevel) {
-    setPrompt(`mission-unlock-${state.newLevel}.mp3`, `Amazing! Number ${numberName(state.newLevel)} is ready to play!`, false);
-  } else {
-    setPrompt('mission-session-complete.mp3', 'Three missions complete! Ten is very proud of you!', false);
-  }
-}
-
-function renderSessionComplete() {
-  elements.equation.replaceChildren();
-  elements.equation.setAttribute('aria-label', 'Mission complete');
-  const card = makeElement('div', 'session-complete-card');
-  card.append(
-    makeElement('span', 'session-stars', '★ ✦ ★'),
-    characterHost(10, 'mission-character session-ten'),
-    makeElement('h2', '', 'Mission complete!'),
-    makeElement('p', state.newLevel ? 'level-unlocked-copy' : '', state.newLevel
-      ? `New number unlocked: ${state.newLevel}!`
-      : 'Three number challenges solved')
-  );
-  const again = makeElement('button', 'mission-again-button');
-  again.type = 'button';
-  again.append(makeElement('span', '', 'Play again'), makeElement('span', '', '★'));
-  again.addEventListener('click', startSession);
-  card.appendChild(again);
-  elements.missionStage.appendChild(card);
-  renderHomeProgress();
-}
-
-function celebrate() {
-  if (state.gentleMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  elements.celebration.replaceChildren();
-  const colors = ['#ef4e55', '#ffd84d', '#43b876', '#34a7df', '#aa67c8', '#fff'];
-  for (let index = 0; index < 24; index += 1) {
-    const piece = makeElement('span', 'celebration-piece');
-    piece.style.setProperty('--left', `${45 + Math.random() * 10}%`);
-    piece.style.setProperty('--top', `${34 + Math.random() * 12}%`);
-    piece.style.setProperty('--x', `${-170 + Math.random() * 340}px`);
-    piece.style.setProperty('--y', `${-160 + Math.random() * 300}px`);
-    piece.style.setProperty('--spin', `${-320 + Math.random() * 640}deg`);
-    piece.style.setProperty('--delay', `${Math.random() * 130}ms`);
-    piece.style.setProperty('--size', `${7 + Math.random() * 9}px`);
-    piece.style.setProperty('--radius', index % 3 === 0 ? '50%' : '3px');
-    piece.style.setProperty('--color', colors[index % colors.length]);
-    elements.celebration.appendChild(piece);
-  }
-  setTimeout(() => elements.celebration.replaceChildren(), 1500);
-}
-
+function replayPrompt() { audio.unlock(); showPrompt(state.prompt.text, state.prompt.file); }
 function showToast(message) {
-  clearTimeout(state.toastTimer);
-  elements.toast.textContent = message;
-  elements.toast.hidden = false;
-  state.toastTimer = setTimeout(() => { elements.toast.hidden = true; }, 1800);
+  clearTimeout(toastTimer);
+  elements.toast.textContent = message; elements.toast.hidden = false;
+  toastTimer = setTimeout(() => { elements.toast.hidden = true; }, 2200);
 }
 
-function openSettings() {
-  elements.settingsOverlay.hidden = false;
-  updatePreferenceUi();
-  updateInstallUi();
+function updateHome() {
+  elements.playgroundCount.textContent = profile.playgrounds.length;
+  document.documentElement.classList.toggle('reduced-motion', profile.settings.reducedMotion);
+  document.documentElement.lang = profile.settings.locale;
+  elements.homeTitle.textContent = ui().homeTitle;
+  elements.adventureLabel.textContent = ui().adventure;
+  elements.adventureHint.textContent = ui().adventureHint;
+  elements.joinLabel.textContent = ui().join;
+  elements.joinHint.textContent = ui().joinHint;
+  elements.shareLabel.textContent = ui().share;
+  elements.shareHint.textContent = ui().shareHint;
+  elements.playgroundsLabel.textContent = ui().playgrounds;
+  elements.firstPlayLabel.textContent = ui().play;
 }
 
-function closeSettings() {
-  elements.settingsOverlay.hidden = true;
-}
-
-function toggleSound() {
-  state.sound = !state.sound;
-  if (!state.sound) sounds.stopVoice();
-  updatePreferenceUi();
-  saveState();
-  if (state.sound) sounds.unlock();
-}
-
-function resetProgress() {
-  const now = Date.now();
-  if (now > state.resetArmedUntil) {
-    state.resetArmedUntil = now + 3500;
-    elements.resetProgressButton.textContent = 'Tap again to reset everything';
-    showToast('Tap reset once more to confirm');
-    setTimeout(() => {
-      if (Date.now() >= state.resetArmedUntil) elements.resetProgressButton.textContent = 'Reset mission progress';
-    }, 3600);
+function renderSavedPlaygrounds() {
+  elements.savedPlaygrounds.replaceChildren();
+  if (!profile.playgrounds.length) {
+    elements.savedPlaygrounds.appendChild(make('p', 'empty-playgrounds', 'Complete an adventure and your playground will wait here.'));
     return;
   }
-  state.progress = { sessionsCompleted: 0, factWins: {}, factStats: {}, mistakes: 0 };
-  state.learning = normalizeLearningSettings({
-    ...state.learning,
-    adaptiveMax: RANGE_PRESETS.find(preset => preset.id === state.learning.preset)?.maxSum
+  [...profile.playgrounds].reverse().forEach(playground => {
+    const card = make('button', 'saved-playground');
+    card.type = 'button'; card.setAttribute('aria-label', 'Replay this completed playground');
+    playground.built.forEach(kind => card.appendChild(make('span', '', PLAYGROUND_ICONS[kind])));
+    card.addEventListener('click', () => { card.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.04)' }, { transform: 'scale(1)' }], { duration: 450 }); audio.effect('build'); });
+    elements.savedPlaygrounds.appendChild(card);
   });
-  state.resetArmedUntil = 0;
-  elements.resetProgressButton.textContent = 'Reset mission progress';
-  saveState();
-  renderHomeProgress();
-  updatePreferenceUi();
-  showToast('Mission progress reset');
 }
 
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+function openParentSettings() {
+  renderParentSettings();
+  elements.parentOverlay.hidden = false;
 }
 
-function updateOfflineUi() {
-  document.documentElement.classList.toggle('offline-ready', state.offlineReady);
-  elements.offlineLabel.textContent = state.offlineReady ? 'Ready to play offline' : 'Preparing offline play…';
-  elements.settingsOfflineDot.classList.toggle('ready', state.offlineReady);
-  elements.settingsOfflineTitle.textContent = state.offlineReady ? 'Ready to play offline' : 'Preparing offline play';
-  elements.settingsOfflineCopy.textContent = state.offlineReady
-    ? 'Missions, characters, voices, and progress work without internet.'
-    : 'Keep this page open for a moment while the app is saved.';
+function evidenceSummary(skillId, label) {
+  const evidence = profile.evidence[skillId] || [];
+  const independent = evidence.filter(item => item.independent).length;
+  return { label, value: `${independent} independent, ${evidence.length - independent} with help` };
 }
 
-function updateInstallUi() {
-  const installed = isStandalone();
-  elements.installInstructions.hidden = installed;
-  elements.installedMessage.hidden = !installed;
-}
-
-async function registerOfflineApp() {
-  if (!('serviceWorker' in navigator) || !window.isSecureContext) {
-    elements.offlineLabel.textContent = 'Open securely to enable offline play';
-    return;
-  }
-  navigator.serviceWorker.addEventListener('message', event => {
-    if (event.data?.type === 'OFFLINE_READY') {
-      state.offlineReady = true;
-      updateOfflineUi();
-    }
+function renderParentSettings() {
+  elements.learningSummary.replaceChildren();
+  const joiningLabel = profile.settings.joinMin > 2 ? `Joining ${profile.settings.joinMin}–${profile.settings.joinMax}` : `Joining to ${profile.settings.joinMax}`;
+  [evidenceSummary('join', joiningLabel), evidenceSummary('share.composition', 'Making groups'), evidenceSummary('share.equal', `Equal sharing to ${profile.settings.equalMax}`), evidenceSummary('share.remainder', `Odd leftovers to ${profile.settings.remainderMax}`)].forEach(item => {
+    const row = make('div', 'summary-row'); row.append(make('span', '', item.label), make('strong', '', item.value)); elements.learningSummary.appendChild(row);
   });
-  try {
-    const registration = await navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
-    await navigator.serviceWorker.ready;
-    (registration.active || registration.waiting || registration.installing)?.postMessage({ type: 'CHECK_READY' });
-    navigator.serviceWorker.controller?.postMessage({ type: 'CHECK_READY' });
-  } catch {
-    elements.offlineLabel.textContent = 'Offline save will retry next time';
-  }
+  elements.rangeButtons.replaceChildren();
+  [{ min: 2, max: 5, label: '1–5' }, { min: 2, max: 7, label: '1–7' }, { min: 2, max: 10, label: '1–10' }, { min: 5, max: 10, label: '5–10' }].forEach(range => {
+    const selected = profile.settings.joinMin === range.min && profile.settings.joinMax === range.max;
+    const button = make('button', selected ? 'selected' : '', range.label);
+    button.type = 'button';
+    button.addEventListener('click', () => { profile.settings.joinMin = range.min; profile.settings.joinMax = range.max; saveProfile(); renderParentSettings(); });
+    elements.rangeButtons.appendChild(button);
+  });
+  elements.lengthButtons.replaceChildren();
+  [4, 6, 8].forEach(value => {
+    const button = make('button', profile.settings.sessionLength === value ? 'selected' : '', value);
+    button.type = 'button'; button.addEventListener('click', () => { profile.settings.sessionLength = value; saveProfile(); renderParentSettings(); }); elements.lengthButtons.appendChild(button);
+  });
+  elements.autoAdvanceToggle.checked = profile.settings.autoAdvance;
+  elements.remaindersToggle.checked = profile.settings.remaindersEnabled;
+  elements.narrationVolume.value = profile.settings.narrationVolume;
+  elements.effectsVolume.value = profile.settings.effectsVolume;
+  elements.reducedMotionToggle.checked = profile.settings.reducedMotion;
+  document.querySelectorAll('[data-locale]').forEach(button => button.classList.toggle('selected', button.dataset.locale === profile.settings.locale));
 }
 
-function wireEvents() {
-  elements.startButton.addEventListener('click', () => {
-    sounds.unlock();
-    elements.welcomeOverlay.hidden = true;
-    if (!state.learning.configured) {
-      elements.rangeOverlay.hidden = false;
+function bindParentHold() {
+  const start = event => {
+    if (event.type === 'pointerdown' && event.pointerType === 'mouse' && event.button !== 0) return;
+    clearTimeout(parentHoldTimer);
+    elements.parentHoldButton.classList.add('holding');
+    parentHoldTimer = setTimeout(() => { elements.parentHoldButton.classList.remove('holding'); openParentSettings(); }, 3000);
+  };
+  const cancel = () => { clearTimeout(parentHoldTimer); elements.parentHoldButton.classList.remove('holding'); };
+  elements.parentHoldButton.addEventListener('pointerdown', start);
+  elements.parentHoldButton.addEventListener('pointerup', cancel);
+  elements.parentHoldButton.addEventListener('pointercancel', cancel);
+  elements.parentHoldButton.addEventListener('pointerleave', cancel);
+  elements.parentHoldButton.addEventListener('keydown', event => { if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) start(event); });
+  elements.parentHoldButton.addEventListener('keyup', cancel);
+}
+
+function bindEvents() {
+  elements.firstPlayButton.addEventListener('click', () => {
+    audio.unlock();
+    try { localStorage.setItem(WELCOME_KEY, 'yes'); } catch {}
+    elements.firstVisitOverlay.hidden = true;
+    showPrompt(copy().welcome, v1Audio('welcome'));
+  });
+  elements.adventureButton.addEventListener('click', () => startSession('adventure'));
+  elements.joinButton.addEventListener('click', () => startSession('join'));
+  elements.shareButton.addEventListener('click', () => startSession('share'));
+  elements.leaveButton.addEventListener('click', goHome);
+  elements.replayButton.addEventListener('click', replayPrompt);
+  elements.audioRetryButton.addEventListener('click', replayPrompt);
+  elements.playgroundsButton.addEventListener('click', () => { renderSavedPlaygrounds(); elements.playgroundsOverlay.hidden = false; });
+  elements.showHelpButton.addEventListener('click', showTaskHelp);
+  elements.resetTaskButton.addEventListener('click', resetCurrentTask);
+  elements.skipTaskButton.addEventListener('click', skipToEasier);
+  elements.allDoneButton.addEventListener('click', goHome);
+  elements.anotherButton.addEventListener('click', () => { elements.finaleOverlay.hidden = true; startSession('adventure'); });
+  document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => closeOverlay(button.dataset.close)));
+  elements.autoAdvanceToggle.addEventListener('change', () => { profile.settings.autoAdvance = elements.autoAdvanceToggle.checked; saveProfile(); });
+  elements.remaindersToggle.addEventListener('change', () => { profile.settings.remaindersEnabled = elements.remaindersToggle.checked; saveProfile(); });
+  elements.narrationVolume.addEventListener('input', () => { profile.settings.narrationVolume = Number(elements.narrationVolume.value); audio.voice.volume = profile.settings.narrationVolume; saveProfile(); });
+  elements.effectsVolume.addEventListener('input', () => { profile.settings.effectsVolume = Number(elements.effectsVolume.value); saveProfile(); });
+  elements.reducedMotionToggle.addEventListener('change', () => { profile.settings.reducedMotion = elements.reducedMotionToggle.checked; updateHome(); saveProfile(); });
+  document.querySelectorAll('[data-locale]').forEach(button => button.addEventListener('click', () => { profile.settings.locale = button.dataset.locale; saveProfile(); updateHome(); renderParentSettings(); }));
+  elements.resetProgressButton.addEventListener('click', () => {
+    if (elements.resetProgressButton.dataset.armed !== 'true') {
+      elements.resetProgressButton.dataset.armed = 'true'; elements.resetProgressButton.textContent = 'Tap again to confirm reset';
+      setTimeout(() => { elements.resetProgressButton.dataset.armed = 'false'; elements.resetProgressButton.textContent = 'Reset local progress'; }, 4000);
       return;
     }
-    sounds.speak('welcome.mp3', "Hello, number maker! I'm Ten. Ready for some number magic?");
+    const settings = { ...profile.settings };
+    profile = createDefaultProfile({ settings }); saveProfile(); renderParentSettings(); updateHome();
+    elements.resetProgressButton.dataset.armed = 'false'; elements.resetProgressButton.textContent = 'Reset local progress';
   });
-  elements.missionButton.addEventListener('click', startSession);
-  elements.backButton.addEventListener('click', goHome);
-  elements.replayButton.addEventListener('click', () => {
-    sounds.unlock();
-    sounds.effect('tap');
-    sounds.speak(state.prompt.file, state.prompt.text);
+  elements.resumeButton.addEventListener('click', () => {
+    audio.unlock();
+    elements.resumeOverlay.hidden = true;
+    state.paused = false;
+    if (profile.checkpoint && (!session || state.phase === 'resolving')) restoreCheckpoint();
+    else replayPrompt();
   });
-  elements.soundButtons.forEach(button => button.addEventListener('click', toggleSound));
-  elements.settingsButton.addEventListener('click', openSettings);
-  elements.offlinePill.addEventListener('click', openSettings);
-  elements.closeSettingsButton.addEventListener('click', closeSettings);
-  elements.settingsOverlay.addEventListener('click', event => {
-    if (event.target === elements.settingsOverlay) closeSettings();
-  });
-  elements.soundToggle.addEventListener('change', () => {
-    state.sound = elements.soundToggle.checked;
-    updatePreferenceUi();
-    saveState();
-    if (state.sound) sounds.unlock();
-    else sounds.stopVoice();
-  });
-  elements.motionToggle.addEventListener('change', () => {
-    state.gentleMotion = elements.motionToggle.checked;
-    updatePreferenceUi();
-    saveState();
-  });
-  elements.settingsRangeChoices.addEventListener('change', event => {
-    if (!event.target.matches('input[data-range-preset]')) return;
-    setLearningPreset(event.target.value);
-    showToast(`Learning range starts at ${RANGE_PRESETS.find(preset => preset.id === event.target.value)?.label}`);
-  });
-  elements.autoAdvanceToggle.addEventListener('change', () => {
-    state.learning = normalizeLearningSettings({ ...state.learning, configured: true, autoAdvance: elements.autoAdvanceToggle.checked });
-    saveState();
-    updatePreferenceUi();
-    showToast(state.learning.autoAdvance ? 'Automatic growth on' : 'Learning range fixed');
-  });
-  elements.restartRangeButton.addEventListener('click', () => {
-    setLearningPreset(state.learning.preset, state.learning.autoAdvance);
-    showToast('Selected learning range restarted');
-  });
-  elements.saveRangeButton.addEventListener('click', () => {
-    const selected = elements.setupRangeChoices.querySelector('input[data-range-preset]:checked')?.value || 'little';
-    setLearningPreset(selected, elements.setupAutoAdvance.checked);
-    elements.rangeOverlay.hidden = true;
-    sounds.speak('welcome.mp3', "Hello, number maker! I'm Ten. Ready for some number magic?");
-    showToast('Starting range saved');
-  });
-  elements.resetProgressButton.addEventListener('click', resetProgress);
+  bindParentHold();
   document.addEventListener('visibilitychange', () => {
-    saveState();
-    if (document.hidden) sounds.stopVoice();
+    if (document.hidden && session) { state.paused = true; audio.stop(); clearTaskTimers(); saveCheckpoint(); }
+    else if (state.paused && session) elements.resumeOverlay.hidden = false;
   });
-  window.addEventListener('pagehide', saveState);
 }
 
-function init() {
+async function registerOffline() {
+  if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
+  try {
+    const registration = await navigator.serviceWorker.register('./sw.js');
+    await registration.update().catch(() => {});
+    navigator.serviceWorker.addEventListener('message', event => {
+      if (event.data?.type === 'OFFLINE_READY') {
+        elements.offlineStatus.classList.add('offline-ready');
+        elements.offlineStatus.querySelector('span:last-child').textContent = 'Available offline';
+      }
+    });
+    registration.active?.postMessage({ type: 'CHECK_READY' });
+  } catch {
+    elements.offlineStatus.querySelector('span:last-child').textContent = 'Online play';
+  }
+}
+
+function initialize() {
   cacheElements();
-  loadState();
-  renderRangeChoices(elements.settingsRangeChoices, 'settingsRange');
-  renderRangeChoices(elements.setupRangeChoices, 'setupRange');
-  renderMentors();
-  renderHomeProgress();
-  updatePreferenceUi();
-  updateOfflineUi();
-  updateInstallUi();
-  wireEvents();
-  registerOfflineApp();
+  renderTens();
+  bindEvents();
+  updateHome();
+  elements.firstVisitOverlay.hidden = localStorage.getItem(WELCOME_KEY) === 'yes';
+  if (profile.checkpoint) elements.resumeOverlay.hidden = false;
+  registerOffline();
 }
 
-init();
+initialize();

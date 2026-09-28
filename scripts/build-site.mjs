@@ -69,7 +69,7 @@ await validateCzytaj({ strictAudio: true });
 
 const numberMagicPackRoot = path.join(clientRoot, 'numberblocks');
 const numberMagicPackFiles = (await walk(numberMagicPackRoot))
-  .filter((file) => !file.endsWith('offline-pack.json'));
+  .filter((file) => !file.endsWith('offline-pack.json') && !file.endsWith('/sw.js'));
 const numberMagicAssets = [];
 for (const file of numberMagicPackFiles) {
   const contents = await readFile(file);
@@ -93,11 +93,12 @@ await Promise.all([
   writeFile(path.join(publicRoot, 'numberblocks', 'offline-pack.json'), numberMagicPackJson)
 ]);
 const productionServiceWorkerPath = path.join(numberMagicPackRoot, 'sw.js');
-const productionServiceWorker = await readFile(productionServiceWorkerPath, 'utf8');
-await writeFile(
-  productionServiceWorkerPath,
-  productionServiceWorker.replace('__PACK_VERSION__', numberMagicPack.version)
-);
+const publicNumberMagicWorkerPath = path.join(publicRoot, 'numberblocks', 'sw.js');
+const numberMagicWorkerTemplate = (await readFile(publicNumberMagicWorkerPath, 'utf8'))
+  .replace(/const BUILD_VERSION = '[^']+';/, "const BUILD_VERSION = '__PACK_VERSION__';");
+for (const destination of [productionServiceWorkerPath, publicNumberMagicWorkerPath]) {
+  await writeFile(destination, numberMagicWorkerTemplate.replace('__PACK_VERSION__', numberMagicPack.version));
+}
 await validateNumberMagic({ strictAudio: true });
 
 await validateMimi();
@@ -145,7 +146,7 @@ if (workerBytes >= 1024 * 1024) throw new Error(`Worker exceeds 1 MB budget: ${w
 if (packManifest.totalBytes >= 60 * 1024 * 1024) throw new Error(`Offline pack exceeds 60 MB budget: ${packManifest.totalBytes} bytes`);
 if (packManifest.assetCount >= 900) throw new Error(`Offline pack exceeds 900 file budget: ${packManifest.assetCount}`);
 if (numberMagicPack.totalBytes >= 30 * 1024 * 1024) throw new Error(`Number Magic offline pack exceeds 30 MB budget: ${numberMagicPack.totalBytes} bytes`);
-if (numberMagicPack.assetCount >= 300) throw new Error(`Number Magic offline pack exceeds 300 file budget: ${numberMagicPack.assetCount}`);
+if (numberMagicPack.assetCount >= 350) throw new Error(`Number Magic offline pack exceeds 350 file budget: ${numberMagicPack.assetCount}`);
 console.log(`Built ${sourceFiles.length} static files, ${formatBytes(packManifest.totalBytes)} Czytaj pack, ${formatBytes(numberMagicPack.totalBytes)} Number Magic pack, ${formatBytes(mimiPack.totalBytes)} Mimi pack, ${formatBytes(workerBytes)} Worker.`);
 
 function formatBytes(bytes) {

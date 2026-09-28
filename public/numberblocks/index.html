@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#77cef2">
+  <meta name="theme-color" content="#5ec7ed">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Ten's Magic">
-  <meta name="description" content="A playful, offline number-making world guided by Ten.">
-  <title>Ten's Number Magic</title>
+  <meta name="apple-mobile-web-app-title" content="Ten's Playground">
+  <meta name="description" content="A tap-first, offline arithmetic playground for young children.">
+  <title>Ten's Number Playground</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
@@ -18,182 +18,109 @@
 <body>
   <main id="app" class="app-shell">
     <section id="homeScreen" class="screen home-screen" aria-labelledby="homeTitle">
-      <div class="sky-decor" aria-hidden="true">
-        <span class="cloud cloud-one"></span>
-        <span class="cloud cloud-two"></span>
-        <span class="tiny-star star-one">✦</span>
-        <span class="tiny-star star-two">✦</span>
-        <span class="tiny-star star-three">✦</span>
-      </div>
-
-      <header class="app-header">
-        <div class="brand-lockup" aria-label="Ten's Number Magic">
-          <span class="brand-ten">10</span>
-          <span class="brand-copy">NUMBER<br>MAGIC</span>
-        </div>
-        <div class="header-actions">
-          <button class="round-button" data-sound-button type="button" aria-label="Turn sound off">
-            <span class="sound-on" aria-hidden="true">♪</span>
-            <span class="sound-off" aria-hidden="true">×</span>
-          </button>
-          <button id="settingsButton" class="round-button" type="button" aria-label="Open grown-up settings">
-            <span aria-hidden="true">⚙</span>
-          </button>
-        </div>
-      </header>
-
-      <div class="home-content">
-        <div class="mentor-home-wrap" aria-hidden="true">
-          <div id="homeMentor" class="character-host mentor-home"></div>
-          <span class="rocket-flame flame-one"></span>
-          <span class="rocket-flame flame-two"></span>
-        </div>
-
-        <div class="home-title-wrap">
-          <p class="eyebrow">TEN HAS A NUMBER MISSION!</p>
-          <h1 id="homeTitle">Ready to build<br><span>number magic?</span></h1>
-        </div>
-
-        <button id="missionButton" class="mission-launch" type="button" aria-label="Start Ten's three number missions">
-          <span class="mission-launch-preview" aria-hidden="true">
-            <i>2</i><b>+</b><i>3</i><b>=</b><i class="mission-mystery">?</i>
-          </span>
-          <span class="mission-launch-copy"><strong>Start Ten's Mission</strong><small>Three playful challenges</small></span>
-          <span class="mission-launch-star" aria-hidden="true">★</span>
-        </button>
-
-        <div id="homeProgress" class="home-progress" aria-label="Mission progress"></div>
-
-        <button id="offlinePill" class="offline-pill" type="button" aria-label="Open offline information">
+      <header class="home-utility">
+        <a class="utility-button" href="../" aria-label="Back to all learning games">←</a>
+        <div id="offlineStatus" class="offline-status" aria-live="polite">
           <span class="offline-dot" aria-hidden="true"></span>
-          <span id="offlineLabel">Preparing offline play…</span>
-        </button>
-      </div>
-    </section>
-
-    <section id="playScreen" class="screen play-screen" aria-labelledby="playTitle" hidden>
-      <header class="app-header play-header">
-        <button id="backButton" class="round-button back-button" type="button" aria-label="Leave the mission">
-          <span aria-hidden="true">←</span>
-        </button>
-        <div class="play-heading">
-          <span>TEN'S</span>
-          <strong id="playTitle">MISSION 1 OF 3</strong>
+          <span>Getting ready…</span>
         </div>
-        <button class="round-button" data-sound-button type="button" aria-label="Turn sound off">
-          <span class="sound-on" aria-hidden="true">♪</span>
-          <span class="sound-off" aria-hidden="true">×</span>
+        <button id="parentHoldButton" class="utility-button parent-hold" type="button" aria-label="Hold for grown-up settings">
+          <span aria-hidden="true">⚙</span><i aria-hidden="true"></i>
         </button>
       </header>
 
-      <div id="playContent" class="play-content mission-play-content">
-        <div class="mentor-strip mission-mentor-strip">
-          <div id="playMentor" class="character-host mentor-mini" aria-hidden="true"></div>
-          <div class="speech-bubble">
-            <p id="mentorText">Listen to Ten, then touch the blocks!</p>
-            <button id="replayButton" class="replay-button" type="button" aria-label="Hear Ten again">♪</button>
-          </div>
+      <div class="home-theatre">
+        <div id="homeTen" class="home-ten" aria-hidden="true"></div>
+        <div class="home-copy"><p class="eyebrow">TEN'S PLAYGROUND</p><h1 id="homeTitle">What shall we play?</h1></div>
+        <div class="mode-grid" aria-label="Choose a game">
+          <button id="adventureButton" class="mode-button adventure-button" type="button">
+            <span class="mode-art" aria-hidden="true"><b>★</b><b>🛝</b><b>★</b></span>
+            <span><strong id="adventureLabel">Adventure</strong><small id="adventureHint">Build a playground</small></span><i aria-hidden="true">▶</i>
+          </button>
+          <button id="joinButton" class="mode-button join-button" type="button">
+            <span class="mode-art join-art" aria-hidden="true"><b>2</b><em>+</em><b>3</b></span>
+            <span><strong id="joinLabel">Bump Together</strong><small id="joinHint">How many altogether?</small></span>
+          </button>
+          <button id="shareButton" class="mode-button share-button" type="button">
+            <span class="mode-art share-art" aria-hidden="true"><b>🧸</b><em>→</em><b>🧺</b></span>
+            <span><strong id="shareLabel">Share the Toys</strong><small id="shareHint">One toy at a time</small></span>
+          </button>
         </div>
-
-        <div id="equation" class="equation mission-equation" aria-live="polite"></div>
-        <div id="missionStage" class="mission-stage" aria-live="polite"></div>
-        <div id="missionProgress" class="mission-progress" aria-label="Session progress"></div>
+        <button id="playgroundsButton" class="playgrounds-button" type="button" aria-label="Visit completed playgrounds">
+          <span aria-hidden="true">🏞️</span><span id="playgroundsLabel">My playgrounds</span><b id="playgroundCount">0</b>
+        </button>
       </div>
     </section>
 
-    <div id="welcomeOverlay" class="modal-layer welcome-layer" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <section id="gameScreen" class="screen game-screen" aria-labelledby="gameTitle" hidden>
+      <header class="game-header">
+        <button id="leaveButton" class="utility-button" type="button" aria-label="Leave this adventure">←</button>
+        <div class="game-heading"><span id="gameTitle">ADVENTURE</span><div id="jobProgress" class="job-progress" aria-label="Playground jobs completed"></div></div>
+        <button id="replayButton" class="utility-button replay-button" type="button" aria-label="Hear the instruction again">🔊</button>
+      </header>
+      <div id="playgroundStrip" class="playground-strip" aria-label="Playground being built"></div>
+      <section class="task-shell">
+        <div class="narrator-row">
+          <div id="playTen" class="play-ten" aria-hidden="true"></div>
+          <div class="prompt-bubble"><p id="promptText">Let's play!</p><button id="audioRetryButton" class="audio-retry" type="button" aria-label="Try the sound again" hidden>🔊</button></div>
+        </div>
+        <div id="taskStage" class="task-stage" aria-live="off"></div>
+        <div id="taskControls" class="task-controls"></div>
+      </section>
+      <div id="resultAnnouncement" class="sr-only" role="status" aria-live="polite"></div>
+    </section>
+
+    <div id="firstVisitOverlay" class="overlay first-visit-overlay" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
       <div class="welcome-card">
-        <div class="welcome-sparkles" aria-hidden="true"><span>✦</span><span>★</span><span>✦</span></div>
-        <div id="welcomeMentor" class="character-host welcome-mentor" aria-hidden="true"></div>
-        <p class="eyebrow">HELLO, NUMBER MAKER!</p>
-        <h2 id="welcomeTitle">Ready for<br>number magic?</h2>
-        <button id="startButton" class="magic-button start-button" type="button">
-          <span>Let's play!</span><span aria-hidden="true">★</span>
-        </button>
-        <p class="welcome-note">Sound starts after this tap</p>
+        <div id="welcomeTen" class="welcome-ten" aria-hidden="true"></div>
+        <p class="eyebrow">TEN'S PLAYGROUND</p><h2 id="welcomeTitle">Ready to play?</h2>
+        <button id="firstPlayButton" class="primary-button first-play-button" type="button"><span aria-hidden="true">▶</span><strong id="firstPlayLabel">Play</strong></button>
+        <p>Sound starts with this tap</p>
       </div>
     </div>
 
-    <div id="settingsOverlay" class="modal-layer settings-layer" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
-      <div class="settings-card">
-        <header class="settings-header">
-          <div>
-            <p class="eyebrow">GROWN-UP CORNER</p>
-            <h2 id="settingsTitle">Play settings</h2>
-          </div>
-          <button id="closeSettingsButton" class="round-button" type="button" aria-label="Close settings">×</button>
-        </header>
-
-        <section class="setting-section">
-          <h3>Sound</h3>
-          <label class="toggle-row">
-            <span><strong>Ten and sound effects</strong><small>All audio is stored on this iPhone.</small></span>
-            <input id="soundToggle" type="checkbox" checked>
-          </label>
-          <label class="toggle-row">
-            <span><strong>Gentle movement</strong><small>Use smaller, calmer animations.</small></span>
-            <input id="motionToggle" type="checkbox">
-          </label>
-        </section>
-
-        <section class="setting-section learning-section">
-          <div class="learning-heading">
-            <div><h3>Learning range</h3><p id="learningSummary">Working with number friends up to five.</p></div>
-            <span id="masteryCount" class="mastery-count">0 strong</span>
-          </div>
-          <div id="settingsRangeChoices" class="range-choices compact" role="radiogroup" aria-label="Choose the learning range"></div>
-          <button id="restartRangeButton" class="restart-range-button" type="button">Restart from the selected range</button>
-          <label class="toggle-row auto-grow-row">
-            <span><strong>Grow automatically</strong><small>Unlock the next total after repeated accurate answers.</small></span>
-            <input id="autoAdvanceToggle" type="checkbox" checked>
-          </label>
-        </section>
-
-        <section class="setting-section offline-section">
-          <div class="offline-heading">
-            <span id="settingsOfflineDot" class="offline-dot" aria-hidden="true"></span>
-            <div><h3 id="settingsOfflineTitle">Preparing offline play</h3><p id="settingsOfflineCopy">Keep this page open for a moment.</p></div>
-          </div>
-          <div id="installInstructions" class="install-instructions">
-            <p><strong>Make it feel like an app</strong></p>
-            <ol>
-              <li>Open this page in Safari.</li>
-              <li>Tap <span class="share-symbol" aria-label="Share">⇧</span> Share.</li>
-              <li>Choose <strong>Add to Home Screen</strong>.</li>
-            </ol>
-          </div>
-          <p id="installedMessage" class="installed-message" hidden>Opened from the Home Screen—perfect.</p>
-        </section>
-
-        <section class="setting-section privacy-section">
-          <h3>Private by design</h3>
-          <p>No account, ads, analytics, camera, or location. Mission progress stays on this device.</p>
-        </section>
-
-        <button id="resetProgressButton" class="reset-button" type="button">Reset mission progress</button>
+    <div id="helpOverlay" class="overlay sheet-overlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+      <div class="bottom-sheet help-sheet">
+        <h2 id="helpTitle">Ten can help</h2>
+        <button id="showHelpButton" class="sheet-action" type="button"><span aria-hidden="true">☝</span><span>Show me</span></button>
+        <button id="resetTaskButton" class="sheet-action" type="button"><span aria-hidden="true">↺</span><span>Start this one again</span></button>
+        <button id="skipTaskButton" class="sheet-action" type="button"><span aria-hidden="true">→</span><span>Try an easier one</span></button>
+        <button class="sheet-close" data-close="helpOverlay" type="button">Back</button>
       </div>
     </div>
 
-    <div id="rangeOverlay" class="modal-layer range-layer" role="dialog" aria-modal="true" aria-labelledby="rangeTitle" hidden>
-      <div class="range-card">
-        <div class="range-stars" aria-hidden="true">★ ✦ ★</div>
-        <p class="eyebrow">GROWN-UP SETUP</p>
-        <h2 id="rangeTitle">Where should Ten begin?</h2>
-        <p class="range-intro">Choose a comfortable starting range. You can change this any time from the gear.</p>
-        <div id="setupRangeChoices" class="range-choices" role="radiogroup" aria-label="Choose the starting number range"></div>
-        <label class="setup-auto-row">
-          <input id="setupAutoAdvance" type="checkbox" checked>
-          <span><strong>Let Ten grow the range</strong><small>New totals unlock after several strong, first-try answers.</small></span>
-        </label>
-        <button id="saveRangeButton" class="magic-button range-save-button" type="button">
-          <span>Save and start</span><span aria-hidden="true">★</span>
-        </button>
-        <p class="range-private-note">Progress stays only on this device.</p>
+    <div id="cosmeticOverlay" class="overlay choice-overlay" role="dialog" aria-modal="true" aria-labelledby="choiceTitle" hidden>
+      <div class="choice-card"><div id="choiceTen" class="choice-ten" aria-hidden="true"></div><h2 id="choiceTitle">Choose one!</h2><div id="cosmeticChoices" class="cosmetic-choices"></div></div>
+    </div>
+
+    <div id="finaleOverlay" class="overlay finale-overlay" role="dialog" aria-modal="true" aria-labelledby="finaleTitle" hidden>
+      <div class="finale-card">
+        <div id="finalePlayground" class="finale-playground" aria-label="Completed playground"></div><div id="finaleTen" class="finale-ten" aria-hidden="true"></div>
+        <h2 id="finaleTitle">We built it!</h2>
+        <div class="finale-actions"><button id="allDoneButton" class="secondary-button" type="button">All done</button><button id="anotherButton" class="primary-button" type="button">Another adventure</button></div>
       </div>
     </div>
 
+    <div id="playgroundsOverlay" class="overlay sheet-overlay" role="dialog" aria-modal="true" aria-labelledby="playgroundsTitle" hidden>
+      <div class="bottom-sheet playgrounds-sheet"><header><h2 id="playgroundsTitle">My playgrounds</h2><button class="sheet-close icon-close" data-close="playgroundsOverlay" type="button" aria-label="Close">×</button></header><div id="savedPlaygrounds" class="saved-playgrounds"></div></div>
+    </div>
+
+    <div id="parentOverlay" class="overlay parent-overlay" role="dialog" aria-modal="true" aria-labelledby="parentTitle" hidden>
+      <div class="parent-card">
+        <header><div><p class="eyebrow">GROWN-UP CORNER</p><h2 id="parentTitle">Play settings</h2></div><button class="sheet-close icon-close" data-close="parentOverlay" type="button" aria-label="Close settings">×</button></header>
+        <section class="parent-summary"><h3>Recent learning</h3><div id="learningSummary"></div></section>
+        <section><h3>Joining range</h3><div id="rangeButtons" class="segmented" role="group" aria-label="Maximum joining total"></div><label class="toggle-row"><span><strong>Grow automatically</strong><small>Use the recent eight-observation gate.</small></span><input id="autoAdvanceToggle" type="checkbox"></label></section>
+        <section><h3>Session</h3><div id="lengthButtons" class="segmented" role="group" aria-label="Challenges per session"></div><label class="toggle-row"><span><strong>Odd leftovers</strong><small>Enable equal sharing with one left over.</small></span><input id="remaindersToggle" type="checkbox"></label></section>
+        <section><h3>Sound and motion</h3><label class="range-row"><span>Narration</span><input id="narrationVolume" type="range" min="0" max="1" step="0.05"></label><label class="range-row"><span>Effects</span><input id="effectsVolume" type="range" min="0" max="1" step="0.05"></label><label class="toggle-row"><span><strong>Reduced motion</strong><small>Keep quantities clear without collisions.</small></span><input id="reducedMotionToggle" type="checkbox"></label></section>
+        <section><h3>Language</h3><div class="segmented locale-picker" role="group" aria-label="Narration language"><button type="button" data-locale="en">English</button><button type="button" data-locale="pl">Polski</button></div></section>
+        <button id="resetProgressButton" class="danger-button" type="button">Reset local progress</button><p class="privacy-note">One profile on this device. No account, ads, analytics, camera, or microphone.</p>
+      </div>
+    </div>
+
+    <div id="resumeOverlay" class="overlay resume-overlay" role="dialog" aria-modal="true" aria-labelledby="resumeTitle" hidden>
+      <div class="resume-card"><span aria-hidden="true">⏸</span><h2 id="resumeTitle">Ready to keep playing?</h2><button id="resumeButton" class="primary-button" type="button">Resume</button></div>
+    </div>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-    <div id="celebration" class="celebration" aria-hidden="true"></div>
   </main>
 </body>
 </html>

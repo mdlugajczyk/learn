@@ -12,8 +12,9 @@
     "audio:generate": "node scripts/generate-reading-audio.mjs",
     "audio:elevenlabs": "node scripts/generate-elevenlabs-reading-audio.mjs",
     "audio:temporary": "node scripts/generate-temporary-reading-audio.mjs",
-    "audio:number-magic": "node scripts/generate-number-magic-audio.mjs",
-    "audio:number-magic:elevenlabs": "node scripts/generate-elevenlabs-number-magic-audio.mjs",
+    "audio:number-magic": "node scripts/generate-elevenlabs-number-magic-v1-audio.mjs --all",
+    "audio:number-magic:elevenlabs": "node scripts/generate-elevenlabs-number-magic-v1-audio.mjs --all",
+    "audio:number-magic:v1": "node scripts/generate-elevenlabs-number-magic-v1-audio.mjs --all",
     "audio:mimi:import": "node scripts/import-mimi-recordings.mjs",
     "icons:number-magic": "python3 scripts/generate-number-magic-icons.py"
   }
