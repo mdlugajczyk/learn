@@ -74,6 +74,14 @@ try {
           {id: `word-${step.target.toLowerCase()}`, active: null}
         ]);
       }
+      if (step.type === 'blend' && step.target === 'MA' && lesson === 0) {
+        const highlights = await page.evaluate(() => window.__highlights.slice(-3));
+        assert.deepEqual(highlights, [
+          {id: 'sound-m', active: '0'},
+          {id: 'sound-a', active: '1'},
+          {id: 'word-ma', active: null}
+        ]);
+      }
       await fit(`${lesson}:${step.type}:next`);
       await page.locator('#next').click();
       stepsChecked++;

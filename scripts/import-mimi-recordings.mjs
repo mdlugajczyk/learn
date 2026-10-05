@@ -25,6 +25,7 @@ const extensions = ['.m4a', '.wav', '.mp3', '.aac'];
 // remain accepted too, so existing recordings never need to be renamed.
 const friendlyNames = {
   'sound-a': 'a', 'sound-i': 'i', 'sound-m': 'm', 'sound-l': 'l', 'sound-o': 'o', 'sound-n': 'n', 'sound-s': 's',
+  'sound-t': 't', 'sound-k': 'k', 'sound-g': 'g',
   'blend-ma': 'ma-blend', 'blend-mi': 'mi-blend', 'blend-la': 'la-blend', 'blend-li': 'li-blend',
   'blend-ta': 'ta-blend', 'blend-to': 'to-blend', 'blend-ko': 'ko-blend', 'blend-no': 'no-blend', 'blend-ga': 'ga-blend',
   'word-ma': 'ma', 'word-mi': 'mi', 'word-la': 'la', 'word-li': 'li', 'word-ta': 'ta', 'word-to': 'to', 'word-ko': 'ko', 'word-no': 'no', 'word-ga': 'ga',

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "version": "4f91d0b3ca14",
+  "version": "6fd6b661e2ee",
   "assets": [
     {
       "path": "app.js",
-      "bytes": 24228,
-      "sha256": "d5523931bddf0495b68c18116ab24ab5b035ffd91ba4027e53766846c8791474"
+      "bytes": 24265,
+      "sha256": "269ad1d805f67bfb4ffea92cadc5f4cafb93b88e2f548275ec66a6730baff256"
     },
     {
       "path": "assets/AtkinsonHyperlegibleNext.woff2",
@@ -79,8 +79,8 @@
     },
     {
       "path": "audio-catalog.js",
-      "bytes": 1856,
-      "sha256": "1344b392a8bd78989d8c4ba40930f9ff2df04d7f74bcdb0f4f7add00cfda70a5"
+      "bytes": 1912,
+      "sha256": "dd771b6b0c0052747918cdacf0535e231011a3027c2cc1198f6ae8ec071835ac"
     },
     {
       "path": "audio.js",
@@ -169,8 +169,8 @@
     },
     {
       "path": "audio/manifest.json",
-      "bytes": 31932,
-      "sha256": "fe7b792e4442cdb24bec5f3d80a9dfd435f2e26010cb38bb18b6a41d11db9cda"
+      "bytes": 33351,
+      "sha256": "6005681c759d0b4029b4d983c44f23c691c11e00d657934841c44ffcbb16325a"
     },
     {
       "path": "audio/meet-dad.mp3",
@@ -208,9 +208,19 @@
       "sha256": "7b0f540336002aa6237d94e0b04050ff86caaf52384b2220b1338f6d23821ff4"
     },
     {
+      "path": "audio/sound-g.mp3",
+      "bytes": 9054,
+      "sha256": "bd075cc370ef9b4c4a0a507b103e2156a3b7bdebe512d5945e976f38135e82b3"
+    },
+    {
       "path": "audio/sound-i.mp3",
       "bytes": 9054,
       "sha256": "83d5aded5fd9978535500e4770db699e43235fd77c55711657d9eda7b85cce8a"
+    },
+    {
+      "path": "audio/sound-k.mp3",
+      "bytes": 10308,
+      "sha256": "74d1418efcd69937172e6aa854afc3d1b0ba2d6b51293009328c33861494a9be"
     },
     {
       "path": "audio/sound-l.mp3",
@@ -236,6 +246,11 @@
       "path": "audio/sound-s.mp3",
       "bytes": 10308,
       "sha256": "65edfd9caa452bdbab847c49fce886f2155ff3d0a1db1b8cc40ca89290ec4e39"
+    },
+    {
+      "path": "audio/sound-t.mp3",
+      "bytes": 9472,
+      "sha256": "3aa859963e4f4b60bf243053380d612800f3be15d219cffa2dc8cee6c36f1239"
     },
     {
       "path": "audio/touch-letter.mp3",
@@ -348,5 +363,5 @@
       "sha256": "6b54c7f050962fe2910a80fd73410c9f26a1a6a443153cbf5d9cfc558b99243f"
     }
   ],
-  "totalBytes": 2064289
+  "totalBytes": 2094635
 }

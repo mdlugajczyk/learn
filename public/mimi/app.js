@@ -135,23 +135,23 @@ async function playModel(step, revision) {
   lab.querySelector('.whole').setAttribute('aria-hidden', 'true');
   lab.querySelectorAll('.unit').forEach(el => el.classList.remove('active', 'heard'));
   lab.querySelectorAll('.join-sign').forEach(el => el.textContent = step.type === 'word' ? '–' : '+');
+  for (const [index, unit] of step.units.entries()) {
+    const el = lab.querySelector(`[data-unit="${index}"]`);
+    el.classList.add('active');
+    await narrator.play(unitAudio(unit));
+    if (revision !== token) return;
+    el.classList.remove('active'); el.classList.add('heard');
+    if (step.type === 'blend') lab.style.setProperty('--blend-progress', (index + 1) / (step.units.length + 1));
+    await pause(160);
+  }
   if (step.type === 'blend') {
-    await narrator.play(`blend-${step.target.toLowerCase()}`, { onProgress: fraction => {
-      if (revision !== token) return;
-      lab.style.setProperty('--blend-progress', fraction);
-      lab.classList.toggle('stretching', fraction > .12);
-      lab.classList.toggle('collapsing', fraction > .75);
-    } });
+    // The child hears exactly the displayed sequence: m, then a, then ma.
+    // Pre-recorded blend clips were ambiguous ("m… ma") and are not used here.
+    lab.classList.add('stretching');
+    await pause(320);
+    lab.classList.add('collapsing');
     if (revision !== token) return;
   } else {
-    for (const [index, unit] of step.units.entries()) {
-      const el = lab.querySelector(`[data-unit="${index}"]`);
-      el.classList.add('active');
-      await narrator.play(unitAudio(unit));
-      if (revision !== token) return;
-      el.classList.remove('active'); el.classList.add('heard');
-      await pause(160);
-    }
     lab.classList.add('hyphenated');
     lab.querySelectorAll('.join-sign').forEach(el => el.textContent = '–');
     await pause(520);
