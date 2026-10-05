@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-bc1563a25cf7",
+  "version": "number-magic-b2e53917f93f",
   "assetCount": 325,
-  "totalBytes": 11553107,
+  "totalBytes": 11554344,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 57548,
-      "sha256": "fead07ad6bbc444c9fbfea601cfbbca5907e0f41ec5579914c0eb119aba4cb20"
+      "bytes": 58336,
+      "sha256": "3ed7745942db3c4376023f90ce12177eae5848b02251701fcde9432e3c939d4d"
     },
     {
       "path": "art/playground-stage.webp",
@@ -1626,8 +1626,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 23881,
-      "sha256": "46e84f68596f216569d3ac06059eb26ffab53712798b88aa28714dd4b3734452"
+      "bytes": 24330,
+      "sha256": "1c4f947ceef35a848593ccccdf205077cfd9cf4b2f7caf40e73be4ae42195e5d"
     }
   ]
 }

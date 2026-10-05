@@ -1175,17 +1175,39 @@ function renderParentSettings() {
 }
 
 function bindParentHold() {
+  let completedHold = false;
   const start = event => {
     if (event.type === 'pointerdown' && event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
     clearTimeout(parentHoldTimer);
+    completedHold = false;
+    if (event.pointerId !== undefined) {
+      try { elements.parentHoldButton.setPointerCapture(event.pointerId); } catch {}
+    }
     elements.parentHoldButton.classList.add('holding');
-    parentHoldTimer = setTimeout(() => { elements.parentHoldButton.classList.remove('holding'); openParentSettings(); }, 3000);
+    parentHoldTimer = setTimeout(() => {
+      parentHoldTimer = null;
+      completedHold = true;
+      elements.parentHoldButton.classList.remove('holding');
+      openParentSettings();
+    }, 3000);
   };
-  const cancel = () => { clearTimeout(parentHoldTimer); elements.parentHoldButton.classList.remove('holding'); };
+  const cancel = event => {
+    clearTimeout(parentHoldTimer);
+    parentHoldTimer = null;
+    elements.parentHoldButton.classList.remove('holding');
+    if (event?.pointerId !== undefined && elements.parentHoldButton.hasPointerCapture?.(event.pointerId)) {
+      try { elements.parentHoldButton.releasePointerCapture(event.pointerId); } catch {}
+    }
+  };
   elements.parentHoldButton.addEventListener('pointerdown', start);
   elements.parentHoldButton.addEventListener('pointerup', cancel);
   elements.parentHoldButton.addEventListener('pointercancel', cancel);
-  elements.parentHoldButton.addEventListener('pointerleave', cancel);
+  elements.parentHoldButton.addEventListener('contextmenu', event => event.preventDefault());
+  elements.parentHoldButton.addEventListener('click', () => {
+    if (completedHold) { completedHold = false; return; }
+    showToast(profile.settings.locale === 'pl' ? 'Przytrzymaj przez 3 sekundy' : 'Hold for 3 seconds');
+  });
   elements.parentHoldButton.addEventListener('keydown', event => { if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) start(event); });
   elements.parentHoldButton.addEventListener('keyup', cancel);
 }

@@ -259,3 +259,14 @@ test('parent can choose every joining maximum from five to ten and Ten is white'
   assert.match(styles, /\.ten-friend, \.number-10 \{ --unit-color: #fff; \}/);
   assert.match(styles, /\.number-10 \.friend-number \{[^}]*background: #fff;/);
 });
+
+test('the parent hold survives iPad touch movement without triggering a browser gesture', async () => {
+  const appSource = await readFile(new URL('../public/numberblocks/app.js', import.meta.url), 'utf8');
+  const styles = await readFile(new URL('../public/numberblocks/styles.css', import.meta.url), 'utf8');
+  assert.match(appSource, /setPointerCapture\(event\.pointerId\)/);
+  assert.match(appSource, /addEventListener\('contextmenu', event => event\.preventDefault\(\)\)/);
+  assert.match(appSource, /Hold for 3 seconds/);
+  assert.doesNotMatch(appSource, /addEventListener\('pointerleave', cancel\)/);
+  assert.match(styles, /\.parent-hold \{ touch-action: none;[^}]*-webkit-touch-callout: none;/);
+  assert.match(styles, /\.parent-hold:active \{ transform: none;/);
+});

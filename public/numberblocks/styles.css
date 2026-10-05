@@ -69,6 +69,9 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid 
 .offline-dot { width: 11px; height: 11px; border-radius: 50%; background: #f0af3b; box-shadow: 0 0 0 4px rgba(240,175,59,.18); }
 .offline-ready .offline-dot { background: #36b96a; box-shadow: 0 0 0 4px rgba(54,185,106,.18); }
 .parent-hold i { width: 100%; height: 100%; position: absolute; inset: 0; border-radius: inherit; background: conic-gradient(#ffd94f var(--hold, 0%), transparent 0); opacity: .45; pointer-events: none; }
+.parent-hold { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.parent-hold:active { transform: none; box-shadow: 0 6px 0 rgba(33, 91, 118, .2); }
+.parent-hold::after { content: "3s"; min-width: 20px; position: absolute; z-index: 2; right: -4px; bottom: -3px; padding: 2px 4px; border: 2px solid #fff; border-radius: 99px; background: var(--purple); color: #fff; font-size: .62rem; line-height: 1; }
 .parent-hold.holding i { animation: hold-fill 3s linear forwards; }
 @keyframes hold-fill { to { --hold: 100%; } }
 @property --hold { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
