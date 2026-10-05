@@ -1,21 +1,22 @@
-// Reuse one media element on iOS's media playback route. No test sound and no
-// await before play(): Safari must receive the request directly from the tap.
+// Each clip gets its own media element. Reassigning src on a just-ended element
+// is unreliable in Mobile Safari: the next short syllable can be silently
+// skipped. No test sound and no await before play(): Safari must receive the
+// first request directly from the tap.
 export class Narrator {
-  constructor({ media = new Audio(), stallMs = 8000, pollMs = 250 } = {}) {
-    this.media = media;
-    this.media.preload = 'auto';
+  constructor({ createMedia = () => new Audio(), stallMs = 8000, pollMs = 250 } = {}) {
+    this.createMedia = createMedia;
     this.current = null;
     this.stallMs = stallMs;
     this.pollMs = pollMs;
   }
   stop() {
     this.current?.finish(false);
-    this.media.pause();
   }
   play(id, { onProgress } = {}) {
     this.stop();
     try { if (globalThis.navigator?.audioSession) navigator.audioSession.type = 'playback'; } catch { /* Older Safari uses the default media route. */ }
-    const media = this.media;
+    const media = this.createMedia();
+    media.preload = 'auto';
     media.src = new URL(`./audio/${id}.mp3`, import.meta.url).href;
     media.muted = false;
     media.volume = 1;
@@ -29,7 +30,10 @@ export class Narrator {
         media.removeEventListener('ended', ended);
         media.removeEventListener('error', failed);
         if (this.current?.finish === finish) this.current = null;
-        if (error) { media.pause(); reject(error); } else resolve(result);
+        // A cancellation must silence the old element before the next clip
+        // starts; a natural `ended` event needs no pause.
+        if (!result) media.pause();
+        if (error) reject(error); else resolve(result);
       };
       const ended = () => { onProgress?.(1); finish(true); };
       const failed = () => finish(false, new Error(`Nie można odtworzyć nagrania: ${id}`));

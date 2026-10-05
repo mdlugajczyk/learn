@@ -362,16 +362,23 @@
       "id": "sound-s",
       "text": "sss",
       "filename": "sound-s.mp3",
-      "source": "ai",
-      "provider": "elevenlabs",
+      "source": "human",
+      "provider": "local-recording",
       "model": "eleven_multilingual_v2",
       "voiceId": "Xb7hH8MSUJpSbSDYk0k2",
       "voice": "Alice",
       "language": "pl",
       "contentHash": "5e116c15487bc2d8553d70694260da1f3be86c359d6e9437f062967132396888",
-      "sha256": "f4fc7bb298dd0422d1e81cbb2fe72abec967c2d92cf0fce10519958ca18c3e9e",
+      "sha256": "65edfd9caa452bdbab847c49fce886f2155ff3d0a1db1b8cc40ca89290ec4e39",
       "generatedAt": "2026-09-16T12:16:13.012Z",
-      "qaStatus": "pending-listening-review"
+      "qaStatus": "needs-listening-review",
+      "originalFilename": "S.m4a",
+      "trim": {
+        "leadingMs": 50,
+        "trailingMs": 150,
+        "silenceThresholdDb": -50
+      },
+      "importedAt": "2026-10-05T13:14:40.169Z"
     },
     {
       "id": "blend-ma",
@@ -391,7 +398,7 @@
         "sound-m",
         "word-ma"
       ],
-      "importedAt": "2026-09-27T22:11:49.595Z"
+      "importedAt": "2026-10-05T13:14:40.224Z"
     },
     {
       "id": "blend-mi",
@@ -411,7 +418,7 @@
         "sound-m",
         "word-mi"
       ],
-      "importedAt": "2026-09-27T22:11:49.641Z"
+      "importedAt": "2026-10-05T13:14:40.272Z"
     },
     {
       "id": "blend-la",
@@ -431,7 +438,7 @@
         "sound-l",
         "word-la"
       ],
-      "importedAt": "2026-09-27T22:11:49.688Z"
+      "importedAt": "2026-10-05T13:14:40.320Z"
     },
     {
       "id": "blend-li",
@@ -451,7 +458,7 @@
         "sound-l",
         "word-li"
       ],
-      "importedAt": "2026-09-27T22:11:49.735Z"
+      "importedAt": "2026-10-05T13:14:40.368Z"
     },
     {
       "id": "blend-ta",
@@ -470,7 +477,7 @@
       "derivedFrom": [
         "word-ta"
       ],
-      "importedAt": "2026-09-27T22:11:49.820Z"
+      "importedAt": "2026-10-05T13:14:40.458Z"
     },
     {
       "id": "blend-to",
@@ -489,7 +496,7 @@
       "derivedFrom": [
         "word-to"
       ],
-      "importedAt": "2026-09-27T22:11:49.858Z"
+      "importedAt": "2026-10-05T13:14:40.498Z"
     },
     {
       "id": "blend-ko",
@@ -508,7 +515,7 @@
       "derivedFrom": [
         "word-ko"
       ],
-      "importedAt": "2026-09-27T22:11:49.897Z"
+      "importedAt": "2026-10-05T13:14:40.538Z"
     },
     {
       "id": "blend-no",
@@ -528,7 +535,7 @@
         "sound-n",
         "word-no"
       ],
-      "importedAt": "2026-09-27T22:11:49.782Z"
+      "importedAt": "2026-10-05T13:14:40.417Z"
     },
     {
       "id": "blend-ga",
@@ -547,7 +554,7 @@
       "derivedFrom": [
         "word-ga"
       ],
-      "importedAt": "2026-09-27T22:11:49.938Z"
+      "importedAt": "2026-10-05T13:14:40.580Z"
     },
     {
       "id": "word-ma",

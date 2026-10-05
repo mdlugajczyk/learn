@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "4ed4bd6e02aa",
+  "version": "4f91d0b3ca14",
   "assets": [
     {
       "path": "app.js",
@@ -84,8 +84,8 @@
     },
     {
       "path": "audio.js",
-      "bytes": 2228,
-      "sha256": "4e451922b2e99008a9637eeb04009c8fbf61068a239a6644aa5e276b8382a1c4"
+      "bytes": 2499,
+      "sha256": "dfd1f00e81a8134740c9907277b363d9eeed8eff64994cc499eb70633bdac143"
     },
     {
       "path": "audio/blend-ga.mp3",
@@ -169,8 +169,8 @@
     },
     {
       "path": "audio/manifest.json",
-      "bytes": 31732,
-      "sha256": "5da4d9842e5566dd4b4e0244358e7b341c1ea4cb14de8501b2e036ceca016792"
+      "bytes": 31932,
+      "sha256": "fe7b792e4442cdb24bec5f3d80a9dfd435f2e26010cb38bb18b6a41d11db9cda"
     },
     {
       "path": "audio/meet-dad.mp3",
@@ -234,8 +234,8 @@
     },
     {
       "path": "audio/sound-s.mp3",
-      "bytes": 10075,
-      "sha256": "f4fc7bb298dd0422d1e81cbb2fe72abec967c2d92cf0fce10519958ca18c3e9e"
+      "bytes": 10308,
+      "sha256": "65edfd9caa452bdbab847c49fce886f2155ff3d0a1db1b8cc40ca89290ec4e39"
     },
     {
       "path": "audio/touch-letter.mp3",
@@ -348,5 +348,5 @@
       "sha256": "6b54c7f050962fe2910a80fd73410c9f26a1a6a443153cbf5d9cfc558b99243f"
     }
   ],
-  "totalBytes": 2063585
+  "totalBytes": 2064289
 }

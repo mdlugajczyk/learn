@@ -11,7 +11,7 @@ class Media extends EventTarget {
 }
 
 test('narration starts on the same tap stack and finishes on media ended', async () => {
-  const media = new Media(), narrator = new Narrator({ media });
+  const media = new Media(), narrator = new Narrator({ createMedia: () => media });
   const progress = [];
   const playing = narrator.play('word-ma', { onProgress: p => progress.push(p) });
   assert.equal(media.playCalls, 1);
@@ -25,20 +25,45 @@ test('narration starts on the same tap stack and finishes on media ended', async
 });
 
 test('new narration cancels the previous clip without overlap or a pending promise', async () => {
-  const media = new Media(), narrator = new Narrator({ media });
+  const clips = [], narrator = new Narrator({ createMedia: () => {
+    const media = new Media();
+    clips.push(media);
+    return media;
+  } });
   const first = narrator.play('word-ma');
   const second = narrator.play('word-mi');
   assert.equal(await first, false);
-  media.dispatchEvent(new Event('ended'));
+  assert.equal(clips[0].paused, true);
+  assert.notEqual(clips[0], clips[1]);
+  clips[1].dispatchEvent(new Event('ended'));
   assert.equal(await second, true);
   const third = narrator.play('word-mama');
   narrator.stop();
   assert.equal(await third, false);
-  assert.equal(media.paused, true);
+  assert.equal(clips[2].paused, true);
+});
+
+test('the same syllable can play twice in a row before a complete word', async () => {
+  const clips = [], narrator = new Narrator({ createMedia: () => {
+    const media = new Media();
+    clips.push(media);
+    return media;
+  } });
+  const first = narrator.play('word-ma');
+  clips[0].dispatchEvent(new Event('ended'));
+  await first;
+  const second = narrator.play('word-ma');
+  clips[1].dispatchEvent(new Event('ended'));
+  await second;
+  const wholeWord = narrator.play('word-mama');
+  clips[2].dispatchEvent(new Event('ended'));
+  await wholeWord;
+  assert.deepEqual(clips.map(({ src }) => src.split('/').at(-1)), ['word-ma.mp3', 'word-ma.mp3', 'word-mama.mp3']);
+  assert.equal(new Set(clips).size, 3);
 });
 
 test('autoplay rejection and missing media fail promptly instead of locking the lesson', async () => {
-  const media = new Media(), narrator = new Narrator({ media });
+  const media = new Media(), narrator = new Narrator({ createMedia: () => media });
   media.play = () => Promise.reject(new Error('NotAllowedError'));
   await assert.rejects(narrator.play('word-ma'), /NotAllowedError/);
   media.play = () => Promise.resolve();
@@ -49,7 +74,7 @@ test('autoplay rejection and missing media fail promptly instead of locking the 
 });
 
 test('a playing icon with no progressing audio reaches recovery instead of waiting forever', async () => {
-  const media = new Media(), narrator = new Narrator({ media, stallMs: 20, pollMs: 5 });
+  const media = new Media(), narrator = new Narrator({ createMedia: () => media, stallMs: 20, pollMs: 5 });
   await assert.rejects(narrator.play('word-ma'), /zatrzymało/);
   assert.equal(media.paused, true);
   assert.equal(narrator.current, null);
