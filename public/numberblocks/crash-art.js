@@ -1,0 +1,22 @@
+// Small, resolution-independent toy illustrations. No image/network dependency.
+const defs = `<defs>
+  <linearGradient id="toyTeal" x2="0" y2="1"><stop stop-color="#64e2db"/><stop offset="1" stop-color="#149baf"/></linearGradient>
+  <linearGradient id="toyPurple" x2=".3" y2="1"><stop stop-color="#b8a1ff"/><stop offset="1" stop-color="#7857d1"/></linearGradient>
+  <linearGradient id="toyCoral" x2="0" y2="1"><stop stop-color="#ffb597"/><stop offset="1" stop-color="#f76c79"/></linearGradient>
+  <linearGradient id="toyGlass" x2="1" y2="1"><stop stop-color="#e6fbff"/><stop offset="1" stop-color="#82cce9"/></linearGradient>
+</defs>`;
+const cargo = `<g class="illustrated-cargo"><rect x="60" y="10" width="70" height="68" rx="17" fill="#574190" opacity=".2" transform="translate(0 5)"/><rect x="60" y="10" width="70" height="68" rx="17" fill="url(#toyPurple)" stroke="#faf4ff" stroke-width="4"/><path d="M72 26h43" stroke="#e1d3ff" stroke-width="5" stroke-linecap="round" opacity=".65"/><text x="95" y="62" fill="white" text-anchor="middle" font-size="46" font-weight="900" font-family="system-ui">?</text></g>`;
+const wheel = x => `<g class="illustrated-wheel" style="transform-origin:${x}px 108px"><circle cx="${x}" cy="108" r="19" fill="#26445d"/><circle cx="${x}" cy="108" r="11" fill="#e9f8ff"/><circle cx="${x}" cy="108" r="4" fill="#7192b0"/><path d="M${x-7} 108h14M${x} 101v14" stroke="#91afc4" stroke-width="3"/></g>`;
+
+export function vehicleArt(scene) {
+  let content;
+  if (scene === 'plane') content = `${cargo}<path d="M22 71 5 41q-2-7 7-7h16l32 39" fill="url(#toyCoral)" stroke="#fff2e7" stroke-width="3"/><path d="M13 76q75-32 167-7 23 7 4 22Q83 112 19 96Z" fill="url(#toyTeal)" stroke="#eaffff" stroke-width="4"/><path d="m104 76-33 47q-5 7 6 7h23l38-46" fill="#ffd36f" stroke="#fff4ce" stroke-width="3"/><path d="m107 80-30-46q-5-8 6-8h16l36 48" fill="#ffdf8d" stroke="#fff4ce" stroke-width="3"/><ellipse class="illustrated-propeller" cx="190" cy="80" rx="5" ry="35" fill="#405e79"/><circle cx="190" cy="80" r="9" fill="#ffbb5a"/><path d="M29 84h30" stroke="#c7fffa" stroke-width="4" stroke-linecap="round"/>`;
+  else if (scene === 'runner') content = `<g class="runner-leg runner-leg-back"><path d="m103 80 17 25" stroke="#5a429e" stroke-width="12" stroke-linecap="round"/><path d="M111 104h24q14 0 14 12v5h-40q-7-9 2-17" fill="#ffb758" stroke="#fff7e8" stroke-width="3"/></g><path class="runner-arm" d="m64 53-22 14-10-14m96 0 17-15 13 9" fill="none" stroke="#7d62c9" stroke-width="10" stroke-linecap="round"/>${cargo}<g class="runner-leg runner-leg-front"><path d="m84 80-9 25" stroke="#7d62c9" stroke-width="12" stroke-linecap="round"/><path d="M68 104h27q14 0 14 12v5H63q-3-12 5-17" fill="#ff8392" stroke="#fff2e7" stroke-width="3"/></g>`;
+  else content = `${cargo}<path d="M133 53h21q18 0 24 28l12 8v17H19q-11 0-11-12V83q0-10 13-10h111Z" fill="url(#toyTeal)" stroke="#e9fffa" stroke-width="4"/><path d="M139 59h13q12 0 17 20h-30Z" fill="url(#toyGlass)" stroke="#17849d" stroke-width="3"/><path d="M21 84h88" stroke="#b9fff0" stroke-width="5" stroke-linecap="round"/><rect x="176" y="88" width="14" height="9" rx="4" fill="#fff2b2"/><rect x="5" y="99" width="22" height="9" rx="4" fill="#ffb75d"/>${wheel(48)}${wheel(153)}`;
+  return `<svg viewBox="0 0 210 140" aria-hidden="true">${defs}${content}</svg>`;
+}
+
+export function obstacleArt(scene) {
+  if (scene === 'plane') return `<svg viewBox="0 0 120 150" aria-hidden="true"><ellipse cx="62" cy="134" rx="54" ry="10" fill="#68616b" opacity=".14"/><rect x="12" y="84" width="102" height="46" rx="22" fill="#ffc5cf" stroke="#fff1e7" stroke-width="4" transform="rotate(-7 60 110)"/><rect x="4" y="48" width="99" height="48" rx="20" fill="#ffd87f" stroke="#fff6d5" stroke-width="4" transform="rotate(9 50 70)"/><rect x="23" y="13" width="88" height="45" rx="20" fill="#b9a1ec" stroke="#f3eaff" stroke-width="4" transform="rotate(-9 65 35)"/><path d="m60 26 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Z" fill="#ffefb4"/></svg>`;
+  return `<svg viewBox="0 0 120 150" aria-hidden="true"><ellipse cx="60" cy="137" rx="53" ry="9" fill="#68616b" opacity=".14"/><g stroke="#fff7de" stroke-width="4" stroke-linejoin="round"><path d="m85 14 23 14v102l-23 10Z" fill="#db8b54"/><path d="M10 26 85 14v126l-75-8Z" fill="#ffd584"/><path d="M10 61 85 52m-75 45 75-5M47 20v37M47 95v41" fill="none"/><path d="M10 26 85 14l23 14-76 10Z" fill="#ffe9b5"/></g><path d="M21 45h18M57 78h17M22 116h17" stroke="#fff1ce" stroke-width="5" stroke-linecap="round"/></svg>`;
+}

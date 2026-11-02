@@ -15,6 +15,8 @@ import {
   undoToyMove,
   validateShare
 } from './game-model.js';
+import { vehicleArt, obstacleArt } from './crash-art.js';
+import { playCrashSound } from './crash-sound.js';
 
 const STORAGE_KEY = 'tens-playground-v3';
 const WELCOME_KEY = 'tens-playground-welcomed-v1';
@@ -226,6 +228,7 @@ class AudioDirector {
     this.voice.preload = 'auto';
     this.context = null;
     this.token = 0;
+    this.crashCancels = [];
     this.voice.addEventListener('error', () => {
       if (!this.voice.src) return;
       state.audioFailed = true;
@@ -239,6 +242,7 @@ class AudioDirector {
     this.effect('tap');
   }
   stop() {
+    this.crashCancels.splice(0).forEach(cancel => cancel());
     this.token += 1;
     this.voice.pause();
     this.voice.removeAttribute('src');
@@ -283,6 +287,9 @@ class AudioDirector {
       oscillator.start(now + index * .07);
       oscillator.stop(now + index * .07 + duration + .03);
     });
+  }
+  crashSound(phase, scene) {
+    this.crashCancels.push(playCrashSound(this.context, profile.settings.effectsVolume, phase, scene));
   }
 }
 
@@ -520,10 +527,14 @@ function renderCrashTask(task) {
   const stage = make('div', `crash-stage crash-${task.scene}`);
   const scenery = make('div', 'crash-scenery');
   scenery.setAttribute('aria-hidden', 'true');
-  scenery.append(make('span', 'crash-cloud cloud-one'), make('span', 'crash-cloud cloud-two'), make('span', 'crash-road'), make('span', 'crash-barrier'));
+  const barrier = make('span', 'crash-barrier');
+  barrier.innerHTML = obstacleArt(task.scene);
+  scenery.append(make('span', 'crash-cloud cloud-one'), make('span', 'crash-cloud cloud-two'), make('span', 'crash-hills'), make('span', 'crash-road'), make('span', 'crash-speed-lines'), barrier);
   const vehicle = make('div', 'mystery-vehicle');
   vehicle.setAttribute('aria-hidden', 'true');
-  vehicle.append(make('span', 'mystery-cargo', '?'), make('span', 'vehicle-body'), make('i', 'wheel wheel-one'), make('i', 'wheel wheel-two'));
+  vehicle.innerHTML = vehicleArt(task.scene);
+  const shadow = make('span', 'vehicle-shadow');
+  scenery.appendChild(shadow);
   const groups = make('div', `crash-groups crash-groups-${task.parts.length}`);
   task.parts.forEach((part, index) => {
     const group = make('div', 'crash-group');
@@ -534,7 +545,16 @@ function renderCrashTask(task) {
     group.appendChild(friend);
     groups.appendChild(group);
   });
-  stage.append(scenery, vehicle, make('span', 'crash-impact', '✦'), groups);
+  const impact = make('div', 'crash-impact');
+  impact.setAttribute('aria-hidden', 'true');
+  impact.append(make('span', 'impact-ring'), make('span', 'impact-star', '✦'));
+  for (let index = 0; index < 8; index += 1) {
+    const puff = make('i', 'crash-puff');
+    puff.style.setProperty('--puff-angle', `${index * 45}deg`);
+    puff.style.setProperty('--puff-distance', `${35 + index % 3 * 14}px`);
+    impact.appendChild(puff);
+  }
+  stage.append(scenery, vehicle, impact, groups);
   const replay = make('button', 'crash-replay', '↻');
   replay.type = 'button';
   replay.setAttribute('aria-label', profile.settings.locale === 'pl' ? 'Powtórz zderzenie' : 'Replay the crash');
@@ -561,39 +581,78 @@ async function animateCrash(task) {
   state.phase = 'crashing';
   audio.stop();
   lockAnswerButtons();
+  elements.taskControls.classList.add('crash-waiting');
   clearTaskTimers();
   saveCheckpoint();
   const stage = elements.taskStage.querySelector('.crash-stage');
   const vehicle = stage.querySelector('.mystery-vehicle');
   const reduced = useReducedMotion();
   elements.promptText.textContent = '?';
+  const stageRect = stage.getBoundingClientRect();
+  const vehicleRect = vehicle.getBoundingClientRect();
+  const wallRect = stage.querySelector('.crash-barrier').getBoundingClientRect();
+  const nose = task.scene === 'runner' ? .64 : .92;
+  const endX = wallRect.left - stageRect.left + wallRect.width * .1 - vehicleRect.width * nose;
+  const endY = wallRect.bottom - stageRect.top - vehicleRect.height * .86;
+  const pose = (x, y, rotation = 0, squash = '') => `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) ${squash}`;
+  vehicle.style.transform = pose(endX, endY);
+  stage.style.setProperty('--impact-x', `${wallRect.left - stageRect.left + 5}px`);
+  stage.style.setProperty('--impact-y', `${endY + vehicleRect.height * .5}px`);
   if (!reduced) {
+    stage.classList.add('crash-approaching');
+    audio.crashSound('approach', task.scene);
+    const airborne = task.scene === 'plane';
     vehicle.animate([
-      { left: '-35%', transform: 'translateY(-50%) rotate(-5deg)' },
-      { left: '12%', transform: 'translateY(-58%) rotate(3deg)', offset: .45 },
-      { left: '48%', transform: 'translateY(-50%) rotate(0)' }
-    ], { duration: 1000, easing: 'cubic-bezier(.4,0,.8,1)', fill: 'forwards' });
-    if (!await delay(1000, token)) return;
+      { transform: pose(-vehicleRect.width - 15, airborne ? endY - 80 : endY + 2, airborne ? 12 : -3) },
+      { transform: pose(endX * .1, airborne ? endY - 45 : endY - 7, airborne ? 8 : 2), offset: .65 },
+      { transform: pose(endX - 9, endY - 2, airborne ? -4 : -7), offset: .9 },
+      { transform: pose(endX, endY) }
+    ], { duration: 1250, easing: 'cubic-bezier(.3,0,.7,1)' });
+    if (!await delay(1030, token)) return;
+    stage.classList.add('crash-braking');
+    audio.crashSound('brake', task.scene);
+    if (!await delay(220, token)) return;
+    stage.classList.remove('crash-approaching');
     stage.classList.add('crash-contact');
-    audio.effect('boop');
-    if (!await delay(150, token)) return;
+    audio.crashSound('impact', task.scene);
+    vehicle.animate([
+      { transform: pose(endX, endY) },
+      { transform: pose(endX + 9, endY + 2, 6, 'scale(.76,1.12)'), offset: .25 },
+      { transform: pose(endX - 12, endY - 5, -9, 'scale(1.04,.98)'), offset: .7 },
+      { transform: pose(endX - 5, endY) }
+    ], { duration: 420, easing: 'ease-out' });
+    stage.querySelector('.crash-barrier').animate([
+      { transform: 'rotate(0) scale(1)' }, { transform: 'rotate(9deg) scale(.88,1.06)', offset: .25 },
+      { transform: 'rotate(-5deg) scale(1.04,.96)', offset: .65 }, { transform: 'rotate(0) scale(1)' }
+    ], { duration: 650, easing: 'ease-out' });
+    stage.animate([{ transform: 'translate(0)' }, { transform: 'translate(4px,2px)' }, { transform: 'translate(-3px,-1px)' }, { transform: 'translate(2px,0)' }, { transform: 'translate(0)' }], { duration: 220 });
+    if (!await delay(240, token)) return;
   }
-  const origin = vehicle.getBoundingClientRect();
+  const origin = vehicle.querySelector('.illustrated-cargo').getBoundingClientRect();
   stage.classList.add('crash-scattering');
+  if (!reduced) {
+    audio.crashSound('scatter', task.scene);
+    vehicle.animate([{ opacity: 1, transform: pose(endX - 5, endY) }, { opacity: 0, transform: pose(endX - 70, endY + 12, -12) }], { duration: 480, fill: 'forwards' });
+  }
   const units = [...stage.querySelectorAll('.quantity-unit')];
   units.forEach((unit, index) => {
     const to = unit.getBoundingClientRect();
     const dx = origin.left + origin.width / 2 - to.left - to.width / 2;
     const dy = origin.top + origin.height / 2 - to.top - to.height / 2;
-    const tilt = index % 2 ? 14 : -14;
+    const tilt = index % 2 ? 28 : -28;
     unit.animate(reduced ? [{ opacity: 0 }, { opacity: 1 }] : [
-      { transform: `translate(${dx}px, ${dy}px) rotate(${tilt}deg) scale(.75)`, opacity: 1 },
-      { transform: `translate(${dx * .35}px, ${dy * .35 - 55}px) rotate(${-tilt}deg)`, offset: .55 },
-      { transform: 'translate(0, 5px) scale(1.06,.92)', offset: .86 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${tilt}deg) scale(.65)`, opacity: 1 },
+      { transform: `translate(${dx * .4}px, ${dy * .45 - Math.min(70, stageRect.height * .2)}px) rotate(${-tilt}deg)`, offset: .45 },
+      { transform: 'translate(0, 5px) scale(1.12,.86)', offset: .76 },
+      { transform: 'translate(0, -9px) scale(.96,1.04)', offset: .88 },
       { transform: 'translate(0, 0) scale(1)' }
-    ], { duration: reduced ? 200 : 850, easing: 'ease-out', fill: 'backwards', delay: reduced ? 0 : index * 25 });
+    ], { duration: reduced ? 200 : 1000, easing: 'ease-out', fill: 'backwards', delay: reduced ? 0 : index * 22 });
   });
-  if (!await delay(reduced ? 220 : 1150, token)) return;
+  if (!reduced) {
+    if (!await delay(760, token)) return;
+    audio.crashSound('land', task.scene);
+    if (!await delay(480, token)) return;
+  } else if (!await delay(220, token)) return;
   stage.classList.add('crash-settled');
   stage.classList.remove('crash-scattering');
   state.taskState.crashSeen = true;

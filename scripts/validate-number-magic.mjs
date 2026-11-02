@@ -12,7 +12,7 @@ async function exists(file) {
 export async function validateNumberMagic({ strictAudio = true } = {}) {
   const errors = [];
   const required = [
-    'index.html', 'styles.css', 'missions.css', 'app.js', 'game-model.js', 'sw.js',
+    'index.html', 'styles.css', 'missions.css', 'app.js', 'game-model.js', 'crash-art.js', 'crash-sound.js', 'sw.js',
     'manifest.webmanifest', 'offline-pack.json', 'art/playground-stage.webp',
     'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'
   ];

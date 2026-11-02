@@ -1,4 +1,4 @@
-const BUILD_VERSION = 'number-magic-ab441bc6b03f';
+const BUILD_VERSION = 'number-magic-fc1eaf4bb609';
 const CACHE_PREFIX = 'tens-number-magic-';
 const PACK_URL = './offline-pack.json';
 let activeCacheName = `${CACHE_PREFIX}${BUILD_VERSION}`;
