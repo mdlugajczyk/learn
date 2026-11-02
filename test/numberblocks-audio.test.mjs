@@ -17,6 +17,9 @@ test('Number Magic uses only bundled bilingual ElevenLabs MP3 narration', () => 
 test('Number Magic catalog has one unique file for every spoken line', () => {
   const filenames = NUMBER_MAGIC_V1_AUDIO_ENTRIES.map(entry => entry.filename);
   assert.equal(new Set(filenames).size, filenames.length);
-  assert.equal(filenames.length, 300);
+  for (const locale of ['en', 'pl']) {
+    assert.ok(filenames.includes(`v1-crash-ask-${locale}.mp3`));
+    for (let total = 2; total <= 10; total += 1) assert.ok(filenames.includes(`v1-crash-result-${total}-${locale}.mp3`));
+  }
   assert.ok(NUMBER_MAGIC_V1_AUDIO_ENTRIES.every(entry => entry.text && entry.filename.endsWith('.mp3')));
 });

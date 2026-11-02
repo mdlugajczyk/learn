@@ -1,3 +1,47 @@
+/* Mystery Crash: all countable blocks are DOM units shared with joining. */
+.crash-mode-button { width: min(100%, 470px); min-height: 86px; flex-direction: row; gap: 14px; margin-top: 12px; background: linear-gradient(125deg, #ddd3ff, #b7e9ff); }
+.crash-mode-button > span:nth-child(2) { align-items: flex-start; }
+.crash-mode-button > i { margin-left: auto; font-style: normal; }
+.crash-mode-art { color: #6d4bb3; font-size: 1.8rem; font-weight: 1000; white-space: nowrap; }
+.crash-mode-art i { color: #f49244; font-style: normal; }
+.crash-stage { width: 100%; height: 100%; position: relative; isolation: isolate; background: linear-gradient(#c8edff 0 65%, #b8dfa3 65%); overflow: hidden; }
+.crash-scenery { position: absolute; inset: 0; pointer-events: none; }
+.crash-cloud { position: absolute; width: 70px; height: 22px; border-radius: 100%; background: #fff9; top: 8%; left: 12%; }
+.cloud-two { left: 65%; top: 16%; width: 100px; }
+.crash-road { position: absolute; left: 0; right: 0; top: 60%; height: 22%; border-top: 5px solid #fff9; background: #c6b7a4; }
+.crash-barrier { position: absolute; left: 66%; top: 31%; width: 20%; height: 34%; border: 5px solid #fff; border-radius: 20px; background: repeating-linear-gradient(-35deg, #d7a4df 0 15px, #b07cc3 15px 30px); box-shadow: 0 6px 0 #865ba733; }
+.crash-plane .crash-barrier { border-radius: 50% 40% 25% 25%; background: #ffe8a0; border-color: #fff8d6; }
+.mystery-vehicle { width: 112px; height: 105px; position: absolute; z-index: 5; top: 43%; left: -40%; transform: translateY(-50%); }
+.mystery-cargo { display: grid; place-items: center; width: 78px; height: 78px; position: absolute; left: 12px; top: -6px; border: 5px solid #fff; border-radius: 22px; background: linear-gradient(145deg, #a18ae5, #6e56bc); box-shadow: inset 0 -8px #0001, 0 5px 0 #59499455; color: #fff; font-size: 3.6rem; font-weight: 1000; }
+.vehicle-body { width: 112px; height: 35px; position: absolute; bottom: 12px; border: 4px solid #fff; border-radius: 16px 27px 10px 10px; background: #ffb84e; }
+.wheel { width: 23px; height: 23px; position: absolute; bottom: 0; border: 6px solid #49647f; border-radius: 50%; background: #fff; }
+.wheel-one { left: 15px; } .wheel-two { right: 12px; }
+.crash-plane .vehicle-body { width: 145px; left: -15px; height: 24px; bottom: 4px; background: #f78091; border-radius: 90% 45% 50% 10%; transform: rotate(-8deg); }
+.crash-plane .wheel { width: 54px; height: 14px; border: 3px solid #fff; border-radius: 50%; background: #ffe09a; bottom: 8px; transform: rotate(-25deg); }
+.crash-plane .wheel-two { bottom: 3px; transform: rotate(25deg); }
+.crash-runner .vehicle-body { display: none; }
+.crash-runner .wheel { width: 42px; height: 16px; border: 3px solid #fff; border-radius: 12px; background: #ed7a92; bottom: 4px; }
+.crash-runner .mystery-vehicle { top: 48%; }
+.crash-impact { position: absolute; z-index: 8; top: 30%; left: 55%; color: #ffd44e; -webkit-text-stroke: 2px white; font-size: 6rem; transform: scale(0); opacity: 0; }
+.crash-contact .crash-impact { animation: crash-pop .5s ease-out; }
+.crash-contact .mystery-cargo { animation: cargo-squash .18s ease-in-out; }
+@keyframes cargo-squash { 50% { transform: scale(.8, 1.12) rotate(8deg); } }
+@keyframes crash-pop { 40% { transform: scale(1.2) rotate(20deg); opacity: 1; } to { transform: scale(.7) rotate(65deg); opacity: 0; } }
+.crash-groups { position: absolute; z-index: 10; inset: 12px 12px 45px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 12px; opacity: 0; }
+.crash-group { display: grid; place-items: center; min-width: 0; position: relative; padding: 14px 4px 8px; border: 3px dashed #fff9; border-radius: 24px; background: #ffffff35; }
+.crash-group .friend-number { height: 30px; min-width: 34px; font-size: 1.15rem; border-width: 2px; margin-bottom: 4px; }
+.crash-group .number-friend, .task-stage:has(.crash-stage) .result-formation .number-friend { --unit: var(--crash-unit, 38px); }
+.crash-scattering .crash-groups, .crash-settled .crash-groups { opacity: 1; }
+.crash-group .friend-number, .crash-group .friend-face, .crash-group .friend-arms, .crash-group { transition: opacity .25s; }
+.crash-scattering .friend-number, .crash-scattering .friend-face, .crash-scattering .friend-arms { opacity: 0; }
+.crash-scattering .mystery-vehicle, .crash-settled .mystery-vehicle { visibility: hidden; }
+.crash-settled .crash-scenery { opacity: .45; }
+.crash-stage.finished .crash-groups, .crash-stage.finished .crash-replay { opacity: 0; pointer-events: none; }
+.crash-replay { position: absolute; z-index: 20; bottom: 5px; right: 7px; min-width: 64px; height: 42px; border: 3px solid #fff; border-radius: 14px; color: #65489b; background: #fff5ce; font-size: 1.5rem; cursor: pointer; visibility: hidden; }
+.crash-settled .crash-replay { visibility: visible; }
+.task-stage:has(.crash-stage) .join-equation { gap: 3px; }
+.task-stage:has(.crash-stage) .join-equation span { min-width: 25px; font-size: 1.1rem; padding: 0 4px; }
+@media (max-height: 700px) { .crash-mode-button { min-height: 68px; padding-block: 8px; margin-top: 8px; } .crash-group { padding: 5px 2px; } .crash-group .friend-number { height: 28px; min-width: 34px; margin-bottom: 3px; border-width: 2px; font-size: 1.1rem; } }
 /* Joining */
 .join-stage { width: 100%; height: 100%; display: grid; grid-template-columns: 1fr 56px 1fr; align-items: end; gap: 3px; position: relative; padding: 16px 8px 25px; }
 .join-group { height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; padding-bottom: 8px; transition: transform .35s ease; }
@@ -153,4 +197,20 @@
   .share-stage, .share-controls { height: 100%; min-height: 0; }
   .share-stage { grid-template-rows: minmax(92px, .7fr) minmax(190px, 1.3fr); }
   .share-controls { grid-template-rows: minmax(0, 1fr) 64px; }
+}
+
+@media (max-width: 374px) {
+  .game-header { min-width: 0; }
+  .job-progress { gap: 5px; }
+  .job-progress i { width: 18px; }
+  .task-shell, .task-controls, .answer-panel, .narrator-row { min-width: 0; }
+  .task-shell:has(.crash-stage) { grid-template-rows: 52px minmax(136px, 1fr) 209px; }
+  .join-task-controls .answer-panel { grid-template-rows: repeat(2, minmax(64px, 1fr)); }
+  .prompt-bubble p { min-width: 0; overflow-wrap: anywhere; }
+  .answer-card { min-width: 0; grid-template-columns: auto minmax(0, 1fr); padding: 6px; gap: 4px; }
+  .answer-numeral { min-width: 34px; font-size: 2.2rem; }
+  .quantity-frame { grid-template-columns: repeat(var(--frame-cols), 10px); grid-auto-rows: 10px; }
+  .quantity-frame i { width: 10px; height: 10px; }
+  .crash-group .friend-number { display: none; }
+  .crash-groups { inset: 6px 5px 46px; gap: 7px; }
 }

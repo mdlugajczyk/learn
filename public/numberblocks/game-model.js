@@ -146,6 +146,18 @@ export function makeShareTask(total, goal, options = {}) {
   };
 }
 
+export function makeCrashTask(total, groupCount, { random = Math.random, introducedMax = 5, id = 'crash', scene = 'car' } = {}) {
+  if (!Number.isInteger(total) || total < 2 || total > introducedMax || introducedMax > 10) throw new Error('Invalid crash total');
+  const count = Math.max(2, Math.min(4, total, groupCount));
+  const cuts = shuffle(Array.from({ length: total - 1 }, (_, index) => index + 1), random).slice(0, count - 1).sort((a, b) => a - b);
+  const boundaries = [0, ...cuts, total];
+  const parts = boundaries.slice(1).map((end, index) => end - boundaries[index]);
+  return {
+    ...makeJoinTask(parts[0], total - parts[0], { random, introducedMax, id }),
+    variant: 'crash', skillId: 'crash', parts, scene, representation: 'blocks', answerSupport: 'quantity'
+  };
+}
+
 export function createToyState(total) {
   if (!Number.isInteger(total) || total < 1 || total > 10) throw new Error('Toy total must be between one and ten');
   return {
@@ -247,6 +259,7 @@ export function createDefaultProfile(overrides = {}) {
     sessionsCompleted: Number(overrides.sessionsCompleted || 0),
     evidence: {
       join: [...(overrides.evidence?.join || [])],
+      crash: [...(overrides.evidence?.crash || [])],
       'share.composition': [...(overrides.evidence?.['share.composition'] || [])],
       'share.equal': [...(overrides.evidence?.['share.equal'] || [])],
       'share.remainder': [...(overrides.evidence?.['share.remainder'] || [])]
@@ -376,6 +389,19 @@ export function createSessionPlan(mode, profileValue, seed = Date.now()) {
   const random = createSeededRandom(seed);
   const length = [4, 6, 8].includes(profile.settings.sessionLength) ? profile.settings.sessionLength : 6;
   const sessionId = `session-${seed}`;
+  if (mode === 'crash') {
+    const easier = needsReducedDemand(profile.evidence.crash);
+    const maximum = easier ? Math.min(5, profile.settings.joinMax) : profile.settings.joinMax;
+    return Array.from({ length }, (_, slot) => {
+      const total = 2 + Math.floor(random() * (maximum - 1));
+      const task = makeCrashTask(total, 2 + slot % (easier ? 1 : 3), {
+        random, introducedMax: profile.settings.joinMax, id: `${sessionId}-crash-${slot}`,
+        scene: ['car', 'plane', 'runner'][slot % 3]
+      });
+      if (easier) task.options = generateJoinOptions(task, { introducedMax: profile.settings.joinMax, choiceCount: 2, random });
+      return task;
+    });
+  }
   const defaultPattern = ['join', 'join', 'share', 'join', 'share', 'join', 'share', 'join'];
   const pattern = mode === 'join' ? Array(length).fill('join')
     : mode === 'share' ? Array(length).fill('share')
@@ -404,6 +430,7 @@ export function createSessionPlan(mode, profileValue, seed = Date.now()) {
 export function easierReplacement(task, profileValue, seed = Date.now()) {
   const profile = createDefaultProfile(profileValue);
   const random = createSeededRandom(seed);
+  if (task.variant === 'crash') return makeCrashTask(2, 2, { random, introducedMax: profile.settings.joinMax, id: `${task.id}-easier`, scene: task.scene });
   if (task.kind === 'join') return makeJoinTask(1, 1, {
     id: `${task.id}-easier`, introducedMax: profile.settings.joinMax, choiceCount: 2, random
   });

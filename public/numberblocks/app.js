@@ -43,6 +43,8 @@ const COPY = {
     joinResult: task => `${cap(task.a)} and ${NUMBER_WORDS[task.b]} make ${NUMBER_WORDS[task.sum]}!`,
     joinLook: "Let's look at the blocks.",
     joinCount: "Let's count together.",
+    crashAsk: 'Boing! The mystery number broke into groups. What number was it?',
+    crashResult: task => `It was ${NUMBER_WORDS[task.sum]}! All the blocks are back together.`,
     joinTap: task => `${cap(task.sum)} blocks altogether. Tap ${NUMBER_WORDS[task.sum]}.`,
     shareTarget: task => `${cap(task.total)} toys. Give your sister ${NUMBER_WORDS[task.target.count]}. The rest are for you.`,
     shareFree: task => `Share these ${NUMBER_WORDS[task.total]} toys between both baskets.`,
@@ -66,6 +68,8 @@ const COPY = {
     joinResult: task => `${capPl(task.a)} i ${plWord(task.b)} to razem ${plWord(task.sum)}!`,
     joinLook: 'Spójrzmy na klocki.',
     joinCount: 'Policzmy razem.',
+    crashAsk: 'Bęc! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?',
+    crashResult: task => `To była liczba ${plWord(task.sum)}! Wszystkie klocki znów są razem.`,
     joinTap: task => `Razem jest ${plWord(task.sum)} klocków. Dotknij ${plWord(task.sum)}.`,
     shareTarget: task => `Jest ${plWord(task.total)} zabawek. Daj siostrze ${plWord(task.target.count)}. Reszta jest dla ciebie.`,
     shareFree: task => `Rozdziel ${plWord(task.total)} zabawek do dwóch koszyków.`,
@@ -90,13 +94,15 @@ const UI_COPY = {
     homeTitle: 'What shall we play?', adventure: 'Adventure', adventureHint: 'Build a playground',
     join: 'Bump Together', joinHint: 'How many altogether?', share: 'Share the Toys', shareHint: 'One toy at a time',
     playgrounds: 'My playgrounds', play: 'Play', you: 'You', sister: 'Sister', help: 'Help', check: 'Check ✓',
-    titles: { adventure: 'ADVENTURE', join: 'BUMP TOGETHER', share: 'SHARE THE TOYS' }
+    crash: 'Mystery Crash', crashHint: 'What number was it?',
+    titles: { adventure: 'ADVENTURE', join: 'BUMP TOGETHER', share: 'SHARE THE TOYS', crash: 'MYSTERY CRASH' }
   },
   pl: {
     homeTitle: 'W co się pobawimy?', adventure: 'Przygoda', adventureHint: 'Zbuduj plac zabaw',
     join: 'Połącz razem', joinHint: 'Ile jest razem?', share: 'Podziel zabawki', shareHint: 'Po jednej zabawce',
     playgrounds: 'Moje place zabaw', play: 'Graj', you: 'Ty', sister: 'Siostra', help: 'Pomoc', check: 'Sprawdź ✓',
-    titles: { adventure: 'PRZYGODA', join: 'POŁĄCZ RAZEM', share: 'PODZIEL ZABAWKI' }
+    crash: 'Tajemnicze zderzenie', crashHint: 'Jaka to była liczba?',
+    titles: { adventure: 'PRZYGODA', join: 'POŁĄCZ RAZEM', share: 'PODZIEL ZABAWKI', crash: 'TAJEMNICZE ZDERZENIE' }
   }
 };
 
@@ -303,7 +309,7 @@ function checkpointIsValid(checkpoint) {
   const task = savedSession.tasks[savedSession.index];
   if (!task || !['join', 'share'].includes(task.kind) || !checkpoint.taskState) return false;
   if (task.kind === 'share' && (!toyStateIsValid(checkpoint.taskState.toys) || checkpoint.taskState.toys.total !== task.total)) return false;
-  return ['question', 'evaluating', 'help', 'resolving', 'playground-update'].includes(checkpoint.phase);
+  return ['question', 'crashing', 'evaluating', 'help', 'resolving', 'playground-update'].includes(checkpoint.phase);
 }
 
 function saveProfile() {
@@ -314,7 +320,7 @@ function cacheElements() {
   [
     'app', 'homeScreen', 'gameScreen', 'offlineStatus', 'parentHoldButton', 'homeTen', 'homeTitle', 'adventureButton',
     'adventureLabel', 'adventureHint', 'joinLabel', 'joinHint', 'shareLabel', 'shareHint', 'playgroundsLabel', 'firstPlayLabel',
-    'joinButton', 'shareButton', 'playgroundsButton', 'playgroundCount', 'gameTitle', 'jobProgress',
+    'joinButton', 'shareButton', 'crashButton', 'crashLabel', 'crashHint', 'playgroundsButton', 'playgroundCount', 'gameTitle', 'jobProgress',
     'playgroundStrip', 'playTen', 'promptText', 'audioRetryButton', 'taskStage', 'taskControls',
     'resultAnnouncement', 'leaveButton', 'replayButton', 'firstVisitOverlay', 'welcomeTen', 'firstPlayButton',
     'helpOverlay', 'showHelpButton', 'resetTaskButton', 'skipTaskButton', 'cosmeticOverlay', 'choiceTen',
@@ -392,6 +398,7 @@ function v1Audio(id) {
 }
 
 function taskPrompt(task) {
+  if (task.variant === 'crash') return { text: copy().crashAsk, file: v1Audio('crash-ask') };
   if (task.kind === 'join') return { text: copy().joinAsk(task), file: joinAudio(task, 'ask') };
   if (task.goal === 'targetRecipient') return { text: copy().shareTarget(task), file: v1Audio(`share-target-${task.total}-${task.target.recipient}-${task.target.count}`) };
   if (task.goal === 'freeGroups') return { text: copy().shareFree(task), file: v1Audio(`share-free-${task.total}`) };
@@ -481,7 +488,10 @@ function renderTask({ speak = true } = {}) {
   elements.taskStage.className = `task-stage task-${task.kind}`;
   elements.taskStage.replaceChildren();
   elements.taskControls.replaceChildren();
-  if (task.kind === 'join') renderJoinTask(task);
+  if (task.variant === 'crash') {
+    renderCrashTask(task);
+    if (!state.taskState.crashSeen && state.phase === 'question') { void animateCrash(task); return; }
+  } else if (task.kind === 'join') renderJoinTask(task);
   else renderShareTask(task);
   const prompt = taskPrompt(task);
   showPrompt(prompt.text, prompt.file, speak);
@@ -504,6 +514,95 @@ function renderJoinTask(task) {
   stage.append(left, make('span', 'join-plus', '+'), right, make('span', 'join-spark', '✦'));
   elements.taskStage.appendChild(stage);
   renderJoinControls(task);
+}
+
+function renderCrashTask(task) {
+  const stage = make('div', `crash-stage crash-${task.scene}`);
+  const scenery = make('div', 'crash-scenery');
+  scenery.setAttribute('aria-hidden', 'true');
+  scenery.append(make('span', 'crash-cloud cloud-one'), make('span', 'crash-cloud cloud-two'), make('span', 'crash-road'), make('span', 'crash-barrier'));
+  const vehicle = make('div', 'mystery-vehicle');
+  vehicle.setAttribute('aria-hidden', 'true');
+  vehicle.append(make('span', 'mystery-cargo', '?'), make('span', 'vehicle-body'), make('i', 'wheel wheel-one'), make('i', 'wheel wheel-two'));
+  const groups = make('div', `crash-groups crash-groups-${task.parts.length}`);
+  task.parts.forEach((part, index) => {
+    const group = make('div', 'crash-group');
+    group.dataset.group = String(index);
+    const friend = createNumberFriend(part, { prefix: `${task.id}-part-${index}`, color: COLORS[part - 1] });
+    friend.style.setProperty('--cols', Math.min(part, 4));
+    friend.style.setProperty('--rows', Math.ceil(part / 4));
+    group.appendChild(friend);
+    groups.appendChild(group);
+  });
+  stage.append(scenery, vehicle, make('span', 'crash-impact', '✦'), groups);
+  const replay = make('button', 'crash-replay', '↻');
+  replay.type = 'button';
+  replay.setAttribute('aria-label', profile.settings.locale === 'pl' ? 'Powtórz zderzenie' : 'Replay the crash');
+  replay.addEventListener('click', () => {
+    if (state.phase !== 'question') return;
+    state.taskState.crashSeen = false;
+    audio.stop();
+    renderTask();
+  });
+  stage.appendChild(replay);
+  if (state.taskState.crashSeen) stage.classList.add('crash-settled');
+  elements.taskStage.appendChild(stage);
+  // Choose one unit size for all groups and the reunited number in this round.
+  const { width, height } = stage.getBoundingClientRect();
+  const rows = task.parts.length > 2 ? 2 : 1;
+  const largestColumns = Math.max(...task.parts.map(part => Math.min(part, 4)), layoutColumns(task.sum));
+  const unit = Math.max(23, Math.min(52, (width - 48) / (largestColumns * 2 + 1), (height - 70) / (rows * 4)));
+  elements.taskStage.style.setProperty('--crash-unit', `${unit}px`);
+  renderJoinControls(task);
+}
+
+async function animateCrash(task) {
+  const token = ++state.token;
+  state.phase = 'crashing';
+  audio.stop();
+  lockAnswerButtons();
+  clearTaskTimers();
+  saveCheckpoint();
+  const stage = elements.taskStage.querySelector('.crash-stage');
+  const vehicle = stage.querySelector('.mystery-vehicle');
+  const reduced = useReducedMotion();
+  elements.promptText.textContent = '?';
+  if (!reduced) {
+    vehicle.animate([
+      { left: '-35%', transform: 'translateY(-50%) rotate(-5deg)' },
+      { left: '12%', transform: 'translateY(-58%) rotate(3deg)', offset: .45 },
+      { left: '48%', transform: 'translateY(-50%) rotate(0)' }
+    ], { duration: 1000, easing: 'cubic-bezier(.4,0,.8,1)', fill: 'forwards' });
+    if (!await delay(1000, token)) return;
+    stage.classList.add('crash-contact');
+    audio.effect('boop');
+    if (!await delay(150, token)) return;
+  }
+  const origin = vehicle.getBoundingClientRect();
+  stage.classList.add('crash-scattering');
+  const units = [...stage.querySelectorAll('.quantity-unit')];
+  units.forEach((unit, index) => {
+    const to = unit.getBoundingClientRect();
+    const dx = origin.left + origin.width / 2 - to.left - to.width / 2;
+    const dy = origin.top + origin.height / 2 - to.top - to.height / 2;
+    const tilt = index % 2 ? 14 : -14;
+    unit.animate(reduced ? [{ opacity: 0 }, { opacity: 1 }] : [
+      { transform: `translate(${dx}px, ${dy}px) rotate(${tilt}deg) scale(.75)`, opacity: 1 },
+      { transform: `translate(${dx * .35}px, ${dy * .35 - 55}px) rotate(${-tilt}deg)`, offset: .55 },
+      { transform: 'translate(0, 5px) scale(1.06,.92)', offset: .86 },
+      { transform: 'translate(0, 0) scale(1)' }
+    ], { duration: reduced ? 200 : 850, easing: 'ease-out', fill: 'backwards', delay: reduced ? 0 : index * 25 });
+  });
+  if (!await delay(reduced ? 220 : 1150, token)) return;
+  stage.classList.add('crash-settled');
+  stage.classList.remove('crash-scattering');
+  state.taskState.crashSeen = true;
+  state.phase = 'question';
+  renderJoinControls(task);
+  const prompt = taskPrompt(task);
+  showPrompt(prompt.text, prompt.file);
+  armInactivity();
+  saveCheckpoint();
 }
 
 function renderJoinControls(task) {
@@ -576,7 +675,9 @@ function chooseJoinAnswer(value, button) {
   showPrompt(copy().joinLook, v1Audio('join-look'));
   if (taskState.guided) taskState.modelAnswer = true;
   state.phase = 'question';
+  const taskToken = state.token;
   setTimeout(() => {
+    if (state.token !== taskToken || state.phase !== 'question' || currentTask() !== task) return;
     if (taskState.wrongSubmissions >= 2 && !taskState.guided) startJoinHelp();
     else renderJoinControls(task);
   }, 500);
@@ -584,6 +685,10 @@ function chooseJoinAnswer(value, button) {
 
 async function animateJoin(task) {
   const token = ++state.token;
+  if (task.variant === 'crash') {
+    await formJoinResult(task, elements.taskStage.querySelector('.crash-stage'), token, useReducedMotion());
+    return;
+  }
   const stage = elements.taskStage.querySelector('.join-stage');
   if (!await delay(150, token)) return;
   if (useReducedMotion()) {
@@ -627,10 +732,13 @@ async function formJoinResult(task, stage, token, reduced) {
   stage.classList.add('finished');
   formation.classList.add('revealed');
   const equation = make('div', 'join-equation visible');
-  equation.append(make('span', '', task.a), make('b', '', '+'), make('span', '', task.b), make('b', '', '='), make('span', '', task.sum));
+  const parts = task.parts || [task.a, task.b];
+  parts.forEach((part, index) => { if (index) equation.appendChild(make('b', '', '+')); equation.appendChild(make('span', '', part)); });
+  equation.append(make('b', '', '='), make('span', '', task.sum));
   elements.taskStage.appendChild(equation);
-  showPrompt(copy().joinResult(task), joinAudio(task, 'result'));
-  elements.resultAnnouncement.textContent = copy().joinResult(task);
+  const resultText = task.variant === 'crash' ? copy().crashResult(task) : copy().joinResult(task);
+  showPrompt(resultText, task.variant === 'crash' ? v1Audio(`crash-result-${task.sum}`) : joinAudio(task, 'result'));
+  elements.resultAnnouncement.textContent = resultText;
   if (!await delay(reduced ? 250 : 700, token)) return;
   finishCurrentTask();
 }
@@ -853,7 +961,7 @@ function outcomeForCurrentTask() {
     taskId: task.id,
     skillId: task.skillId,
     sessionId: session.id,
-    family: task.kind === 'join' ? factFamily(task.a, task.b) : `${task.goal}:${task.total}`,
+    family: task.variant === 'crash' ? [...task.parts].sort((a, b) => a - b).join('+') : task.kind === 'join' ? factFamily(task.a, task.b) : `${task.goal}:${task.total}`,
     completed: true,
     skipped: false,
     teachingDemo: task.teachingDemo,
@@ -908,7 +1016,8 @@ function replayResult() {
     state.phase = 'question';
     const saved = state.taskState;
     elements.taskStage.replaceChildren();
-    renderJoinTask(task);
+    if (task.variant === 'crash') renderCrashTask(task);
+    else renderJoinTask(task);
     state.taskState = saved;
     state.phase = 'resolving';
     animateJoin(task);
@@ -1080,7 +1189,7 @@ function restoreCheckpoint() {
     renderTask({ speak: false });
     const task = currentTask();
     if (task.kind === 'join') {
-      const stage = elements.taskStage.querySelector('.join-stage');
+      const stage = elements.taskStage.querySelector('.join-stage, .crash-stage');
       void formJoinResult(task, stage, ++state.token, true);
     } else {
       state.taskState.transferLocked = false;
@@ -1116,6 +1225,8 @@ function updateHome() {
   elements.joinHint.textContent = ui().joinHint;
   elements.shareLabel.textContent = ui().share;
   elements.shareHint.textContent = ui().shareHint;
+  elements.crashLabel.textContent = ui().crash;
+  elements.crashHint.textContent = ui().crashHint;
   elements.playgroundsLabel.textContent = ui().playgrounds;
   elements.firstPlayLabel.textContent = ui().play;
 }
@@ -1149,7 +1260,7 @@ function evidenceSummary(skillId, label) {
 function renderParentSettings() {
   elements.learningSummary.replaceChildren();
   const joiningLabel = profile.settings.joinMin > 2 ? `Joining ${profile.settings.joinMin}–${profile.settings.joinMax}` : `Joining to ${profile.settings.joinMax}`;
-  [evidenceSummary('join', joiningLabel), evidenceSummary('share.composition', 'Making groups'), evidenceSummary('share.equal', `Equal sharing to ${profile.settings.equalMax}`), evidenceSummary('share.remainder', `Odd leftovers to ${profile.settings.remainderMax}`)].forEach(item => {
+  [evidenceSummary('join', joiningLabel), evidenceSummary('crash', 'Mystery Crash'), evidenceSummary('share.composition', 'Making groups'), evidenceSummary('share.equal', `Equal sharing to ${profile.settings.equalMax}`), evidenceSummary('share.remainder', `Odd leftovers to ${profile.settings.remainderMax}`)].forEach(item => {
     const row = make('div', 'summary-row'); row.append(make('span', '', item.label), make('strong', '', item.value)); elements.learningSummary.appendChild(row);
   });
   elements.rangeButtons.replaceChildren();
@@ -1222,6 +1333,7 @@ function bindEvents() {
   elements.adventureButton.addEventListener('click', () => startSession('adventure'));
   elements.joinButton.addEventListener('click', () => startSession('join'));
   elements.shareButton.addEventListener('click', () => startSession('share'));
+  elements.crashButton.addEventListener('click', () => startSession('crash'));
   elements.leaveButton.addEventListener('click', goHome);
   elements.replayButton.addEventListener('click', replayPrompt);
   elements.audioRetryButton.addEventListener('click', replayPrompt);
