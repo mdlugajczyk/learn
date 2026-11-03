@@ -36,3 +36,14 @@ test('mystery sessions obey parent range and keep evidence separate from additio
     assert.equal(easierReplacement(tasks[0], profile).variant, 'crash');
   }
 });
+
+test('crash sessions vary narration and never repeat an impact palette consecutively', () => {
+  for (let seed = 0; seed < 100; seed += 1) {
+    const tasks = createSessionPlan('crash', createDefaultProfile(), seed);
+    assert.deepEqual(new Set(tasks.map(task => task.crashCue)), new Set(['boom', 'kaboom']));
+    for (let index = 1; index < tasks.length; index += 1) {
+      assert.notEqual(tasks[index].impactVariant, tasks[index - 1].impactVariant);
+      if (index > 1) assert.ok(new Set(tasks.slice(index - 2, index + 1).map(task => task.crashCue)).size > 1);
+    }
+  }
+});

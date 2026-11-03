@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-fc1eaf4bb609",
-  "assetCount": 347,
-  "totalBytes": 12659545,
+  "version": "number-magic-df1b88b270fb",
+  "assetCount": 349,
+  "totalBytes": 12824303,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 67874,
-      "sha256": "1ee19c7f872b646c22cf95963af4196c8673653465ad87652c838db428eb43dd"
+      "bytes": 69309,
+      "sha256": "2decf4fd456a4369112a54a8c9a2a21990cc5e7b3f7ce64d54e766e4182dedfb"
     },
     {
       "path": "art/playground-stage.webp",
@@ -176,13 +176,23 @@
     },
     {
       "path": "audio/v1-crash-ask-en.mp3",
-      "bytes": 78201,
-      "sha256": "4f04ca74cf2a350a568adadc4c060ba731abe3a39d8e862bf36a378aa2cc2368"
+      "bytes": 67752,
+      "sha256": "eb41deaeebf36d554297290baa6f749932734582369e57a077edc0b52b390714"
+    },
+    {
+      "path": "audio/v1-crash-ask-kaboom-en.mp3",
+      "bytes": 80709,
+      "sha256": "5fcb29aede88eba96836d92668209927dc93616bbadb4c9e518c4eeff22c039d"
+    },
+    {
+      "path": "audio/v1-crash-ask-kaboom-pl.mp3",
+      "bytes": 84470,
+      "sha256": "35001865dc5d97dfe6ad112b56dff45538b57fca37fe738f2b19c9084ed172c2"
     },
     {
       "path": "audio/v1-crash-ask-pl.mp3",
-      "bytes": 81963,
-      "sha256": "409ba45e51807026dc9b42a4583224003bcb567dca270f507b53b44d8d37f63d"
+      "bytes": 87814,
+      "sha256": "f26e53d2e91b597c98d6cd95d0a213e14aacfbde6c5a2dfadc8d871bed05c79e"
     },
     {
       "path": "audio/v1-crash-result-10-en.mp3",
@@ -1286,8 +1296,8 @@
     },
     {
       "path": "audio/v1-manifest.json",
-      "bytes": 260792,
-      "sha256": "c86fe50fca43080e95337d102c1a0efebd40891a1f26c82b1abdb88bc3bb410d"
+      "bytes": 262500,
+      "sha256": "7e224bc0e98efa818ff30d8dc71497efad26d97649501aade526d489e57a9c3b"
     },
     {
       "path": "audio/v1-session-end-en.mp3",
@@ -1686,8 +1696,8 @@
     },
     {
       "path": "crash-sound.js",
-      "bytes": 3143,
-      "sha256": "e15ed1165c9d7c8f93f38143412db472182cfa599244bc7d191dd85f26e25fb2"
+      "bytes": 3502,
+      "sha256": "aab0dd318b905a464aaf44987c4b85b15d648da78860706da6a94a5c509462a4"
     },
     {
       "path": "engine.js",
@@ -1696,8 +1706,8 @@
     },
     {
       "path": "game-model.js",
-      "bytes": 18642,
-      "sha256": "7f2f2a547341126adcac0ed4b7b02bf8b11777d1075cad53fd94b849b68192d2"
+      "bytes": 19182,
+      "sha256": "26287d2bbed7a99fc113dc1e231d61538194565ad9215ed6ce9cd23d50619945"
     },
     {
       "path": "icons/icon-192.png",
@@ -1726,8 +1736,8 @@
     },
     {
       "path": "missions.css",
-      "bytes": 26348,
-      "sha256": "8c557cfb2c6a00b86930e93c1f0b4286123a8b5589c40a1fc990d9970a3ebd32"
+      "bytes": 26483,
+      "sha256": "420ea32fe3c731a26dc4744cbc6cfefb2f720784f34764770b544b2ae8aa4971"
     },
     {
       "path": "missions.js",

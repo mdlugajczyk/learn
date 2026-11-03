@@ -5,7 +5,7 @@
   "voice": "Jessica - Playful, Bright, Warm",
   "voiceId": "cgSgspJ2msm6clMCkdW9",
   "outputFormat": "mp3_44100_128",
-  "generatedAt": "2026-11-02T10:34:01.472Z",
+  "generatedAt": "2026-11-03T12:26:22.008Z",
   "assets": [
     {
       "id": "count-1",
@@ -490,12 +490,12 @@
     {
       "id": "crash-ask",
       "locale": "en",
-      "text": "Boing! The mystery number broke into groups. What number was it?",
+      "text": "Boom! The mystery number broke into groups. What number was it?",
       "src": "audio/v1-crash-ask-en.mp3",
       "filename": "v1-crash-ask-en.mp3",
-      "durationMs": 4830,
+      "durationMs": 4180,
       "cues": [],
-      "contentHash": "33579e003b66326587fc5766454a368f32b80a493e3887cea86c5f663ee8ff6d",
+      "contentHash": "11c9168e8564b412b8cd3cea00d41f6ff346b9c3fbba770a5ec3b3a5fe61344c",
       "provider": "elevenlabs",
       "model": "eleven_multilingual_v2",
       "voice": "Jessica - Playful, Bright, Warm",
@@ -508,18 +508,66 @@
         "use_speaker_boost": true,
         "speed": 0.96
       },
-      "generatedAt": "2026-11-02T10:21:13.233Z",
+      "generatedAt": "2026-11-03T12:24:49.787Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "id": "crash-ask-kaboom",
+      "locale": "en",
+      "text": "Kaboom! The mystery number broke into groups. What number was it?",
+      "src": "audio/v1-crash-ask-kaboom-en.mp3",
+      "filename": "v1-crash-ask-kaboom-en.mp3",
+      "durationMs": 4969,
+      "cues": [],
+      "contentHash": "9c10a0ec6b0f01f88ee5eb9d7a7428b83567d452119d1d1f049881558ab80c84",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "generatedAt": "2026-11-03T12:24:51.445Z",
+      "qaStatus": "pending-listening-review"
+    },
+    {
+      "id": "crash-ask-kaboom",
+      "locale": "pl",
+      "text": "Kabum! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?",
+      "src": "audio/v1-crash-ask-kaboom-pl.mp3",
+      "filename": "v1-crash-ask-kaboom-pl.mp3",
+      "durationMs": 5201,
+      "cues": [],
+      "contentHash": "cfadc737075f4d0a92a36a3b90a1ea27be0ad3face680e8ea669f99e6bd90c81",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voice": "Jessica - Playful, Bright, Warm",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "outputFormat": "mp3_44100_128",
+      "voiceSettings": {
+        "stability": 0.58,
+        "similarity_boost": 0.82,
+        "style": 0.08,
+        "use_speaker_boost": true,
+        "speed": 0.96
+      },
+      "generatedAt": "2026-11-03T12:24:51.849Z",
       "qaStatus": "pending-listening-review"
     },
     {
       "id": "crash-ask",
       "locale": "pl",
-      "text": "Bęc! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?",
+      "text": "Bum! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?",
       "src": "audio/v1-crash-ask-pl.mp3",
       "filename": "v1-crash-ask-pl.mp3",
-      "durationMs": 5062,
+      "durationMs": 5433,
       "cues": [],
-      "contentHash": "5bbbb96eeb3ef0a855061133b678a1a54d7a5bebdb7d4e69b3050e85d434140c",
+      "contentHash": "75ef8672ee55e71b55dd034eb883b6cc52d522aa59f70caf7aaba404c2ced41f",
       "provider": "elevenlabs",
       "model": "eleven_multilingual_v2",
       "voice": "Jessica - Playful, Bright, Warm",
@@ -532,7 +580,7 @@
         "use_speaker_boost": true,
         "speed": 0.96
       },
-      "generatedAt": "2026-11-02T10:21:13.657Z",
+      "generatedAt": "2026-11-03T12:24:50.219Z",
       "qaStatus": "pending-listening-review"
     },
     {

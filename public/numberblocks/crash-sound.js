@@ -1,5 +1,5 @@
 // Layered Web Audio foley: generated locally, available offline, no media delay.
-export function playCrashSound(context, volume, phase, scene) {
+export function playCrashSound(context, volume, phase, scene, variant = 0) {
   if (!context || volume <= 0) return () => {};
   const nodes = [];
   const output = context.createGain();
@@ -41,9 +41,13 @@ export function playCrashSound(context, volume, phase, scene) {
   } else if (phase === 'brake') {
     tone(900, 420, .22, 0, .09, 'triangle'); noise(.2, 1600, 0, .08, true);
   } else if (phase === 'impact') {
-    tone(145, 48, .28, 0, .65); // Soft low thump under a woody clack.
-    noise(.18, 1450, 0, .48);
-    tone(540, 95, .48, .055, .24, 'triangle');
+    // Three equally gentle palettes: low boom, woody crash, and bright kaboom.
+    const palettes = [[145, 48, .28, 1450, 540, 95], [190, 62, .23, 2200, 690, 140], [110, 38, .36, 1050, 430, 72]];
+    const [from, to, length, cutoff, sparkle, tail] = palettes[Math.abs(variant) % palettes.length];
+    tone(from, to, length, 0, .65);
+    noise(length * .65, cutoff, 0, .48);
+    tone(sparkle, tail, .48, .055, .24, 'triangle');
+    if (variant === 1) tone(310, 125, .15, .11, .12, 'triangle');
   } else if (phase === 'scatter') {
     noise(.4, 1700, 0, .16);
     [520, 660, 790, 990].forEach((pitch, i) => tone(pitch, pitch * .68, .13, .25 + i * .11, .11, 'triangle'));

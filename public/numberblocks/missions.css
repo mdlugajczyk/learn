@@ -88,6 +88,8 @@
 .crash-settled .mystery-vehicle { visibility: hidden; }
 .crash-waiting .answer-panel { opacity: .38; transition: opacity .2s; }
 .crash-braking .illustrated-wheel { animation-duration: .6s; }
+.crash-gentle .impact-star, .crash-gentle .crash-puff { display: none; }
+.crash-gentle .crash-impact .impact-ring { animation: none; }
 .crash-group { background: #ffffff66; border-style: solid; border-color: #fff9; box-shadow: 0 4px 0 #54786c15; }
 .crash-scattering .crash-group { background: transparent; border-color: transparent; box-shadow: none; }
 .crash-settled .crash-scenery { opacity: .24; transition: opacity .3s; }

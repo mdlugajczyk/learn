@@ -14,7 +14,8 @@ add('welcome', "Hi! Let's build a playground together!", 'Cześć! Zbudujmy raze
 add('session-end', 'We built it! All done, or play again?', 'Zbudowaliśmy plac zabaw! Koniec czy gramy jeszcze raz?');
 add('join-look', "Let's look at the blocks.", 'Spójrzmy na klocki.');
 add('join-count', "Let's count together.", 'Policzmy razem.');
-add('crash-ask', 'Boing! The mystery number broke into groups. What number was it?', 'Bęc! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?');
+add('crash-ask', 'Boom! The mystery number broke into groups. What number was it?', 'Bum! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?');
+add('crash-ask-kaboom', 'Kaboom! The mystery number broke into groups. What number was it?', 'Kabum! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?');
 for (let total = 2; total <= 10; total += 1) {
   add(`crash-result-${total}`, `It was ${EN[total]}! All the blocks are back together.`, `To była liczba ${PL[total]}! Wszystkie klocki znów są razem.`);
 }

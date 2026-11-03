@@ -154,7 +154,8 @@ export function makeCrashTask(total, groupCount, { random = Math.random, introdu
   const parts = boundaries.slice(1).map((end, index) => end - boundaries[index]);
   return {
     ...makeJoinTask(parts[0], total - parts[0], { random, introducedMax, id }),
-    variant: 'crash', skillId: 'crash', parts, scene, representation: 'blocks', answerSupport: 'quantity'
+    variant: 'crash', skillId: 'crash', parts, scene, representation: 'blocks', answerSupport: 'quantity',
+    crashCue: random() < .5 ? 'boom' : 'kaboom', impactVariant: Math.floor(random() * 3)
   };
 }
 
@@ -392,12 +393,20 @@ export function createSessionPlan(mode, profileValue, seed = Date.now()) {
   if (mode === 'crash') {
     const easier = needsReducedDemand(profile.evidence.crash);
     const maximum = easier ? Math.min(5, profile.settings.joinMax) : profile.settings.joinMax;
+    let previousCue;
+    let cueRun = 0;
+    let previousImpact = -1;
     return Array.from({ length }, (_, slot) => {
       const total = 2 + Math.floor(random() * (maximum - 1));
       const task = makeCrashTask(total, 2 + slot % (easier ? 1 : 3), {
         random, introducedMax: profile.settings.joinMax, id: `${sessionId}-crash-${slot}`,
         scene: ['car', 'plane', 'runner'][slot % 3]
       });
+      if (cueRun >= 2 && task.crashCue === previousCue) task.crashCue = previousCue === 'boom' ? 'kaboom' : 'boom';
+      cueRun = task.crashCue === previousCue ? cueRun + 1 : 1;
+      previousCue = task.crashCue;
+      if (task.impactVariant === previousImpact) task.impactVariant = (previousImpact + 1 + Math.floor(random() * 2)) % 3;
+      previousImpact = task.impactVariant;
       if (easier) task.options = generateJoinOptions(task, { introducedMax: profile.settings.joinMax, choiceCount: 2, random });
       return task;
     });

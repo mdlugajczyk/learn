@@ -45,7 +45,7 @@ const COPY = {
     joinResult: task => `${cap(task.a)} and ${NUMBER_WORDS[task.b]} make ${NUMBER_WORDS[task.sum]}!`,
     joinLook: "Let's look at the blocks.",
     joinCount: "Let's count together.",
-    crashAsk: 'Boing! The mystery number broke into groups. What number was it?',
+    crashAsk: task => `${task.crashCue === 'kaboom' ? 'Kaboom' : 'Boom'}! The mystery number broke into groups. What number was it?`,
     crashResult: task => `It was ${NUMBER_WORDS[task.sum]}! All the blocks are back together.`,
     joinTap: task => `${cap(task.sum)} blocks altogether. Tap ${NUMBER_WORDS[task.sum]}.`,
     shareTarget: task => `${cap(task.total)} toys. Give your sister ${NUMBER_WORDS[task.target.count]}. The rest are for you.`,
@@ -70,7 +70,7 @@ const COPY = {
     joinResult: task => `${capPl(task.a)} i ${plWord(task.b)} to razem ${plWord(task.sum)}!`,
     joinLook: 'Spójrzmy na klocki.',
     joinCount: 'Policzmy razem.',
-    crashAsk: 'Bęc! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?',
+    crashAsk: task => `${task.crashCue === 'kaboom' ? 'Kabum' : 'Bum'}! Tajemnicza liczba rozpadła się na grupy. Jaka to była liczba?`,
     crashResult: task => `To była liczba ${plWord(task.sum)}! Wszystkie klocki znów są razem.`,
     joinTap: task => `Razem jest ${plWord(task.sum)} klocków. Dotknij ${plWord(task.sum)}.`,
     shareTarget: task => `Jest ${plWord(task.total)} zabawek. Daj siostrze ${plWord(task.target.count)}. Reszta jest dla ciebie.`,
@@ -289,7 +289,7 @@ class AudioDirector {
     });
   }
   crashSound(phase, scene) {
-    this.crashCancels.push(playCrashSound(this.context, profile.settings.effectsVolume, phase, scene));
+    this.crashCancels.push(playCrashSound(this.context, profile.settings.effectsVolume, phase, scene, state.taskState?.impactVariant ?? currentTask()?.impactVariant ?? 0));
   }
 }
 
@@ -405,7 +405,10 @@ function v1Audio(id) {
 }
 
 function taskPrompt(task) {
-  if (task.variant === 'crash') return { text: copy().crashAsk, file: v1Audio('crash-ask') };
+  if (task.variant === 'crash') {
+    const crashCue = state.taskState?.crashCue || task.crashCue || 'boom';
+    return { text: copy().crashAsk({ ...task, crashCue }), file: v1Audio(crashCue === 'kaboom' ? 'crash-ask-kaboom' : 'crash-ask') };
+  }
   if (task.kind === 'join') return { text: copy().joinAsk(task), file: joinAudio(task, 'ask') };
   if (task.goal === 'targetRecipient') return { text: copy().shareTarget(task), file: v1Audio(`share-target-${task.total}-${task.target.recipient}-${task.target.count}`) };
   if (task.goal === 'freeGroups') return { text: copy().shareFree(task), file: v1Audio(`share-free-${task.total}`) };
@@ -587,6 +590,12 @@ async function animateCrash(task) {
   const stage = elements.taskStage.querySelector('.crash-stage');
   const vehicle = stage.querySelector('.mystery-vehicle');
   const reduced = useReducedMotion();
+  // Vary each replay too, without changing the maths or its scoring state.
+  const previousImpact = state.taskState.impactVariant ?? task.impactVariant ?? 0;
+  state.taskState.impactVariant = (previousImpact + 1 + Math.floor(Math.random() * 2)) % 3;
+  state.taskState.crashCue = state.taskState.crashCue
+    ? state.taskState.crashCue === 'boom' ? 'kaboom' : 'boom'
+    : task.crashCue || (Math.random() < .5 ? 'boom' : 'kaboom');
   elements.promptText.textContent = '?';
   const stageRect = stage.getBoundingClientRect();
   const vehicleRect = vehicle.getBoundingClientRect();
@@ -598,7 +607,17 @@ async function animateCrash(task) {
   vehicle.style.transform = pose(endX, endY);
   stage.style.setProperty('--impact-x', `${wallRect.left - stageRect.left + 5}px`);
   stage.style.setProperty('--impact-y', `${endY + vehicleRect.height * .5}px`);
-  if (!reduced) {
+  if (reduced) {
+    // Reduced motion changes the staging, not the story. Keep the mystery,
+    // contact and split visible instead of jumping directly to the answer.
+    stage.classList.add('crash-gentle', 'crash-presenting');
+    vehicle.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+    if (!await delay(850, token)) return;
+    stage.classList.add('crash-contact');
+    audio.crashSound('impact', task.scene);
+    stage.querySelector('.impact-ring').animate([{ opacity: .8 }, { opacity: 0 }], { duration: 400 });
+    if (!await delay(450, token)) return;
+  } else {
     stage.classList.add('crash-approaching');
     audio.crashSound('approach', task.scene);
     const airborne = task.scene === 'plane';
@@ -1256,6 +1275,7 @@ function restoreCheckpoint() {
     }
   } else {
     state.phase = 'question';
+    if (currentTask().variant === 'crash') state.taskState.crashSeen = false;
     if (state.taskState.toys) state.taskState.transferLocked = false;
     renderTask({ speak: false });
   }
@@ -1423,7 +1443,7 @@ function bindEvents() {
     audio.unlock();
     elements.resumeOverlay.hidden = true;
     state.paused = false;
-    if (profile.checkpoint && (!session || state.phase === 'resolving')) restoreCheckpoint();
+    if (profile.checkpoint && (!session || state.phase === 'resolving' || state.phase === 'crashing')) restoreCheckpoint();
     else replayPrompt();
   });
   bindParentHold();

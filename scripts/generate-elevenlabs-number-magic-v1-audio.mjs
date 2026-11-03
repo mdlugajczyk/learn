@@ -81,7 +81,8 @@ for (const entry of selected) {
   if (completed % 10 === 0 || completed === selected.length) console.log(`Prepared ${completed}/${selected.length} clips`);
 }
 
-const assets = [...records.values()].sort((left, right) => left.filename.localeCompare(right.filename));
+const currentFilenames = new Set(NUMBER_MAGIC_V1_AUDIO_ENTRIES.map(entry => entry.filename));
+const assets = [...records.values()].filter(record => currentFilenames.has(record.filename)).sort((left, right) => left.filename.localeCompare(right.filename));
 await writeFile(existingManifestPath, `${JSON.stringify({
   schemaVersion: 1,
   provider: 'elevenlabs',
