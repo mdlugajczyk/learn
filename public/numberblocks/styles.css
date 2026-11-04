@@ -29,6 +29,7 @@ body { min-width: 320px; overflow: hidden; background: var(--sky-deep); color: v
 button, input { font: inherit; }
 button { color: inherit; }
 button, a { touch-action: manipulation; }
+[data-lock-pinch], [data-lock-pinch] .bottom-sheet { touch-action: pan-x pan-y; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 5px solid #fff36d; outline-offset: 3px; }
 [hidden] { display: none !important; }
 

@@ -57,7 +57,7 @@
       </div>
     </section>
 
-    <section id="gameScreen" class="screen game-screen" aria-labelledby="gameTitle" hidden>
+    <section id="gameScreen" class="screen game-screen" aria-labelledby="gameTitle" data-lock-pinch hidden>
       <header class="game-header">
         <button id="leaveButton" class="utility-button" type="button" aria-label="Leave this adventure">←</button>
         <div class="game-heading"><span id="gameTitle">ADVENTURE</span><div id="jobProgress" class="job-progress" aria-label="Playground jobs completed"></div></div>
@@ -84,7 +84,7 @@
       </div>
     </div>
 
-    <div id="helpOverlay" class="overlay sheet-overlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+    <div id="helpOverlay" class="overlay sheet-overlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" data-lock-pinch hidden>
       <div class="bottom-sheet help-sheet">
         <h2 id="helpTitle">Ten can help</h2>
         <button id="showHelpButton" class="sheet-action" type="button"><span aria-hidden="true">☝</span><span>Show me</span></button>
@@ -94,11 +94,11 @@
       </div>
     </div>
 
-    <div id="cosmeticOverlay" class="overlay choice-overlay" role="dialog" aria-modal="true" aria-labelledby="choiceTitle" hidden>
+    <div id="cosmeticOverlay" class="overlay choice-overlay" role="dialog" aria-modal="true" aria-labelledby="choiceTitle" data-lock-pinch hidden>
       <div class="choice-card"><div id="choiceTen" class="choice-ten" aria-hidden="true"></div><h2 id="choiceTitle">Choose one!</h2><div id="cosmeticChoices" class="cosmetic-choices"></div></div>
     </div>
 
-    <div id="finaleOverlay" class="overlay finale-overlay" role="dialog" aria-modal="true" aria-labelledby="finaleTitle" hidden>
+    <div id="finaleOverlay" class="overlay finale-overlay" role="dialog" aria-modal="true" aria-labelledby="finaleTitle" data-lock-pinch hidden>
       <div class="finale-card">
         <div id="finalePlayground" class="finale-playground" aria-label="Completed playground"></div><div id="finaleTen" class="finale-ten" aria-hidden="true"></div>
         <h2 id="finaleTitle">We built it!</h2>
@@ -122,7 +122,7 @@
       </div>
     </div>
 
-    <div id="resumeOverlay" class="overlay resume-overlay" role="dialog" aria-modal="true" aria-labelledby="resumeTitle" hidden>
+    <div id="resumeOverlay" class="overlay resume-overlay" role="dialog" aria-modal="true" aria-labelledby="resumeTitle" data-lock-pinch hidden>
       <div class="resume-card"><span aria-hidden="true">⏸</span><h2 id="resumeTitle">Ready to keep playing?</h2><button id="resumeButton" class="primary-button" type="button">Resume</button></div>
     </div>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>

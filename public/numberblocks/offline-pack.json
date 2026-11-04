@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "number-magic-df1b88b270fb",
+  "version": "number-magic-a8264c81d39e",
   "assetCount": 349,
-  "totalBytes": 12824303,
+  "totalBytes": 12825043,
   "assets": [
     {
       "path": "app.js",
-      "bytes": 69309,
-      "sha256": "2decf4fd456a4369112a54a8c9a2a21990cc5e7b3f7ce64d54e766e4182dedfb"
+      "bytes": 69887,
+      "sha256": "41b703eaa09156804b82cc9bbc4a3b5bb65e77d952dc87fe998a2c00ca32cca1"
     },
     {
       "path": "art/playground-stage.webp",
@@ -1726,8 +1726,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 10021,
-      "sha256": "cb4da8ddf29b0fbdaff682aad2f5c01c1cee378ea770a641f41f635be4e925e5"
+      "bytes": 10101,
+      "sha256": "98b10da7c48b1d55f9a4afdb59d416db20b83662b53083838bf7b6966ff85af1"
     },
     {
       "path": "manifest.webmanifest",
@@ -1746,8 +1746,8 @@
     },
     {
       "path": "styles.css",
-      "bytes": 24330,
-      "sha256": "1c4f947ceef35a848593ccccdf205077cfd9cf4b2f7caf40e73be4ae42195e5d"
+      "bytes": 24412,
+      "sha256": "9bcffd80f5ac2a58c3c797a289d5ed50c789017eaebd748b99cdf0edb213e4af"
     }
   ]
 }

@@ -1403,6 +1403,15 @@ function bindParentHold() {
 }
 
 function bindEvents() {
+  // Safari can ignore viewport scale limits. Suppress its pinch events only
+  // on play surfaces so ordinary scrolling and the parent panel stay usable.
+  document.querySelectorAll('[data-lock-pinch]').forEach(surface => {
+    const preventPinch = event => { if (event.cancelable) event.preventDefault(); };
+    for (const type of ['gesturestart', 'gesturechange']) surface.addEventListener(type, preventPinch, { passive: false });
+    surface.addEventListener('touchmove', event => {
+      if (event.touches.length > 1) preventPinch(event);
+    }, { passive: false });
+  });
   elements.firstPlayButton.addEventListener('click', () => {
     audio.unlock();
     try { localStorage.setItem(WELCOME_KEY, 'yes'); } catch {}
